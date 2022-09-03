@@ -116,16 +116,20 @@ namespace EC.IdentityServer.Configuration
 
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
         };
-
         public static IEnumerable<IdentityResource> IdentityResources =>
                    new IdentityResource[]
                    {
                        new IdentityResources.Email(),
                        new IdentityResources.OpenId(),
                        new IdentityResources.Profile(),
-                       new IdentityResource(){ Name="roles", DisplayName="Roles", Description="Kullanıcı rolleri", UserClaims=new []{ "role"} }
+                       new IdentityResource()
+                       { 
+                           Name="roles", 
+                           DisplayName="Roles", 
+                           Description="User Roles", 
+                           UserClaims=new []{ "role"} 
+                       }
                    };
-
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
@@ -180,7 +184,7 @@ namespace EC.IdentityServer.Configuration
         {
             return new List<Client>
             {
-                // JavaScript Client
+                #region JS Client
                 new Client
                 {
                     ClientId = "js",
@@ -195,21 +199,21 @@ namespace EC.IdentityServer.Configuration
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "order_fullpermission",
-                        "basket",
-                        "orders.signalrhub",
+                        "order_full",
+                        "basket_full",
                     },
                 },
+	            #endregion
+                #region MVC Client
                 new Client
                 {
                     ClientId = "mvc",
                     ClientName = "MVC Client",
                     ClientSecrets = new List<Secret>
                     {
-
-                        new Secret("secret".Sha256())
+                        new Secret("mvc_client_secret".Sha256())
                     },
-                    ClientUri = $"{clientsUrl["Mvc"]}",                             // public uri of the client
+                    ClientUri = $"{clientsUrl["Mvc"]}", // public uri of the client
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     AllowAccessTokensViaBrowser = false,
                     RequireConsent = false,
@@ -228,13 +232,85 @@ namespace EC.IdentityServer.Configuration
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.OfflineAccess,
-                        "orders",
-                        "basket",
+                        "order_full",
+                        "basket_full",
                         "orders.signalrhub",
                     },
                     AccessTokenLifetime = 60*60*2, // 2 hours
                     IdentityTokenLifetime= 60*60*2 // 2 hours
                 },
+	            #endregion
+                #region Base Client
+                new Client
+                {
+                    ClientName="Base Client",
+                    ClientId="base_client",
+                    ClientSecrets= {new Secret("base_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "base_full, base_write", "base_read" }
+                },
+	            #endregion
+                #region Basket Client
+                new Client
+                {
+                    ClientName="Basket Client",
+                    ClientId="basket_client",
+                    ClientSecrets= {new Secret("basket_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "basket_full, basket_write", "basket_read" }
+                },
+	            #endregion
+                #region Category Client
+                new Client
+                {
+                    ClientName="Category Client",
+                    ClientId="category_client",
+                    ClientSecrets= {new Secret("category_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "category_full, category_write", "category_read" }
+                },
+	            #endregion
+                #region Discount Client
+                new Client
+                {
+                    ClientName="Discount Client",
+                    ClientId="discount_client",
+                    ClientSecrets= {new Secret("discount_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "discount_full, discount_write", "discount_read" }
+                },
+	            #endregion
+                #region Order Client
+                new Client
+                {
+                    ClientName="Order Client",
+                    ClientId="order_client",
+                    ClientSecrets= {new Secret("order_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "order_full, order_write", "order_read" }
+                },
+	            #endregion
+                #region Payment Client
+                new Client
+                {
+                    ClientName="Payment Client",
+                    ClientId="payment_client",
+                    ClientSecrets= {new Secret("payment_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "payment_full, payment_write", "payment_read" }
+                },
+	            #endregion
+                #region Product
+                new Client
+                {
+                    ClientName="Product Client",
+                    ClientId="product_client",
+                    ClientSecrets= {new Secret("product_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "product_full, product_write", "product_read" }
+                },
+	            #endregion
+
             };
         }
 
