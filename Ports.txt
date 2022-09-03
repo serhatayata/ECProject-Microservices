@@ -1,0 +1,9 @@
+Gateway -> 6000 , IIS ApplicationUrl -> 13000
+IdentityServer -> 6001, IIS ApplicationUrl -> 13001
+Base -> 6002, IIS ApplicationUrl -> 13002
+Basket -> 6003, IIS ApplicationUrl -> 13003
+Category -> 6004, IIS ApplicationUrl -> 13004
+Discount -> 6005, IIS ApplicationUrl -> 13005
+Order -> 6006, IIS ApplicationUrl -> 13006
+Payment -> 6007, IIS ApplicationUrl -> 13007
+Product -> 6008, IIS ApplicationUrl -> 13008
