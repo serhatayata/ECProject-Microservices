@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace EC.IdentityServer.Migrations.AppIdentityDb
+namespace EC.IdentityServer.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    [Migration("20220904093727_mig_v1")]
+    [Migration("20220904100554_mig_v1")]
     partial class mig_v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

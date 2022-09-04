@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EC.IdentityServer.Migrations.AppIdentityDb
+namespace EC.IdentityServer.Migrations
 {
     public partial class mig_v1 : Migration
     {

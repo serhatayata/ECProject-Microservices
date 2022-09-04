@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EC.IdentityServer.Migrations
+namespace EC.IdentityServer.Migrations.PersistedGrantDb
 {
     public partial class mig_persistedGrant_v1 : Migration
     {

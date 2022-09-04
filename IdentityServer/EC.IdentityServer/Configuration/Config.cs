@@ -247,7 +247,7 @@ namespace EC.IdentityServer.Configuration
                     ClientId="base_client",
                     ClientSecrets= {new Secret("base_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "base_full, base_write", "base_read" }
+                    AllowedScopes={ "base_full","base_write", "base_read" }
                 },
 	            #endregion
                 #region Basket Client
@@ -257,7 +257,7 @@ namespace EC.IdentityServer.Configuration
                     ClientId="basket_client",
                     ClientSecrets= {new Secret("basket_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "basket_full, basket_write", "basket_read" }
+                    AllowedScopes={ "basket_full","basket_write", "basket_read" }
                 },
 	            #endregion
                 #region Category Client
@@ -267,7 +267,7 @@ namespace EC.IdentityServer.Configuration
                     ClientId="category_client",
                     ClientSecrets= {new Secret("category_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "category_full, category_write", "category_read" }
+                    AllowedScopes={ "category_full", "category_write", "category_read" }
                 },
 	            #endregion
                 #region Discount Client
@@ -277,7 +277,7 @@ namespace EC.IdentityServer.Configuration
                     ClientId="discount_client",
                     ClientSecrets= {new Secret("discount_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "discount_full, discount_write", "discount_read" }
+                    AllowedScopes={ "discount_full", "discount_write", "discount_read" }
                 },
 	            #endregion
                 #region Order Client
@@ -287,7 +287,7 @@ namespace EC.IdentityServer.Configuration
                     ClientId="order_client",
                     ClientSecrets= {new Secret("order_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "order_full, order_write", "order_read" }
+                    AllowedScopes={ "order_full", "order_write", "order_read" }
                 },
 	            #endregion
                 #region Payment Client
@@ -297,7 +297,7 @@ namespace EC.IdentityServer.Configuration
                     ClientId="payment_client",
                     ClientSecrets= {new Secret("payment_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "payment_full, payment_write", "payment_read" }
+                    AllowedScopes={ "payment_full", "payment_write", "payment_read" }
                 },
 	            #endregion
                 #region Product
@@ -307,7 +307,7 @@ namespace EC.IdentityServer.Configuration
                     ClientId="product_client",
                     ClientSecrets= {new Secret("product_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "product_full, product_write", "product_read" }
+                    AllowedScopes={ "product_full", "product_write", "product_read" }
                 },
 	            #endregion
 
