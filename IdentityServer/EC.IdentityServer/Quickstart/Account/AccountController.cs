@@ -3,6 +3,10 @@
 
 
 using EC.IdentityServer.Models.Identity;
+using EC.IdentityServer.Quickstart.Models;
+using EC.IdentityServer.Quickstart.Options;
+using EC.IdentityServer.Quickstart.Providers;
+using EC.IdentityServer.Quickstart.ViewModels;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
@@ -11,12 +15,8 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IdentityServerHost.Quickstart.UI
 {

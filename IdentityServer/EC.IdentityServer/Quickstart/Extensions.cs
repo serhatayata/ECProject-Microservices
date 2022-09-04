@@ -1,4 +1,5 @@
 using System;
+using EC.IdentityServer.Quickstart.ViewModels;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Mvc;
 

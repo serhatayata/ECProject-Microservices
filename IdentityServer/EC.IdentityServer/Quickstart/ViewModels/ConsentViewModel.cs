@@ -3,8 +3,9 @@
 
 
 using System.Collections.Generic;
+using EC.IdentityServer.Quickstart.Models;
 
-namespace IdentityServerHost.Quickstart.UI
+namespace EC.IdentityServer.Quickstart.ViewModels
 {
     public class ConsentViewModel : ConsentInputModel
     {

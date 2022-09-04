@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 using IdentityServer4.Validation;
 using System.Collections.Generic;
 using System;
+using EC.IdentityServer.Quickstart.Models;
+using EC.IdentityServer.Quickstart.Options;
+using EC.IdentityServer.Quickstart.ViewModels;
 
 namespace IdentityServerHost.Quickstart.UI
 {

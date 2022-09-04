@@ -4,6 +4,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using EC.IdentityServer.Quickstart.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
