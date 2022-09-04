@@ -14,4 +14,11 @@ namespace EC.IdentityServer.Models.Identity
         public DateTime UpdatedAt { get; set; }
         public DateTime LastSeen { get; set; }
     }
+
+    public enum UserStatus
+    {
+        NotValidated=1,
+        Validated=2,
+        Suspended=3
+    }
 }

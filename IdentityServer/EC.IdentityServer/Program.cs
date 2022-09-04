@@ -11,15 +11,14 @@ ConfigurationManager Configuration = builder.Configuration;
 IWebHostEnvironment Environment = builder.Environment;
 
 var assembly = typeof(Program).Assembly.GetName().Name;
+var identityConnString = Configuration.GetConnectionString("IdentityConnection");
 
 #region Services
 
 
+#region Identity - DbContext
+builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(identityConnString, b => b.MigrationsAssembly(assembly)));
 
-
-#region IdentityDbContext Settings
-var identityConnString = Configuration.GetConnectionString("IdentityConnection");
-builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection"), b => b.MigrationsAssembly(assembly)));
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
 {
     //this place might be changed...
@@ -39,7 +38,7 @@ builder.Services.AddIdentityServer(options =>
     options.Events.RaiseFailureEvents = true;
     options.Events.RaiseSuccessEvents = true;
 
-    // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
+    //see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
     options.EmitStaticAudienceClaim = true;
 })
   .AddAspNetIdentity<AppUser>()
@@ -52,15 +51,13 @@ builder.Services.AddIdentityServer(options =>
                   b.UseSqlServer(identityConnString, opt => opt.MigrationsAssembly(assembly));
   })
     .AddDeveloperSigningCredential(); //Sertifika yoksa
-
-IdentityExtensions.AddDbContextSettings(identityConnString, Configuration);
 #endregion
-#region SeedData
-await AppIdentityDbContextSeed.AddUserSeedDataAsync();
-await ConfigurationDbContextSeed.AddIdentityConfigurationSeedData(Configuration);
+#region SeedData - Settings
+await AppIdentityDbContextSeed.AddUserSettingsAsync(identityConnString);
+await ConfigurationDbContextSeed.AddIdentityConfigurationSettingsAsync(Configuration);
 #endregion
 #region Logging
-builder.Services.AddLogging();
+//builder.Services.AddLogging();
 #endregion
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -77,9 +74,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
-app.UseRouting();
 app.UseHttpsRedirection();
 app.UseIdentityServer();
+
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

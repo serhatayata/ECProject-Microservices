@@ -14,6 +14,7 @@
     <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.Storage" Version="4.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
@@ -47,5 +48,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://json.schemastore.org/appsettings.json" /></VisualStudio></ProjectExtensions>
 
 </Project>
