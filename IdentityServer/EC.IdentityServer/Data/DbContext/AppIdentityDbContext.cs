@@ -39,18 +39,23 @@ namespace EC.IdentityServer.Data.DbContext
             modelBuilder.Entity<AppUser>(entity =>
             {
                 entity.ToTable(name: "Users");
-            });
 
-            modelBuilder.Entity<AppUser>().HasKey(x => x.Id);
-            modelBuilder.Entity<AppUser>().Property(e => e.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<AppUser>().HasIndex(x => x.UserName).IsUnique();
-            modelBuilder.Entity<AppUser>().Property(x => x.UserName).HasMaxLength(20);
-            modelBuilder.Entity<AppUser>().Property(x => x.Name).HasMaxLength(100);
-            modelBuilder.Entity<AppUser>().Property(x => x.Surname).HasMaxLength(100);
-            modelBuilder.Entity<AppUser>().Property(x => x.Surname).HasMaxLength(30);
-            modelBuilder.Entity<AppUser>().Property(x => x.Email).HasMaxLength(100);
-            modelBuilder.Entity<AppUser>().Property(x => x.PhoneNumber).HasMaxLength(20);
-            modelBuilder.Entity<AppUser>().HasIndex(x => x.PhoneNumber).IsUnique();
+                entity.HasKey(x => x.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.HasIndex(x => x.UserName).IsUnique();
+                entity.Property(x => x.UserName).HasMaxLength(13);
+                entity.Property(x => x.Name).HasMaxLength(100);
+                entity.Property(x => x.Surname).HasMaxLength(100);
+                entity.Property(x => x.Surname).HasMaxLength(30);
+                entity.Property(x => x.Email).HasMaxLength(100);
+                entity.HasIndex(x=>x.Email).IsUnique();
+                entity.Property(x => x.PhoneNumber).HasMaxLength(13);
+                entity.HasIndex(x => x.PhoneNumber).IsUnique();
+
+                entity.Property(x => x.CreatedAt).HasDefaultValueSql("(getdate())");
+                entity.Property(x => x.UpdatedAt).HasDefaultValueSql("(getdate())");
+                entity.Property(x => x.LastSeen).HasDefaultValueSql("(getdate())");
+            });
             #endregion
             #region AppRole
             modelBuilder.Entity<AppRole>(entity =>

@@ -120,7 +120,10 @@ namespace EC.IdentityServer.Data.SeedData
                 //Log.Debug("Mehmet Kaya user already exists");
             }
             #endregion
-            #region Card_1
+            #region Roles
+
+            #endregion
+            #region Cards
             var card1 = await context.Cards.FirstOrDefaultAsync(x => x.CardNumber == "TR123456789123456789123456");
             if (card1 == null)
             {
