@@ -1,4 +1,5 @@
 ﻿using EC.IdentityServer.Data.DbContext;
+using EC.IdentityServer.Models;
 using EC.IdentityServer.Models.Identity;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
@@ -36,6 +37,7 @@ namespace EC.IdentityServer.Data.SeedData
             var context = scope.ServiceProvider.GetService<AppIdentityDbContext>();
             context.Database.Migrate();
 
+            #region User_1
             var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             var user_1 = await userMgr.FindByNameAsync("905374882316");
             if (user_1 == null)
@@ -46,10 +48,10 @@ namespace EC.IdentityServer.Data.SeedData
                     Surname = "Ayata",
                     CreatedAt = DateTime.Now,
                     LastSeen = DateTime.Now,
-                    UpdatedAt=DateTime.Now,
-                    PhoneNumber="905374882316",
+                    UpdatedAt = DateTime.Now,
+                    PhoneNumber = "905374882316",
                     UserName = "905374882316",
-                    Status=(int)UserStatus.NotValidated,
+                    Status = (int)UserStatus.NotValidated,
                     Email = "srht1@email.com",
                     EmailConfirmed = true,
                 };
@@ -76,7 +78,8 @@ namespace EC.IdentityServer.Data.SeedData
             {
                 //Log.Debug("Serhat Ayata user already exists");
             }
-
+            #endregion
+            #region User_2
             var user_2 = await userMgr.FindByNameAsync("905555555555");
             if (user_2 == null)
             {
@@ -116,6 +119,39 @@ namespace EC.IdentityServer.Data.SeedData
             {
                 //Log.Debug("Mehmet Kaya user already exists");
             }
+            #endregion
+            #region Card_1
+            var card1 = await context.Cards.FirstOrDefaultAsync(x => x.CardNumber == "TR123456789123456789123456");
+            if (card1 == null)
+            {
+                card1 = new()
+                {
+                    CardNumber= "TR123456789123456789123456",
+                    UserId=user_1.Id,
+                    Name="Card_test_1",
+                    Expiration=DateTime.Now.AddYears(2),
+                    Cvv="123"
+                };
+
+                await context.Cards.AddAsync(card1);
+                await context.SaveChangesAsync();
+            }
+            var card2 = await context.Cards.FirstOrDefaultAsync(x => x.CardNumber == "TR234567892345678923456789");
+            if (card2==null)
+            {
+                card2 = new()
+                {
+                    CardNumber = "TR234567892345678923456789",
+                    UserId = user_2.Id,
+                    Name = "Card_test_2",
+                    Expiration = DateTime.Now.AddYears(3),
+                    Cvv = "345"
+                };
+
+                await context.Cards.AddAsync(card2);
+                await context.SaveChangesAsync();
+            }
+            #endregion
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using EC.IdentityServer.Models.Identity;
+﻿using EC.IdentityServer.Models;
+using EC.IdentityServer.Models.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Shared.Utilities.IoC;
@@ -21,6 +22,7 @@ namespace EC.IdentityServer.Data.DbContext
 
         public DbSet<AppUser> Users { get; set; }
         public DbSet<AppRole> Roles { get; set; }
+        public DbSet<Card> Cards { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -57,6 +59,15 @@ namespace EC.IdentityServer.Data.DbContext
             });
 
             modelBuilder.Entity<AppRole>().Property(x => x.Name).HasMaxLength(50);
+            #endregion
+            #region Cards
+            modelBuilder.Entity<Card>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Name).HasColumnType("nvarchar(30)");
+                entity.Property(x => x.CardNumber).HasColumnType("nvarchar(26)");
+                entity.Property(x => x.Cvv).HasColumnType("nvarchar(3)");
+            });
             #endregion
 
         }
