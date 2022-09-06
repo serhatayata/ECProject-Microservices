@@ -1,5 +1,5 @@
 ﻿using EC.IdentityServer.Dtos;
-using IResult = Shared.Utilities.Results.IResult;
+using IResult = Core.Utilities.Results.IResult;
 
 namespace EC.IdentityServer.Services.Abstract
 {

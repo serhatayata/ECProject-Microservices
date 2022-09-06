@@ -1,8 +1,8 @@
-﻿using EC.IdentityServer.Models;
+﻿using Core.Utilities.IoC;
+using EC.IdentityServer.Models;
 using EC.IdentityServer.Models.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Shared.Utilities.IoC;
 
 namespace EC.IdentityServer.Data.DbContext
 {

@@ -121,7 +121,39 @@ namespace EC.IdentityServer.Data.SeedData
             }
             #endregion
             #region Roles
+            var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
 
+            var role_1 = await roleMgr.FindByNameAsync("User.Normal");
+            if (role_1 == null)
+            {
+                role_1 = new AppRole()
+                {
+                    Name="User.Normal",
+                    NormalizedName="USER.NORMAL"
+                };
+
+                var result = await roleMgr.CreateAsync(role_1);
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
+            }
+
+            var role_2 = await roleMgr.FindByNameAsync("User.Admin");
+            if (role_2 == null)
+            {
+                role_2 = new AppRole()
+                {
+                    Name = "User.Admin",
+                    NormalizedName = "USER.ADMIN"
+                };
+
+                var result = await roleMgr.CreateAsync(role_2);
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
+            }
             #endregion
             #region Cards
             var card1 = await context.Cards.FirstOrDefaultAsync(x => x.CardNumber == "TR123456789123456789123456");

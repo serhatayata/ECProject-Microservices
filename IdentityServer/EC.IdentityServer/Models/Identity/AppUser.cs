@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Shared.Entities;
+﻿using Core.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace EC.IdentityServer.Models.Identity
 {

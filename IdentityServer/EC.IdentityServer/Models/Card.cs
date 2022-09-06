@@ -1,4 +1,5 @@
-﻿using Shared.Entities;
+﻿
+using Core.Entities;
 
 namespace EC.IdentityServer.Models
 {
