@@ -27,7 +27,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterMod
 #region AUTO MAPPER
 builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #endregion
-#region Identity - DbContext
+#region IDENTITY - DBCONTEXT
 builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(identityConnString, b => b.MigrationsAssembly(assembly)));
 
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
@@ -63,14 +63,18 @@ builder.Services.AddIdentityServer(options =>
   })
     .AddDeveloperSigningCredential(); //Sertifika yoksa
 #endregion
-#region IOptions
+#region HTTP CONTEXT ACCESSOR
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+#endregion
+#region IOPTIONS
 builder.Services.AddOptionsPattern(Configuration);
 #endregion
-#region SeedData
+#region SEED_DATA
 await AppIdentityDbContextSeed.AddUserSettingsAsync(identityConnString);
 await ConfigurationDbContextSeed.AddIdentityConfigurationSettingsAsync(Configuration);
 #endregion
-#region Logging
+#region LOGGING
 //builder.Services.AddLogging();
 #endregion
 

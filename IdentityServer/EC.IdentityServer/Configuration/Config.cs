@@ -214,7 +214,7 @@ namespace EC.IdentityServer.Configuration
                         new Secret("mvc_client_secret".Sha256())
                     },
                     ClientUri = $"{clientsUrl["Mvc"]}", // public uri of the client
-                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     AllowAccessTokensViaBrowser = false,
                     RequireConsent = false,
                     AllowOfflineAccess = true,

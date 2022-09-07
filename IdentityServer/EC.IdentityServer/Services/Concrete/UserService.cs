@@ -13,24 +13,27 @@ using System.Net;
 using IResult = Core.Utilities.Results.IResult;
 using EC.IdentityServer.Models.Email;
 using MimeKit;
+using Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace EC.IdentityServer.Services.Concrete
 {
-    public class UserManager : IUserService
+    public class UserService : IUserService
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IRedisCacheManager _redisCacheManager;
         private IPasswordHasher<AppUser> _passwordHasher;
         private readonly IMapper _mapper;
 
-        public UserManager(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager, IPasswordHasher<AppUser> passwordHasher, IMapper mapper, IEmailSender emailSender)
+        public UserService(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager, IPasswordHasher<AppUser> passwordHasher, IMapper mapper, IEmailSender emailSender, IRedisCacheManager redisCacheManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _redisCacheManager = redisCacheManager;
             _passwordHasher = passwordHasher;
             _mapper = mapper;
         }
@@ -75,7 +78,7 @@ namespace EC.IdentityServer.Services.Concrete
                 randomNumber.ToString()
                 );
 
-            //userId_rndnumber will be added to redis cache
+            await _redisCacheManager.SetAsync($"activation_{userId}", randomNumber.ToString());
 
             _emailSender.SendSmtpEmail(message);
 
@@ -86,8 +89,12 @@ namespace EC.IdentityServer.Services.Concrete
         public async Task<IResult> ActivateAccount(string userId, string code)
         {
             //Check redis cache if userId_rndnumber exists and true
-            var cacheValue = 
+            var cacheValue = await _redisCacheManager.GetAsync<string>($"activation_{userId}");
             if(cacheValue == null)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(PropertyNames.Code));
+            }
+            if (cacheValue != code)
             {
                 return new ErrorResult(MessageExtensions.NotCorrect(PropertyNames.Code));
             }

@@ -3,6 +3,7 @@ using EC.IdentityServer.Models.Settings;
 using EC.IdentityServer.Services.Abstract;
 using IdentityServer4.Models;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace EC.IdentityServer.Services.Concrete
@@ -11,9 +12,9 @@ namespace EC.IdentityServer.Services.Concrete
     {
         private readonly SmtpSetting _smtpSetting;
 
-        public EmailSender(SmtpSetting smtpSetting)
+        public EmailSender(IOptions<SmtpSetting> smtpSetting)
         {
-            _smtpSetting = smtpSetting;
+            _smtpSetting = smtpSetting.Value;
         }
 
         #region SendEmail
