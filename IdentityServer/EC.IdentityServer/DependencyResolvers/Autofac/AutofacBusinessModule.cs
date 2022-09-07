@@ -10,6 +10,7 @@ namespace EC.IdentityServer.DependencyResolvers.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<AuthManager>().As<IAuthService>().InstancePerDependency();
+            builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerDependency();
 
 
 

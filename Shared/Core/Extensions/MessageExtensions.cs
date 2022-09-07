@@ -37,6 +37,14 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region NotCorrect
+        public static string NotCorrect(string entity)
+        {
+            var value = $"{entity} not correct !";
+            return value;
+        }
+        #endregion
+
         #region Added
         public static string Added(string entity)
         {
@@ -232,6 +240,12 @@ namespace Core.Extensions
         #endregion
         #region PasswordNotCorrect
         public static string PasswordNotCorrect() => "Password not correct";
+        #endregion
+        #region AccountNotActivated
+        public static string AccountNotActivated() => "Your code is true but an error occured while activating your account";
+        #endregion
+        #region AccountActivated
+        public static string AccountActivated() => "Your account is activated";
         #endregion
         #region RefreshTokenNotCreated
         public static string RefreshTokenNotCreated() => "Refresh token not created";

@@ -63,7 +63,10 @@ builder.Services.AddIdentityServer(options =>
   })
     .AddDeveloperSigningCredential(); //Sertifika yoksa
 #endregion
-#region SeedData - Settings
+#region IOptions
+builder.Services.AddOptionsPattern(Configuration);
+#endregion
+#region SeedData
 await AppIdentityDbContextSeed.AddUserSettingsAsync(identityConnString);
 await ConfigurationDbContextSeed.AddIdentityConfigurationSettingsAsync(Configuration);
 #endregion

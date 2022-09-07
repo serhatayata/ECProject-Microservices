@@ -6,6 +6,7 @@
         public static string Card = "Card";
         public static string PhoneNumber = "PhoneNumber";
         public static string Email = "Email";
+        public static string Code = "Code";
         public static string Password = "Password";
     }
 }

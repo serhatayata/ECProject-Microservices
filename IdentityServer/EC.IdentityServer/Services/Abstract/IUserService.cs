@@ -6,7 +6,7 @@ namespace EC.IdentityServer.Services.Abstract
     {
         Task<IResult> ChangePasswordAsync(ChangePasswordDto model);
         Task<IResult> ActivateAccountSendSms(string userId);
-        Task<IResult> ActivateAccount(string userId);
+        Task<IResult> ActivateAccount(string userId, string code);
 
 
     }

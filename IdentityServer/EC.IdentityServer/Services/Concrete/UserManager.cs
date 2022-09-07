@@ -4,9 +4,15 @@ using Core.Utilities.Results;
 using EC.IdentityServer.Constants;
 using EC.IdentityServer.Dtos;
 using EC.IdentityServer.Models.Identity;
+using EC.IdentityServer.Models.Settings;
 using EC.IdentityServer.Services.Abstract;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using System.Net.Mail;
+using System.Net;
 using IResult = Core.Utilities.Results.IResult;
+using EC.IdentityServer.Models.Email;
+using MimeKit;
 
 namespace EC.IdentityServer.Services.Concrete
 {
@@ -15,14 +21,16 @@ namespace EC.IdentityServer.Services.Concrete
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailSender _emailSender;
         private IPasswordHasher<AppUser> _passwordHasher;
         private readonly IMapper _mapper;
 
-        public UserManager(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager, IPasswordHasher<AppUser> passwordHasher, IMapper mapper)
+        public UserManager(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager, IPasswordHasher<AppUser> passwordHasher, IMapper mapper, IEmailSender emailSender)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
             _passwordHasher = passwordHasher;
             _mapper = mapper;
         }
@@ -53,13 +61,50 @@ namespace EC.IdentityServer.Services.Concrete
         #region ActivateAccountSendSms
         public async Task<IResult> ActivateAccountSendSms(string userId)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(PropertyNames.Email));
+            }
+            Random rnd = new();
+            int randomNumber = rnd.Next(100000, 99999);
+
+            var message = new SmtpMessage(
+                new List<string>() { user.Email },
+                "Account Activation",
+                randomNumber.ToString()
+                );
+
+            //userId_rndnumber will be added to redis cache
+
+            _emailSender.SendSmtpEmail(message);
+
+            return new SuccessResult();
         }
         #endregion
         #region ActivateAccount
-        public async Task<IResult> ActivateAccount(string userId)
+        public async Task<IResult> ActivateAccount(string userId, string code)
         {
-            throw new NotImplementedException();
+            //Check redis cache if userId_rndnumber exists and true
+            var cacheValue = 
+            if(cacheValue == null)
+            {
+                return new ErrorResult(MessageExtensions.NotCorrect(PropertyNames.Code));
+            }
+
+            //IF true
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(PropertyNames.Email));
+            }
+            user.Status = (int)UserStatus.Validated;
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                return new ErrorResult(MessageExtensions.AccountNotActivated());
+            }
+            return new SuccessResult(MessageExtensions.AccountActivated());
         }
         #endregion
 
