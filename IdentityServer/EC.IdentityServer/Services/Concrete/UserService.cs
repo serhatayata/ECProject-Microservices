@@ -1,19 +1,14 @@
 ﻿using AutoMapper;
+using Core.CrossCuttingConcerns.Caching.Redis;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.IdentityServer.Constants;
 using EC.IdentityServer.Dtos;
+using EC.IdentityServer.Models.Email;
 using EC.IdentityServer.Models.Identity;
-using EC.IdentityServer.Models.Settings;
 using EC.IdentityServer.Services.Abstract;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using System.Net.Mail;
-using System.Net;
 using IResult = Core.Utilities.Results.IResult;
-using EC.IdentityServer.Models.Email;
-using MimeKit;
-using Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace EC.IdentityServer.Services.Concrete
 {
@@ -70,7 +65,7 @@ namespace EC.IdentityServer.Services.Concrete
                 return new ErrorResult(MessageExtensions.NotFound(PropertyNames.Email));
             }
             Random rnd = new();
-            int randomNumber = rnd.Next(100000, 99999);
+            int randomNumber = rnd.Next(100000, 999999);
 
             var message = new SmtpMessage(
                 new List<string>() { user.Email },
@@ -78,7 +73,7 @@ namespace EC.IdentityServer.Services.Concrete
                 randomNumber.ToString()
                 );
 
-            await _redisCacheManager.SetAsync($"activation_{userId}", randomNumber.ToString());
+            await _redisCacheManager.SetAsync($"activation_{userId}", randomNumber.ToString(),StaticValues.sendActivationCodeExpirationTime);
 
             _emailSender.SendSmtpEmail(message);
 
