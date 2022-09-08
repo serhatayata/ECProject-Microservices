@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace EC.IdentityServer.Extensions
@@ -7,12 +8,12 @@ namespace EC.IdentityServer.Extensions
     {
         public static string GetTokenTypeValue(string token, string type)
         {
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            var tokenExt = token.Substring(7);
-            JwtSecurityToken securityToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
-            IEnumerable<Claim> claims = securityToken.Claims;
+            var handler = new JwtSecurityTokenHandler();
+            var authHeader = token.Replace("Bearer ", "");
+            var jsonToken = handler.ReadToken(authHeader);
+            var tokenS = handler.ReadToken(authHeader) as JwtSecurityToken;
 
-            var value = claims.FirstOrDefault(x => x.Type == type)?.Value;
+            var value = tokenS?.Claims.FirstOrDefault(x => x.Type == type)?.Value;
             return value;
         }
     }

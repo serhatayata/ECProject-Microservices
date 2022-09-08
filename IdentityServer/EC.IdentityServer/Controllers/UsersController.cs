@@ -22,12 +22,12 @@ namespace EC.IdentityServer.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly IUserService _userManager;
+        private readonly IUserService _userService;
 
-        public UsersController(IAuthService authService,IUserService userManager)
+        public UsersController(IAuthService authService,IUserService userService)
         {
             _authService = authService;
-            _userManager = userManager;
+            _userService = userService;
         }
 
         #region Register
@@ -51,7 +51,7 @@ namespace EC.IdentityServer.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest,new ErrorResult(MessageExtensions.NotFound(PropertyNames.User)));
             }
-            var result = await _userManager.ActivateAccountSendSms(userId);
+            var result = await _userService.ActivateAccountSendSms(userId);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
