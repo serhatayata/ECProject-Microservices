@@ -7,6 +7,7 @@ using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Entities;
 using EC.Services.ProductAPI.Repositories.Abstract;
 using MongoDB.Driver;
+using Nest;
 using IResult = Core.Utilities.Results.IResult;
 
 namespace EC.Services.ProductAPI.Repositories.Concrete
@@ -22,7 +23,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             _mapper = mapper;
         }
 
-        #region Create
+        #region CreateAsync
         public async Task<IResult> CreateAsync(ProductAddDto entity)
         {
             #region Link
@@ -49,7 +50,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             return new SuccessResult(MessageExtensions.Added(ProductEntities.Product));
         }
         #endregion
-        #region Update
+        #region UpdateAsync
         public async Task<IResult> UpdateAsync(ProductUpdateDto entity)
         {
             var productExists = await (await _context.Products.FindAsync(x => x.Id == entity.Id)).FirstOrDefaultAsync();
@@ -79,7 +80,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             return new ErrorResult(MessageExtensions.NotUpdated(ProductEntities.Product));
         }
         #endregion
-        #region Delete
+        #region DeleteAsync
         public async Task<IResult> DeleteAsync(string id)
         {
             var filter = Builders<Product>.Filter.Eq(m => m.Id, id);
@@ -91,29 +92,52 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             return new ErrorResult(MessageExtensions.NotDeleted(ProductEntities.Product));
         }
         #endregion
-        #region Get
+        #region GetAsync
         public async Task<DataResult<ProductDto>> GetAsync(string id)
         {
-
-            throw new NotImplementedException();
+            var result = await _context.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
+            if (result != null)
+            {
+                var product = _mapper.Map<ProductDto>(result);
+                return new SuccessDataResult<ProductDto>(product);
+            }
+            return new ErrorDataResult<ProductDto>(MessageExtensions.NotFound(ProductEntities.Product));
         }
         #endregion
-        #region GetAll
+        #region GetAllAsync
         public async Task<DataResult<List<ProductDto>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var result = await _context.Products.Find(p => true).ToListAsync();
+            if (result != null)
+            {
+                var product = _mapper.Map<List<ProductDto>>(result);
+                return new SuccessDataResult<List<ProductDto>>(product);
+            }
+            return new ErrorDataResult<List<ProductDto>>(MessageExtensions.NotFound(ProductEntities.Product));
         }
         #endregion
-        #region GetProductByCategoryId
-        public async Task<List<ProductDto>> GetProductByCategoryIdAsync(int categoryId)
+        #region GetProductByCategoryIdAsync
+        public async Task<DataResult<List<ProductDto>>> GetProductsByCategoryIdAsync(int categoryId)
         {
-            throw new NotImplementedException();
+            var result = await _context.Products.Find(p => p.CategoryId == categoryId).ToListAsync();
+            if (result != null)
+            {
+                var product = _mapper.Map<List<ProductDto>>(result);
+                return new SuccessDataResult<List<ProductDto>>(product);
+            }
+            return new ErrorDataResult<List<ProductDto>>(MessageExtensions.NotFound(ProductEntities.Product));
         }
         #endregion
-        #region GetProductByName
-        public async Task<List<ProductDto>> GetProductByNameAsync(string name)
+        #region GetProductByNameAsync
+        public async Task<DataResult<List<ProductDto>>> GetProductsByNameAsync(string name)
         {
-            throw new NotImplementedException();
+            var result = await _context.Products.Find(p => p.Name.Contains(name)).ToListAsync();
+            if (result != null)
+            {
+                var product = _mapper.Map<List<ProductDto>>(result);
+                return new SuccessDataResult<List<ProductDto>>(product);
+            }
+            return new ErrorDataResult<List<ProductDto>>(MessageExtensions.NotFound(ProductEntities.Product));
         }
         #endregion
 

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EC.Services.ProductAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("product/api/[controller]")]
     [ApiController]
     public class ProductVariantsController : ControllerBase
     {
