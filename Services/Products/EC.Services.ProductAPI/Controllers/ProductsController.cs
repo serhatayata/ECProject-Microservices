@@ -1,4 +1,5 @@
-﻿using EC.Services.ProductAPI.Dtos.ProductDtos;
+﻿using EC.Services.ProductAPI.Dtos.BaseDtos;
+using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Repositories.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,15 @@ namespace EC.Services.ProductAPI.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await _productRepository.GetAllAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region GetAllAsync
+        [HttpGet]
+        [Route("getall-paging")]
+        public async Task<IActionResult> GetAllPagingAsync([FromQuery]PagingDto model)
+        {
+            var result = await _productRepository.GetAllPagingAsync(model.Page,model.PageSize);
             return StatusCode(result.StatusCode, result);
         }
         #endregion

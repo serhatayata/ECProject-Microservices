@@ -95,7 +95,8 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         #region GetAsync
         public async Task<DataResult<ProductDto>> GetAsync(string id)
         {
-            var result = await _context.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
+            var query = await _context.Products.FindAsync(p => p.Id == id && p.Status);
+            var result = await query.FirstOrDefaultAsync();
             if (result != null)
             {
                 var product = _mapper.Map<ProductDto>(result);
@@ -107,7 +108,20 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         #region GetAllAsync
         public async Task<DataResult<List<ProductDto>>> GetAllAsync()
         {
-            var result = await _context.Products.Find(p => true).ToListAsync();
+            var query = await _context.Products.FindAsync(p => p.Status);
+            var result = await query.ToListAsync();
+            if (result != null)
+            {
+                var product = _mapper.Map<List<ProductDto>>(result);
+                return new SuccessDataResult<List<ProductDto>>(product);
+            }
+            return new ErrorDataResult<List<ProductDto>>(MessageExtensions.NotFound(ProductEntities.Product));
+        }
+        #endregion
+        #region GetAllPagingAsync
+        public async Task<DataResult<List<ProductDto>>> GetAllPagingAsync(int page=1,int pageSize=8)
+        {
+            var result = _context.ProductsAsQueryable.Where(x => x.Status).OrderByDescending(x => x.Id).Skip((page - 1) * pageSize).Take(pageSize);
             if (result != null)
             {
                 var product = _mapper.Map<List<ProductDto>>(result);
@@ -119,7 +133,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         #region GetProductByCategoryIdAsync
         public async Task<DataResult<List<ProductDto>>> GetProductsByCategoryIdAsync(int categoryId)
         {
-            var result = await _context.Products.Find(p => p.CategoryId == categoryId).ToListAsync();
+            var result = await _context.Products.Find(p => p.CategoryId == categoryId && p.Status).ToListAsync();
             if (result != null)
             {
                 var product = _mapper.Map<List<ProductDto>>(result);
@@ -131,7 +145,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         #region GetProductByNameAsync
         public async Task<DataResult<List<ProductDto>>> GetProductsByNameAsync(string name)
         {
-            var result = await _context.Products.Find(p => p.Name.Contains(name)).ToListAsync();
+            var result = await _context.Products.Find(p => p.Name.Contains(name) && p.Status).ToListAsync();
             if (result != null)
             {
                 var product = _mapper.Map<List<ProductDto>>(result);

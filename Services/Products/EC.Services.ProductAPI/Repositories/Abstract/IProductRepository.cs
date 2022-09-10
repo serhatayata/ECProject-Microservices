@@ -8,5 +8,7 @@ namespace EC.Services.ProductAPI.Repositories.Abstract
     {
         Task<DataResult<List<ProductDto>>> GetProductsByNameAsync(string name);
         Task<DataResult<List<ProductDto>>> GetProductsByCategoryIdAsync(int categoryId);
+        Task<DataResult<List<ProductDto>>> GetAllPagingAsync(int page = 1, int pageSize = 8);
+
     }
 }
