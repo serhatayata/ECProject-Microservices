@@ -1,15 +1,21 @@
+using EC.Services.ProductAPI.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager Configuration = builder.Configuration;
+IWebHostEnvironment Environment = builder.Environment;
 
-// Add services to the container.
-
+#region Services
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+#region Settings
+builder.Services.AddSettings(Configuration);
+#endregion
 
 var app = builder.Build();
+#endregion
 
-// Configure the HTTP request pipeline.
+#region Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -23,3 +29,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+#endregion
