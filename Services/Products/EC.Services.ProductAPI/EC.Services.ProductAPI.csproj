@@ -7,18 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.4.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="MongoDB.Bson" Version="2.17.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\Abstract\" />
-    <Folder Include="Repositories\Concrete\" />
+    <ProjectReference Include="..\..\..\Shared\Core\Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\Core\Core.csproj" />
+    <Folder Include="Dtos\StockDtos\" />
+    <Folder Include="Dtos\VariantDtos\" />
+    <Folder Include="Dtos\ProductVariantDtos\" />
   </ItemGroup>
 
 </Project>

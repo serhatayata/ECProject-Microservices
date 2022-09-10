@@ -60,7 +60,8 @@ namespace EC.Services.ProductAPI.Extensions
                     Line=1,
                     Link=SeoLinkExtensions.GenerateSlug("product-1"),
                     Price=500.00M,
-                    Status=true
+                    Status=true,
+                    CreatedAt=DateTime.Now
                 },
                 new()
                 {
@@ -69,7 +70,8 @@ namespace EC.Services.ProductAPI.Extensions
                     Line=2,
                     Link=SeoLinkExtensions.GenerateSlug("product-2"),
                     Price=400.00M,
-                    Status=true
+                    Status=true,
+                    CreatedAt=DateTime.Now
                 },
                 new()
                 {
@@ -78,7 +80,8 @@ namespace EC.Services.ProductAPI.Extensions
                     Line=3,
                     Link=SeoLinkExtensions.GenerateSlug("product-3"),
                     Price=800.00M,
-                    Status=true
+                    Status=true,
+                    CreatedAt=DateTime.Now
                 },
             };
         }

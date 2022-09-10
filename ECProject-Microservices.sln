@@ -5,6 +5,7 @@ VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionsItems", "SolutionsItems", "{17F40608-071A-4C0F-AE5C-D679ACC71475}"
 	ProjectSection(SolutionItems) = preProject
+		Databases.txt = Databases.txt
 		Ports.txt = Ports.txt
 	EndProjectSection
 EndProject

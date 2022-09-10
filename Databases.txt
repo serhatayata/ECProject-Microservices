@@ -1,0 +1,6 @@
+Product --> MongoDB
+Baskets --> Redis
+Categories --> MSSQL
+Orders --> MSSQL
+Payments --> MSSQL
+Discount --> MSSQL
