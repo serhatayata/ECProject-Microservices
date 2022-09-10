@@ -39,6 +39,8 @@ namespace Core.Extensions
 
         private static string RemoveAccent(string text)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             byte[] bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(text);
             return System.Text.Encoding.ASCII.GetString(bytes);
         }

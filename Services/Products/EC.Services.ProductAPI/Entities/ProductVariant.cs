@@ -4,7 +4,7 @@ namespace EC.Services.ProductAPI.Entities
 {
     public class ProductVariant:IEntity
     {
-        public int ProductId { get; set; }
-        public int VariantId { get; set; }
+        public string ProductId { get; set; }
+        public string VariantId { get; set; }
     }
 }

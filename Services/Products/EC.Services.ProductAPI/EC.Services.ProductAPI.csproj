@@ -17,4 +17,8 @@
     <Folder Include="Repositories\Concrete\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Core\Core.csproj" />
+  </ItemGroup>
+
 </Project>

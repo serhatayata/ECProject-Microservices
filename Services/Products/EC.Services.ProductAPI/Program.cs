@@ -1,4 +1,5 @@
 using EC.Services.ProductAPI.Extensions;
+using EC.Services.ProductAPI.Settings.Abstract;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
@@ -11,7 +12,12 @@ builder.Services.AddSwaggerGen();
 #region Settings
 builder.Services.AddSettings(Configuration);
 #endregion
-
+#region SeedData
+var sp = builder.Services.BuildServiceProvider();
+var productDatabaseSettings = sp.GetRequiredService<IProductDatabaseSettings>();
+SeedDataExtensions.Configure(productDatabaseSettings);
+SeedDataExtensions.AddSeedData();
+#endregion
 var app = builder.Build();
 #endregion
 
