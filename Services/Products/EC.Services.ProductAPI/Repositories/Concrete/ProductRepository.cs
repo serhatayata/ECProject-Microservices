@@ -94,6 +94,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         #region Get
         public async Task<DataResult<ProductDto>> GetAsync(string id)
         {
+
             throw new NotImplementedException();
         }
         #endregion
