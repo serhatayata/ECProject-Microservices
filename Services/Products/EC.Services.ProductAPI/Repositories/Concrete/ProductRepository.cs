@@ -6,6 +6,7 @@ using EC.Services.ProductAPI.Data.Abstract;
 using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Entities;
 using EC.Services.ProductAPI.Repositories.Abstract;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using Nest;
 using IResult = Core.Utilities.Results.IResult;
@@ -42,7 +43,8 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             productAdded.Status = true;
 
             await _context.Products.InsertOneAsync(productAdded);
-            var checkProduct = await (await _context.Products.FindAsync(x => x.Id == productAdded.Id)).AnyAsync();
+            var checkProduct = await _context.ProductsAsQueryable.AnyAsync(x => x.Id == productAdded.Id);
+            //var checkProduct = await (await _context.Products.FindAsync(x => x.Id == productAdded.Id)).AnyAsync();
             if(checkProduct)
             {
                 return new ErrorResult(MessageExtensions.NotAdded(ProductEntities.Product));
@@ -53,7 +55,8 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         #region UpdateAsync
         public async Task<IResult> UpdateAsync(ProductUpdateDto entity)
         {
-            var productExists = await (await _context.Products.FindAsync(x => x.Id == entity.Id)).FirstOrDefaultAsync();
+            //var productExists = await (await _context.Products.FindAsync(x => x.Id == entity.Id)).FirstOrDefaultAsync();
+            var productExists = await _context.ProductsAsQueryable.FirstOrDefaultAsync(x => x.Id == entity.Id);
             if (productExists == null)
             {
                 return new ErrorResult(MessageExtensions.NotFound(ProductEntities.Product));

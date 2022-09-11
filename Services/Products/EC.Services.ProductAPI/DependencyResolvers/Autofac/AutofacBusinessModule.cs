@@ -12,10 +12,15 @@ namespace EC.Services.ProductAPI.DependencyResolvers.Autofac
         {
             #region Services - AddScoped
             builder.RegisterType<ProductRepository>().As<IProductRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductVariantRepository>().As<IProductVariantRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<VariantRepository>().As<IVariantRepository>().InstancePerLifetimeScope();
             #endregion
             #region DbContext
             builder.RegisterType<ProductContext>().As<IProductContext>().SingleInstance();
             #endregion
+
+
+
             //AddTransient
             //builder.RegisterType<EfCategoryDal>().As<ICategoryDal>().InstancePerDependency();
         }

@@ -22,8 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Dtos\StockDtos\" />
-    <Folder Include="Dtos\VariantDtos\" />
-    <Folder Include="Dtos\ProductVariantDtos\" />
   </ItemGroup>
 
 </Project>
