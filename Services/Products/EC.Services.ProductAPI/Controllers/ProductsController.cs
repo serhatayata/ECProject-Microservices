@@ -62,7 +62,7 @@ namespace EC.Services.ProductAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
         #endregion
-        #region GetAllAsync
+        #region GetAllPagingAsync
         [HttpGet]
         [Route("getall-paging")]
         public async Task<IActionResult> GetAllPagingAsync([FromQuery]PagingDto model)

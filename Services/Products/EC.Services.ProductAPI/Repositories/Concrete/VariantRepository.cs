@@ -66,9 +66,9 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             var updateResult = await _context.Variants.ReplaceOneAsync(x=>x.Id == variantUpdated.Id, variantUpdated);
             if (updateResult.IsAcknowledged && updateResult.ModifiedCount > 0)
             {
-                return new SuccessResult(MessageExtensions.Updated(ProductEntities.Product));
+                return new SuccessResult(MessageExtensions.Updated(ProductEntities.Variant));
             }
-            return new ErrorResult(MessageExtensions.NotUpdated(ProductEntities.Product));
+            return new ErrorResult(MessageExtensions.NotUpdated(ProductEntities.Variant));
         }
         #endregion
         #region DeleteAsync
@@ -118,7 +118,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
                 var product = _mapper.Map<List<VariantDto>>(result);
                 return new SuccessDataResult<List<VariantDto>>(product);
             }
-            return new ErrorDataResult<List<VariantDto>>(MessageExtensions.NotFound(ProductEntities.Product));
+            return new ErrorDataResult<List<VariantDto>>(MessageExtensions.NotFound(ProductEntities.Variant));
         }
         #endregion
 

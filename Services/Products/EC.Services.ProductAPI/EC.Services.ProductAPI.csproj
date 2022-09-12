@@ -20,8 +20,4 @@
     <ProjectReference Include="..\..\..\Shared\Core\Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\StockDtos\" />
-  </ItemGroup>
-
 </Project>

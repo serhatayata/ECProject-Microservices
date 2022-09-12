@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Dtos.ProductVariantDtos;
+using EC.Services.ProductAPI.Dtos.StockDtos;
 using EC.Services.ProductAPI.Dtos.VariantDtos;
 using EC.Services.ProductAPI.Entities;
 
@@ -27,6 +28,11 @@ namespace EC.Services.ProductAPI.Mappings
             CreateMap<ProductVariant, ProductVariantDto>().ReverseMap();
             CreateMap<ProductVariant, ProductVariantGetDto>().ReverseMap();
             CreateMap<ProductVariant, ProductVariantDeleteDto>().ReverseMap();
+            #endregion
+            #region Stock
+            CreateMap<Stock, StockDto>().ReverseMap();
+            CreateMap<Stock, StockAddDto>().ReverseMap();
+            CreateMap<Stock, StockUpdateDto>().ReverseMap();
             #endregion
         }
     }
