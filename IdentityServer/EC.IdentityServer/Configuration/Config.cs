@@ -307,7 +307,7 @@ namespace EC.IdentityServer.Configuration
                     ClientId="product_client",
                     ClientSecrets= {new Secret("product_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "product_full", "product_write", "product_read" }
+                    AllowedScopes={ "product_full", "product_write", "product_read" },
                 },
 	            #endregion
 

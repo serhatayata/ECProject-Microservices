@@ -1,6 +1,7 @@
 ﻿using EC.Services.ProductAPI.Dtos.BaseDtos;
 using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Repositories.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,6 +57,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region GetAllAsync
         [HttpGet]
         [Route("getall")]
+        [Authorize(Policy = "ReadProduct,FullProduct")]
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await _productRepository.GetAllAsync();
