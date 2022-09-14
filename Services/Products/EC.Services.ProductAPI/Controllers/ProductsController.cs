@@ -1,4 +1,5 @@
-﻿using EC.Services.ProductAPI.Dtos.BaseDtos;
+﻿using EC.Services.ProductAPI.Attributes;
+using EC.Services.ProductAPI.Dtos.BaseDtos;
 using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Repositories.Abstract;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +22,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region CreateAsync
         [HttpPost]
         [Route("create")]
+        [AuthorizeAnyPolicy("WriteProduct,FullProduct")]
         public async Task<IActionResult> CreateAsync(ProductAddDto model)
         {
            var result= await _productRepository.CreateAsync(model);
@@ -30,6 +32,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region UpdateAsync
         [HttpPut]
         [Route("update")]
+        [AuthorizeAnyPolicy("WriteProduct,FullProduct")]
         public async Task<IActionResult> UpdateAsync(ProductUpdateDto model)
         {
             var result = await _productRepository.UpdateAsync(model);
@@ -39,6 +42,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region DeleteAsync
         [HttpDelete]
         [Route("delete")]
+        [AuthorizeAnyPolicy("WriteProduct,FullProduct")]
         public async Task<IActionResult> DeleteAsync(string id)
         {
             var result = await _productRepository.DeleteAsync(id);
@@ -48,6 +52,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region GetAsync
         [HttpGet]
         [Route("get")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
         public async Task<IActionResult> GetAsync([FromQuery]string id)
         {
             var result = await _productRepository.GetAsync(id);
@@ -57,7 +62,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region GetAllAsync
         [HttpGet]
         [Route("getall")]
-        [Authorize(Policy = "ReadProduct,FullProduct")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await _productRepository.GetAllAsync();
@@ -67,6 +72,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region GetAllPagingAsync
         [HttpGet]
         [Route("getall-paging")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
         public async Task<IActionResult> GetAllPagingAsync([FromQuery]PagingDto model)
         {
             var result = await _productRepository.GetAllPagingAsync(model.Page,model.PageSize);
@@ -76,6 +82,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region GetProductByCategoryIdAsync
         [HttpGet]
         [Route("get-products-by-category-id")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
         public async Task<IActionResult> GetProductByCategoryIdAsync([FromQuery]int categoryId)
         {
             var result = await _productRepository.GetProductsByCategoryIdAsync(categoryId);
@@ -85,6 +92,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region GetProductByNameAsync
         [HttpGet]
         [Route("get-products-by-name")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
         public async Task<IActionResult> GetProductsByNameAsync([FromQuery]string name)
         {
             var result = await _productRepository.GetProductsByNameAsync(name);

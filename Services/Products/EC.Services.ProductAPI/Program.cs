@@ -26,12 +26,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region AUTH
 builder.Services.AddAuth(Configuration);
-
-#region Settings
+#endregion
+#region SETTINGS
 builder.Services.AddSettings(Configuration);
 #endregion
-#region SeedData
+#region SEEDDATA
 var sp = builder.Services.BuildServiceProvider();
 var productDatabaseSettings = sp.GetRequiredService<IProductDatabaseSettings>();
 SeedDataExtensions.Configure(productDatabaseSettings);
