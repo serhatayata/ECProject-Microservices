@@ -1,10 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace EC.Services.ProductAPI.Filters
+namespace Core.Utilities.Filters
 {
-    public class AuthorizeAnyPolicyFilter : IAsyncAuthorizationFilter
+    public class AuthorizeAnyPolicyFilter: IAsyncAuthorizationFilter
     {
         private readonly IAuthorizationService authorization;
         public string Policies { get; private set; }

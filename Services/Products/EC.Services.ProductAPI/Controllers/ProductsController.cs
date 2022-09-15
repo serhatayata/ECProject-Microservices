@@ -1,4 +1,4 @@
-﻿using EC.Services.ProductAPI.Attributes;
+﻿using Core.Utilities.Attributes;
 using EC.Services.ProductAPI.Dtos.BaseDtos;
 using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Repositories.Abstract;
