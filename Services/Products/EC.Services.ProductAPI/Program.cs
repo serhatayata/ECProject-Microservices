@@ -1,12 +1,12 @@
-using Autofac.Extensions.DependencyInjection;
 using Autofac;
-using EC.Services.ProductAPI.Extensions;
-using EC.Services.ProductAPI.Settings.Abstract;
+using Autofac.Extensions.DependencyInjection;
+using Core.Utilities.Security.Encryption;
 using EC.Services.ProductAPI.DependencyResolvers.Autofac;
+using EC.Services.ProductAPI.Extensions;
 using EC.Services.ProductAPI.Mappings;
-using Autofac.Core;
-using EC.Services.ProductAPI.Data.Abstract;
-using EC.Services.ProductAPI.Data.Concrete;
+using EC.Services.ProductAPI.Settings.Abstract;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
@@ -21,13 +21,18 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterMod
 #region AUTO MAPPER
 builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #endregion
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-#region Settings
+
+#region AUTH
+builder.Services.AddAuth(Configuration);
+#endregion
+#region SETTINGS
 builder.Services.AddSettings(Configuration);
 #endregion
-#region SeedData
+#region SEEDDATA
 var sp = builder.Services.BuildServiceProvider();
 var productDatabaseSettings = sp.GetRequiredService<IProductDatabaseSettings>();
 SeedDataExtensions.Configure(productDatabaseSettings);
@@ -44,7 +49,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

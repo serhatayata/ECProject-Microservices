@@ -33,6 +33,7 @@ namespace EC.IdentityServer.Controllers
         #region Register
         [HttpPost]
         [Route("register")]
+        [Authorize(LocalApi.PolicyName)] //This is used because a client we don't know will not be able to use this method...
         public async Task<IActionResult> Register(RegisterDto model)
         {
             var result = await _authService.RegisterAsync(model);
@@ -42,6 +43,7 @@ namespace EC.IdentityServer.Controllers
         #region SendActivationCodeAsync
         [HttpPost]
         [Route("send-activation-code")]
+        [Authorize(LocalApi.PolicyName)]
         public async Task<IActionResult> SendActivationCodeAsync()
         {
             string token = Request.Headers[HeaderNames.Authorization];

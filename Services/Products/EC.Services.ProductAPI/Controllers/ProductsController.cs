@@ -1,11 +1,14 @@
-﻿using EC.Services.ProductAPI.Dtos.ProductDtos;
+﻿using Core.Dtos;
+using Core.Utilities.Attributes;
+using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Repositories.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EC.Services.ProductAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("product/api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -16,24 +19,85 @@ namespace EC.Services.ProductAPI.Controllers
             _productRepository = productRepository;
         }
 
-        #region Create
+        #region CreateAsync
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> Create(ProductAddDto model)
+        [AuthorizeAnyPolicy("WriteProduct,FullProduct")]
+        public async Task<IActionResult> CreateAsync(ProductAddDto model)
         {
            var result= await _productRepository.CreateAsync(model);
             return StatusCode(result.StatusCode,result);
         }
         #endregion
-        #region Update
-        [HttpPost]
+        #region UpdateAsync
+        [HttpPut]
         [Route("update")]
-        public async Task<IActionResult> Update(ProductUpdateDto model)
+        [AuthorizeAnyPolicy("WriteProduct,FullProduct")]
+        public async Task<IActionResult> UpdateAsync(ProductUpdateDto model)
         {
             var result = await _productRepository.UpdateAsync(model);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
-
+        #region DeleteAsync
+        [HttpDelete]
+        [Route("delete")]
+        [AuthorizeAnyPolicy("WriteProduct,FullProduct")]
+        public async Task<IActionResult> DeleteAsync(string id)
+        {
+            var result = await _productRepository.DeleteAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region GetAsync
+        [HttpGet]
+        [Route("get")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
+        public async Task<IActionResult> GetAsync([FromQuery]string id)
+        {
+            var result = await _productRepository.GetAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region GetAllAsync
+        [HttpGet]
+        [Route("getall")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var result = await _productRepository.GetAllAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region GetAllPagingAsync
+        [HttpGet]
+        [Route("getall-paging")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
+        public async Task<IActionResult> GetAllPagingAsync([FromQuery]PagingDto model)
+        {
+            var result = await _productRepository.GetAllPagingAsync(model.Page,model.PageSize);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region GetProductByCategoryIdAsync
+        [HttpGet]
+        [Route("get-products-by-category-id")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
+        public async Task<IActionResult> GetProductByCategoryIdAsync([FromQuery]int categoryId)
+        {
+            var result = await _productRepository.GetProductsByCategoryIdAsync(categoryId);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region GetProductByNameAsync
+        [HttpGet]
+        [Route("get-products-by-name")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
+        public async Task<IActionResult> GetProductsByNameAsync([FromQuery]string name)
+        {
+            var result = await _productRepository.GetProductsByNameAsync(name);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
     }
 }
