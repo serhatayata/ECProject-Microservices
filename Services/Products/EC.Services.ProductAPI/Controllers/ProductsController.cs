@@ -1,5 +1,5 @@
-﻿using Core.Utilities.Attributes;
-using EC.Services.ProductAPI.Dtos.BaseDtos;
+﻿using Core.Dtos;
+using Core.Utilities.Attributes;
 using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Repositories.Abstract;
 using Microsoft.AspNetCore.Authorization;

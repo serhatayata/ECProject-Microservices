@@ -1,5 +1,6 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
+using static IdentityServer4.IdentityServerConstants;
 
 namespace EC.IdentityServer.Configuration
 {
@@ -214,21 +215,16 @@ namespace EC.IdentityServer.Configuration
                         new Secret("mvc_client_secret".Sha256())
                     },
                     ClientUri = $"{clientsUrl["Mvc"]}", // public uri of the client
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     AllowAccessTokensViaBrowser = false,
                     RequireConsent = false,
                     AllowOfflineAccess = true,
                     AlwaysIncludeUserClaimsInIdToken = true,
-                    RedirectUris = new List<string>
-                    {
-                        $"{clientsUrl["Mvc"]}/signin-oidc"
-                    },
-                    PostLogoutRedirectUris = new List<string>
-                    {
-                        $"{clientsUrl["Mvc"]}/signout-callback-oidc"
-                    },
+                    RedirectUris = new List<string>{$"{clientsUrl["Mvc"]}/signin-oidc"},
+                    PostLogoutRedirectUris = new List<string>{$"{clientsUrl["Mvc"]}/signout-callback-oidc"},
                     AllowedScopes = new List<string>
                     {
+                        IdentityServerConstants.LocalApi.ScopeName,
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.OfflineAccess,
@@ -237,7 +233,9 @@ namespace EC.IdentityServer.Configuration
                         "orders.signalrhub",
                     },
                     AccessTokenLifetime = 60*60*2, // 2 hours
-                    IdentityTokenLifetime= 60*60*2 // 2 hours
+                    IdentityTokenLifetime= 60*60*2, // 2 hours
+                    RefreshTokenExpiration=TokenExpiration.Absolute,
+                    RefreshTokenUsage=TokenUsage.OneTimeOnly   
                 },
 	            #endregion
                 #region Base Client

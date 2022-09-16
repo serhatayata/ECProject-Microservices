@@ -1,4 +1,4 @@
-﻿using EC.Services.ProductAPI.Dtos.BaseDtos;
+﻿using Core.Dtos;
 using EC.Services.ProductAPI.Dtos.VariantDtos;
 using EC.Services.ProductAPI.Repositories.Abstract;
 using Microsoft.AspNetCore.Http;

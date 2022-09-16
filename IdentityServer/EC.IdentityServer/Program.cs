@@ -42,6 +42,8 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
 .AddEntityFrameworkStores<AppIdentityDbContext>()
 .AddDefaultTokenProviders();
 
+builder.Services.AddLocalApiAuthentication();
+
 builder.Services.AddIdentityServer(options =>
 {
     options.Events.RaiseErrorEvents = true;

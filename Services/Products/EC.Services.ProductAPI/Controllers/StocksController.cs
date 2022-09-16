@@ -1,4 +1,4 @@
-﻿using EC.Services.ProductAPI.Dtos.BaseDtos;
+﻿using Core.Dtos;
 using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Dtos.StockDtos;
 using EC.Services.ProductAPI.Repositories.Abstract;

@@ -13,17 +13,6 @@ namespace EC.Services.ProductAPI.Extensions
                 options.RequireHttpsMetadata = false;
                 options.Authority = tokenOptions.Issuer;
                 options.Audience = tokenOptions.Audience;
-                //options.TokenValidationParameters = new TokenValidationParameters
-                //{
-                //    ValidateIssuer = true,
-                //    ValidateAudience = true,
-                //    ValidateLifetime = false,
-                //    ValidIssuer = tokenOptions.Issuer,
-                //    ValidAudience = tokenOptions.Audience,
-                //    ValidateIssuerSigningKey = true,
-                //    IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
-                //    ClockSkew = TimeSpan.Zero
-                //};
             });
 
             services.AddAuthorization(_ =>
