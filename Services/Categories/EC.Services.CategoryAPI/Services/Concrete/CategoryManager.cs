@@ -29,6 +29,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
             _mapper = mapper;
         }
 
+
         #region AddAsync
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("ICategoryService", Priority = (int)CacheItemPriority.High)]
