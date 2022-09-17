@@ -17,15 +17,18 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterMod
 #region AUTO MAPPER
 builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #endregion
-
+#region CONTROLLERS
 builder.Services.AddControllers();
+#endregion
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 #region AuthExtensions
 builder.Services.AddAuth(Configuration);
 #endregion
-
+#region SeedData
+builder.Services.AddSeedData(Configuration);
+#endregion
 #endregion
 
 #region Pipelines
