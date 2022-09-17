@@ -80,7 +80,7 @@ namespace EC.Services.CategoryAPI.Data.Concrete.Dapper
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             { 
                 connection.Open();
-                var result = await connection.QueryAsync<Category>(sql, new { Page = page, PageSize = pageSize });
+                var result = await connection.QueryAsync<Category>(sql, new { Page = page-1, PageSize = pageSize });
                 return result.ToList();
             }
         }
@@ -104,7 +104,7 @@ namespace EC.Services.CategoryAPI.Data.Concrete.Dapper
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 connection.Open();
-                var result = await connection.QueryAsync<Category>(sql, new { ParentId = id, Page=page, PageSize=pageSize });
+                var result = await connection.QueryAsync<Category>(sql, new { ParentId = id, Page=page-1, PageSize=pageSize });
                 return result.ToList();
             }
         }
@@ -152,7 +152,7 @@ namespace EC.Services.CategoryAPI.Data.Concrete.Dapper
             using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 connection.Open();
-                var result = await connection.QueryAsync<Category>(sql, new { Name = $"%{name}%", Page=page, PageSize=pageSize });
+                var result = await connection.QueryAsync<Category>(sql, new { Name = $"%{name}%", Page=page - 1, PageSize=pageSize });
                 return result.ToList();
             }
         }

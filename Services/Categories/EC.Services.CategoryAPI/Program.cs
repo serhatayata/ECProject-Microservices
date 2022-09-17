@@ -1,5 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Core.CrossCuttingConcerns.Caching.Redis;
+using Core.DependencyResolvers;
+using Core.Extensions;
+using Core.Utilities.IoC;
 using EC.Services.CategoryAPI.DependencyResolvers.Autofac;
 using EC.Services.CategoryAPI.Extensions;
 using EC.Services.CategoryAPI.Mappings;
@@ -20,9 +24,15 @@ builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #region CONTROLLERS
 builder.Services.AddControllers();
 #endregion
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region CORE MODULE
+builder.Services.AddDependencyResolvers(new ICoreModule[] {
+                new CoreModule()
+            });
+#endregion
 #region AuthExtensions
 builder.Services.AddAuth(Configuration);
 #endregion
@@ -40,8 +50,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+#region StaticFiles
+app.UseStaticFiles();
+#endregion
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

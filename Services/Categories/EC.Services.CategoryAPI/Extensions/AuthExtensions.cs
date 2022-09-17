@@ -22,9 +22,21 @@ namespace EC.Services.CategoryAPI.Extensions
 
             services.AddAuthorization(_ =>
             {
-                _.AddPolicy("ReadCategory", policy => policy.RequireClaim("scope", "category_read"));
-                _.AddPolicy("WriteCategory", policy => policy.RequireClaim("scope", "category_write"));
-                _.AddPolicy("FullCategory", policy => policy.RequireClaim("scope", "category_full"));
+                _.AddPolicy("ReadCategory", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "category_read");
+                });
+                _.AddPolicy("WriteCategory", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "category_write");
+                });
+                _.AddPolicy("FullCategory", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "category_full");
+                });
             });
         }
     }

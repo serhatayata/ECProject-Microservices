@@ -13,7 +13,7 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
     public class RedisCacheManager : IRedisCacheManager, IDisposable
     {
         private readonly ConnectionMultiplexer _client;
-        private const string RedisDbName = "MemoryCache1:";
+        private const string RedisDbName = "ECProject:";
         private readonly string _connectionString;
         private readonly ConfigurationOptions _configurationOptions;
 

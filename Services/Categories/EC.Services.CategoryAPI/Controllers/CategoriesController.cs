@@ -2,6 +2,7 @@
 using Core.Utilities.Attributes;
 using EC.Services.CategoryAPI.Dtos.CategoryDtos;
 using EC.Services.CategoryAPI.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

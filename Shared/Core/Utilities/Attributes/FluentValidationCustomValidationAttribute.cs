@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Utilities.Results;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
@@ -19,16 +20,11 @@ namespace Core.Utilities.Attributes
                         .Select(v => v.ErrorMessage)
                         .ToList();
 
-                var responseObj = new
-                {
-                    Code = 123456,
-                    Message = "One or more validation errors occurred.",
-                    Errors = errors
-                };
+                var responseObj = new ErrorResult(errors);
 
                 context.Result = new JsonResult(responseObj)
                 {
-                    StatusCode = 200
+                    StatusCode = 400
                 };
             }
         }

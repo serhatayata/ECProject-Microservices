@@ -1,6 +1,7 @@
 ﻿using Core.Utilities.Attributes;
 using EC.Services.CategoryAPI.Validations;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace EC.Services.CategoryAPI.Extensions
@@ -18,6 +19,10 @@ namespace EC.Services.CategoryAPI.Extensions
                 v.RegisterValidatorsFromAssemblyContaining<CategoryUpdateDtoValidator>();
             });
 
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
         }
     }
 }

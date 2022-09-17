@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Nest;
 
 namespace EC.Services.ProductAPI.Extensions
 {
@@ -17,9 +18,21 @@ namespace EC.Services.ProductAPI.Extensions
 
             services.AddAuthorization(_ =>
             {
-                _.AddPolicy("ReadProduct", policy => policy.RequireClaim("scope", "product_read"));
-                _.AddPolicy("WriteProduct", policy => policy.RequireClaim("scope", "product_write"));
-                _.AddPolicy("FullProduct", policy => policy.RequireClaim("scope", "product_full"));
+                _.AddPolicy("ReadProduct", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "product_read");
+                });
+                _.AddPolicy("WriteProduct", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "product_write");
+                });
+                _.AddPolicy("FullProduct", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "product_full");
+                });
             });
         }
     }
