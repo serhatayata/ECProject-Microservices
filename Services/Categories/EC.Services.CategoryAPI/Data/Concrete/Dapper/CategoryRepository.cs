@@ -73,6 +73,18 @@ namespace EC.Services.CategoryAPI.Data.Concrete.Dapper
             }
         }
         #endregion
+        #region GetAllPagingAsync
+        public async Task<List<Category>> GetAllPagingAsync(int page = 1, int pageSize = 8)
+        {
+            var sql = "SELECT * FROM Categories ORDER BY Id OFFSET @Page * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY";
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            { 
+                connection.Open();
+                var result = await connection.QueryAsync<Category>(sql, new { Page = page, PageSize = pageSize });
+                return result.ToList();
+            }
+        }
+        #endregion
         #region GetAllSubCategoriesByIdAsync
         public async Task<List<Category>> GetAllSubCategoriesByIdAsync(int id)
         {
