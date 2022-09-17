@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using Core.Aspects.Autofac.Caching;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.ProductAPI.Constants;
 using EC.Services.ProductAPI.Data.Abstract;
+using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Dtos.StockDtos;
 using EC.Services.ProductAPI.Dtos.VariantDtos;
 using EC.Services.ProductAPI.Entities;
 using EC.Services.ProductAPI.Repositories.Abstract;
+using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
 using Nest;
 using IResult = Core.Utilities.Results.IResult;
@@ -25,6 +28,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
 
         #region CreateAsync
+        [RedisCacheRemoveAspect("IStockRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> CreateAsync(StockAddDto entity)
         {
             var stockExistsGet = await _context.Stocks.FindAsync(x => x.ProductId == entity.ProductId);
@@ -45,6 +49,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region UpdateAsync
+        [RedisCacheRemoveAspect("IStockRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> UpdateAsync(StockUpdateDto entity)
         {
             var stockExistsGet = await _context.Stocks.FindAsync(x => x.Id == entity.Id && x.ProductId==entity.ProductId);
@@ -65,6 +70,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region DeleteAsync
+        [RedisCacheRemoveAspect("IStockRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAsync(string id)
         {
             var filter = Builders<Stock>.Filter.Eq(m => m.Id, id);
@@ -77,6 +83,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetAllAsync
+        [RedisCacheAspect<DataResult<List<StockDto>>>(duration: 60)]
         public async Task<DataResult<List<StockDto>>> GetAllAsync()
         {
             var query = await _context.Stocks.FindAsync(p => true);
@@ -90,6 +97,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetAllPagingAsync
+        [RedisCacheAspect<DataResult<List<StockDto>>>(duration: 60)]
         public async Task<DataResult<List<StockDto>>> GetAllPagingAsync(int page = 1, int pageSize = 8)
         {
             var result = _context.StocksAsQueryable.OrderByDescending(x => x.Id).Skip((page - 1) * pageSize).Take(pageSize);

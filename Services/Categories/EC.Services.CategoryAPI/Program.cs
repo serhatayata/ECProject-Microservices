@@ -22,9 +22,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-#region SETTINGS
-builder.Services.AddSettings(Configuration);
-#endregion
 #region AuthExtensions
 builder.Services.AddAuth(Configuration);
 #endregion

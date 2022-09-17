@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.ProductAPI.Constants;
@@ -7,6 +9,7 @@ using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Entities;
 using EC.Services.ProductAPI.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
 using Nest;
 using IResult = Core.Utilities.Results.IResult;
@@ -25,6 +28,8 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
 
         #region CreateAsync
+        [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
+        [RedisCacheRemoveAspect("IProductRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> CreateAsync(ProductAddDto entity)
         {
             #region Link
@@ -53,6 +58,8 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region UpdateAsync
+        [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
+        [RedisCacheRemoveAspect("IProductRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> UpdateAsync(ProductUpdateDto entity)
         {
             //var productExists = await (await _context.Products.FindAsync(x => x.Id == entity.Id)).FirstOrDefaultAsync();
@@ -84,6 +91,8 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region DeleteAsync
+        [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
+        [RedisCacheRemoveAspect("IProductRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAsync(string id)
         {
             var filter = Builders<Product>.Filter.Eq(m => m.Id, id);
@@ -109,6 +118,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetAllAsync
+        [RedisCacheAspect<DataResult<List<ProductDto>>>(duration: 60)]
         public async Task<DataResult<List<ProductDto>>> GetAllAsync()
         {
             var query = await _context.Products.FindAsync(p => p.Status);
@@ -122,6 +132,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetAllPagingAsync
+        [RedisCacheAspect<DataResult<List<ProductDto>>>(duration: 60)]
         public async Task<DataResult<List<ProductDto>>> GetAllPagingAsync(int page=1,int pageSize=8)
         {
             var result = _context.ProductsAsQueryable.Where(x => x.Status).OrderByDescending(x => x.Id).Skip((page - 1) * pageSize).Take(pageSize);
@@ -134,6 +145,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetProductByCategoryIdAsync
+        [RedisCacheAspect<DataResult<List<ProductDto>>>(duration: 60)]
         public async Task<DataResult<List<ProductDto>>> GetProductsByCategoryIdAsync(int categoryId)
         {
             var result = await _context.Products.Find(p => p.CategoryId == categoryId && p.Status).ToListAsync();
@@ -146,6 +158,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetProductByNameAsync
+        [RedisCacheAspect<DataResult<List<ProductDto>>>(duration: 60)]
         public async Task<DataResult<List<ProductDto>>> GetProductsByNameAsync(string name)
         {
             var result = await _context.Products.Find(p => p.Name.Contains(name) && p.Status).ToListAsync();
