@@ -254,5 +254,34 @@ namespace Core.Extensions
         public static string RefreshTokenNotValid() => "Refresh token not valid";
         #endregion
 
+        #region ErrorNotEmpty
+        public static string ErrorNotEmpty(string entity)
+        {
+            var value = $"{entity} cannot be empty";
+            return value;
+        }
+        #endregion
+        #region ErrorNotNull
+        public static string ErrorNotNull(string entity)
+        {
+            var value = $"{entity} cannot be null";
+            return value;
+        }
+        #endregion
+        #region ErrorBetween
+        public static string ErrorBetween(string entity,int bottom, int top)
+        {
+            var value = $"{entity} must be between {bottom} and {top}";
+            return value;
+        }
+        #endregion
+        #region ErrorBiggerThan
+        public static string ErrorBiggerThan(string entity, int v)
+        {
+            var value = $"{entity} must be bigger than {v}";
+            return value;
+        }
+        #endregion
+
     }
 }

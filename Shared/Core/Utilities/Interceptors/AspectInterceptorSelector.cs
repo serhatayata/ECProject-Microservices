@@ -34,7 +34,8 @@ namespace Core.Utilities.Interceptors
             }
             
             //Tüm method class larına aşağıdaki Attribut u ekle. Tek tek bütün methodların üzerine yazmamak için.
-            classAttributes.Add(new ExceptionLogAspect(typeof(FileLogger), (byte)EnumRisk.Medium));
+            //Burada Log4Net için burası aktif edilir...
+            //classAttributes.Add(new ExceptionLogAspect(typeof(FileLogger), (byte)EnumRisk.Medium));
             //classAttributes.Add(new ExceptionLogAspect(typeof(DatabaseLogger))); Database e ulaşılamadığında hata logları yazılamayabilir. O yüzden FileLogger tercih ettik.
 
             return classAttributes.OrderBy(x => x.Priority).ToArray();

@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
+using Core.Aspects.Autofac.Caching;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.ProductAPI.Constants;
 using EC.Services.ProductAPI.Data.Abstract;
 using EC.Services.ProductAPI.Dtos.ProductDtos;
+using EC.Services.ProductAPI.Dtos.ProductVariantDtos;
 using EC.Services.ProductAPI.Dtos.VariantDtos;
 using EC.Services.ProductAPI.Entities;
 using EC.Services.ProductAPI.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
 using IResult = Core.Utilities.Results.IResult;
 
@@ -25,6 +28,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
 
         #region CreateAsync
+        [RedisCacheRemoveAspect("IVariantRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> CreateAsync(VariantAddDto entity)
         {
             var variantExistsGet = await _context.Variants.FindAsync(x => x.Name == entity.Name);
@@ -45,6 +49,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region UpdateAsync
+        [RedisCacheRemoveAspect("IVariantRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> UpdateAsync(VariantUpdateDto entity)
         {
             var variantExistsGet = await _context.Variants.FindAsync(x => x.Id == entity.Id);
@@ -72,6 +77,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region DeleteAsync
+        [RedisCacheRemoveAspect("IVariantRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAsync(string id)
         {
             var filter = Builders<Variant>.Filter.Eq(m => m.Id, id);
@@ -97,6 +103,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetAllAsync
+        [RedisCacheAspect<DataResult<List<VariantDto>>>(duration: 60)]
         public async Task<DataResult<List<VariantDto>>> GetAllAsync()
         {
             var query = await _context.Variants.FindAsync(p => true);
@@ -110,6 +117,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetAllPagingAsync
+        [RedisCacheAspect<DataResult<List<VariantDto>>>(duration: 60)]
         public async Task<DataResult<List<VariantDto>>> GetAllPagingAsync(int page = 1, int pageSize = 8)
         {
             var result = _context.VariantsAsQueryable.OrderByDescending(x => x.Id).Skip((page - 1) * pageSize).Take(pageSize);

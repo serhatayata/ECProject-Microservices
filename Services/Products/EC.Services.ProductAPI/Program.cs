@@ -21,8 +21,10 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterMod
 #region AUTO MAPPER
 builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #endregion
+#region CONTROLLERS
+builder.Services.AddControllerSettings();
+#endregion
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -49,6 +51,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 

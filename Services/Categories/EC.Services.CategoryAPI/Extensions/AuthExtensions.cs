@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using EC.Services.CategoryAPI.Data.Contexts;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace EC.Services.CategoryAPI.Extensions
 {
@@ -7,6 +10,8 @@ namespace EC.Services.CategoryAPI.Extensions
         public static void AddAuth(this IServiceCollection services, IConfiguration configuration)
         {
             var tokenOptions = configuration.GetSection("TokenOptions").Get<Core.Utilities.Security.Jwt.TokenOptions>();
+
+            services.AddDbContext<CategoryDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -17,9 +22,21 @@ namespace EC.Services.CategoryAPI.Extensions
 
             services.AddAuthorization(_ =>
             {
-                _.AddPolicy("ReadCategory", policy => policy.RequireClaim("scope", "category_read"));
-                _.AddPolicy("WriteCategory", policy => policy.RequireClaim("scope", "category_write"));
-                _.AddPolicy("FullCategory", policy => policy.RequireClaim("scope", "category_full"));
+                _.AddPolicy("ReadCategory", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "category_read");
+                });
+                _.AddPolicy("WriteCategory", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "category_write");
+                });
+                _.AddPolicy("FullCategory", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "category_full");
+                });
             });
         }
     }
