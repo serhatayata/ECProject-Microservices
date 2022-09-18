@@ -43,7 +43,7 @@ namespace EC.Services.CategoryAPI.Controllers
         [HttpDelete]
         [Route("delete")]
         [AuthorizeAnyPolicy("WriteCategory,FullCategory")]
-        public async Task<IActionResult> DeleteAsync(CategoryDeleteDto model)
+        public async Task<IActionResult> DeleteAsync([FromQuery]CategoryDeleteDto model)
         {
             var result = await _categoryService.DeleteAsync(model);
             return StatusCode(result.StatusCode, result);

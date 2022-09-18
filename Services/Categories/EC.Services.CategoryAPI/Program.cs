@@ -24,6 +24,9 @@ builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #region CONTROLLERS
 builder.Services.AddControllers();
 #endregion
+#region REDIS
+builder.Services.AddScoped<IRedisCacheManager, RedisCacheManager>();
+#endregion
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

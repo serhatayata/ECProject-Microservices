@@ -106,13 +106,15 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         #region UpdatingAsync
         public async Task<IResult> UpdatingAsync(CategoryUpdateDto categoryModel, Category category)
         {
-            var categoryUpdated = _mapper.Map<CategoryUpdateDto, Category>(categoryModel, category);
-            if (categoryModel.Name != category.Name)
+            if (category.Name != categoryModel.Name)
             {
                 Guid guidValue = Guid.NewGuid();
                 var link = SeoLinkExtensions.GenerateSlug(categoryModel.Name, guidValue.ToString());
-                categoryUpdated.Link = link;
+                category.Link = link;
             }
+
+            var categoryUpdated = _mapper.Map<CategoryUpdateDto, Category>(categoryModel, category);
+
             await _categoryDal.UpdateAsync(categoryUpdated);
             return new SuccessResult(MessageExtensions.Updated(CategoryEntities.Category), StatusCodes.Status200OK);
         }
@@ -125,7 +127,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
             var categoryExists = await _categoryRepository.GetByIdAsync(model.Id);
             if (categoryExists == null)
             {
-                return new ErrorResult(MessageExtensions.NotUpdated(CategoryEntities.Category), StatusCodes.Status400BadRequest);
+                return new ErrorResult(MessageExtensions.NotFound(CategoryEntities.Category), StatusCodes.Status400BadRequest);
             }
             var result = await this.DeletingAsync(categoryExists);
             if (result.Success)
@@ -139,7 +141,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         public async Task<IResult> DeletingAsync(Category category)
         {
             await _categoryDal.DeleteAsync(category);
-            if (!await _categoryRepository.AnyByLinkAsync(category.Link))
+            if (await _categoryRepository.GetByIdAsync(category.Id) !=null)
             {
                 return new ErrorResult(MessageExtensions.NotDeleted(CategoryEntities.Category), StatusCodes.Status500InternalServerError);
             }
