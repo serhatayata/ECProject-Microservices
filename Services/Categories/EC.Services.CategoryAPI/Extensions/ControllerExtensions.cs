@@ -23,6 +23,9 @@ namespace EC.Services.CategoryAPI.Extensions
             services.AddValidatorsFromAssemblyContaining<CategoryUpdateDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CategoryAddDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CategoryDeleteDtoValidator>();
+
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters(); // for client side
         }
     }
 }
