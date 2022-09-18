@@ -22,7 +22,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterMod
 builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #endregion
 #region CONTROLLERS
-builder.Services.AddControllers();
+builder.Services.AddControllerSettings();
 #endregion
 #region REDIS
 builder.Services.AddScoped<IRedisCacheManager, RedisCacheManager>();

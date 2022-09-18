@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EC.Services.CategoryAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("category/api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
