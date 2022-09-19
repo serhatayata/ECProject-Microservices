@@ -9,37 +9,37 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
     {
 
 
-        public Task<IResult> AddAsync(PhotoAddDto model)
+        public async Task<IResult> AddAsync(PhotoAddDto model)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IResult> DeleteAllByTypeAndEntityIdAsync(PhotoDeleteDto model)
+        public async Task<IResult> DeleteAllByTypeAndEntityIdAsync(PhotoDeleteDto model)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IResult> DeleteByIdAsync(int id)
+        public async Task<IResult> DeleteByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<DataResult<PhotoDto>> GetAllAsync()
+        public async Task<DataResult<List<PhotoDto>>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<DataResult<PhotoDto>> GetAllByTypeAndEntityIdAsync(PhotoGetAllByTypeAndEntityIdDto model)
+        public async Task<DataResult<List<PhotoDto>>> GetAllByTypeAndEntityIdAsync(PhotoGetAllByTypeAndEntityIdDto model)
         {
             throw new NotImplementedException();
         }
 
-        public Task<DataResult<PhotoDto>> GetAllByTypeAsync(PhotoGetAllByTypeDto model)
+        public async Task<DataResult<List<PhotoDto>>> GetAllByTypeAsync(PhotoGetAllByTypeDto model)
         {
             throw new NotImplementedException();
         }
 
-        public Task<DataResult<PhotoDto>> GetByIdAsync(int id)
+        public async Task<DataResult<PhotoDto>> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

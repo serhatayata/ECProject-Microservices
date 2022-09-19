@@ -1,11 +1,21 @@
-var builder = WebApplication.CreateBuilder(args);
+using Autofac;
+using Core.DataAccess.Dapper;
+using EC.Services.PhotoStockAPI.Extensions;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
+IWebHostEnvironment Environment = builder.Environment;
+
+#region Services
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+#region Autofac
+builder.Services.AddAutofacSettings(configuration);
+#endregion
+
+#endregion
 
 var app = builder.Build();
 
@@ -16,10 +26,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+#region Pipelines
 app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+#endregion
+
