@@ -7,7 +7,7 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
 {
     public class PhotoManager : IPhotoService
     {
-
+        
 
         public async Task<IResult> AddAsync(PhotoAddDto model)
         {

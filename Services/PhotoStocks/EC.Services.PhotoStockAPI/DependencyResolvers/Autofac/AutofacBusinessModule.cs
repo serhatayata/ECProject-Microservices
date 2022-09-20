@@ -4,8 +4,10 @@ using Castle.DynamicProxy;
 using Core.CrossCuttingConcerns.Caching.Redis;
 using Core.DataAccess.Dapper;
 using Core.Utilities.Interceptors;
-using EC.Services.PhotoStockAPI.Data.Abstract;
-using EC.Services.PhotoStockAPI.Data.Concrete;
+using EC.Services.PhotoStockAPI.Data.Abstract.Dapper;
+using EC.Services.PhotoStockAPI.Data.Abstract.EntityFramework;
+using EC.Services.PhotoStockAPI.Data.Concrete.Dapper;
+using EC.Services.PhotoStockAPI.Data.Concrete.EntityFramework;
 using EC.Services.PhotoStockAPI.Services.Abstract;
 using EC.Services.PhotoStockAPI.Services.Concrete;
 using System.Reflection;
@@ -15,14 +17,6 @@ namespace EC.Services.PhotoStockAPI.DependencyResolvers.Autofac
 {
     public class AutofacBusinessModule: Module
     {
-        private readonly IConfiguration _configuration;
-        private readonly string _connString;
-        public AutofacBusinessModule(IConfiguration configuration)
-        {
-            _configuration = configuration;
-            _connString = _configuration.GetConnectionString("DefaultConnection");
-        }
-
         protected override void Load(ContainerBuilder builder)
         {
             #region Services - AddScoped
@@ -30,8 +24,8 @@ namespace EC.Services.PhotoStockAPI.DependencyResolvers.Autofac
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerLifetimeScope();
             #endregion
             #region DataAccess - AddTransient
-            builder.RegisterType<PhotoRepository>().As<IPhotoRepository>().InstancePerDependency();
-            builder.RegisterType<DapperManager>().As<IDapperManager>().InstancePerDependency().WithParameter("connectionString", _connString);
+            builder.RegisterType<DapperPhotoRepository>().As<IDapperPhotoRepository>().InstancePerDependency();
+            builder.RegisterType<EfPhotoRepository>().As<IEfPhotoRepository>().InstancePerDependency();
 
             #endregion
 

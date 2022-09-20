@@ -11,7 +11,7 @@ namespace EC.Services.PhotoStockAPI.Extensions
             var connString = configuration.GetConnectionString("DefaultConnection");
 
             var autofacBuilder = new ContainerBuilder();
-            autofacBuilder.RegisterModule(new AutofacBusinessModule(configuration));
+            autofacBuilder.RegisterModule(new AutofacBusinessModule());
         }
     }
 }
