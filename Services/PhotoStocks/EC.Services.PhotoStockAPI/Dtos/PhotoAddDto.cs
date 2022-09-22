@@ -7,6 +7,12 @@ namespace EC.Services.PhotoStockAPI.Dtos
         public IFormFile Photo { get; set; }
         public int Type { get; set; }
         public int EntityId { get; set; }
-        public string Url { get; set; }
     }
+
+    public enum PhotoTypes
+    {
+        Product=1,
+        Category=2
+    }
+
 }

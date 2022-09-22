@@ -1,6 +1,7 @@
 using Autofac;
 using Core.DataAccess.Dapper;
 using EC.Services.PhotoStockAPI.Extensions;
+using EC.Services.PhotoStockAPI.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -14,6 +15,10 @@ builder.Services.AddSwaggerGen();
 #region Autofac
 builder.Services.AddAutofacSettings(configuration);
 #endregion
+#region AUTO MAPPER
+builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
+#endregion
+
 
 #endregion
 
