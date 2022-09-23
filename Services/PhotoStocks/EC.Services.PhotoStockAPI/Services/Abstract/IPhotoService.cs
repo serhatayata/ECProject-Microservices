@@ -11,7 +11,7 @@ namespace EC.Services.PhotoStockAPI.Services.Abstract
         Task<DataResult<List<PhotoDto>>> GetAllByTypeAsync(PhotoGetAllByTypeDto model);
         Task<DataResult<List<PhotoDto>>> GetAllByTypeAndEntityIdAsync(PhotoGetAllByTypeAndEntityIdDto model);
         Task<DataResult<List<PhotoDto>>> GetAllAsync();
-        Task<IResult> DeleteAllByTypeAndEntityIdAsync(PhotoDeleteDto model);
+        Task<IResult> DeleteAllByTypeAndEntityIdAsync(PhotoDeleteByTypeAndEntityIdDto model);
         Task<IResult> DeleteByIdAsync(int id);
         Task<IResult> DeleteByUrlAsync(string url);
     }

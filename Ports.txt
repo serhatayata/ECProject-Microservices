@@ -6,6 +6,7 @@ Discount -> 6004, IIS ApplicationUrl -> 13004
 Order -> 6005, IIS ApplicationUrl -> 13005
 Payment -> 6006, IIS ApplicationUrl -> 13006
 Product -> 6007, IIS ApplicationUrl -> 13007
+PhotoStock -> 6008, IIS ApplicationUrl -> 13008
 
 MVC Client -> 6101
 SPA Client -> 6102

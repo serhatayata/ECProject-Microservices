@@ -26,9 +26,9 @@ namespace EC.Services.PhotoStockAPI.DependencyResolvers.Autofac
             #region DataAccess - AddTransient
             builder.RegisterType<DapperPhotoRepository>().As<IDapperPhotoRepository>().InstancePerDependency();
             builder.RegisterType<EfPhotoRepository>().As<IEfPhotoRepository>().InstancePerDependency();
+            builder.RegisterType<DapperManager>().As<IDapperManager>().InstancePerDependency();
 
             #endregion
-
 
             //AddTransient
             //builder.RegisterType<EfCategoryDal>().As<ICategoryDal>().InstancePerDependency();

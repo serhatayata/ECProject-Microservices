@@ -11,7 +11,7 @@ namespace EC.Services.PhotoStockAPI.Mappings
             #region Photo
             CreateMap<Photo, PhotoDto>().ReverseMap();
             CreateMap<Photo, PhotoAddDto>().ReverseMap();
-            CreateMap<Photo, PhotoDeleteDto>().ReverseMap();
+            CreateMap<Photo, PhotoDeleteByTypeAndEntityIdDto>().ReverseMap();
             #endregion
         }
     }

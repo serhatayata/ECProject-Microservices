@@ -36,7 +36,9 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
             }
 
             var timeStamp = DateExtensions.GetTimestamp(DateTime.Now);
-            var uniqueFileName = Guid.NewGuid().ToString() + "_" + timeStamp;
+
+            string extent = PhotoExtensions.GetPhotoExtent(model.Photo);
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + timeStamp+extent;
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", uniqueFileName);
 
@@ -105,9 +107,9 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region DeleteAllByTypeAndEntityIdAsync
-        public async Task<IResult> DeleteAllByTypeAndEntityIdAsync(PhotoDeleteDto model)
+        public async Task<IResult> DeleteAllByTypeAndEntityIdAsync(PhotoDeleteByTypeAndEntityIdDto model)
         {
-            var allPhotos = await _dapperPhotoRepository.GetAllByTypeAndEntityIdAsync(model.Type, model.EntityId);
+            var allPhotos = await _dapperPhotoRepository.GetAllByTypeAndEntityIdAsync(model.PhotoType, model.EntityId);
             if (allPhotos?.Count == 0 || allPhotos == null)
             {
                 return new ErrorResult(MessageExtensions.NotFound(PhotoTitles.Photo));
@@ -119,41 +121,57 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
                 if (await _dapperPhotoRepository.GetByIdAsync(photo.Id) == null)
                 {
                     var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", photo.Url);
-
                     System.IO.File.Delete(path);
                 }
             }
 
-
-
+            return new SuccessResult(MessageExtensions.Deleted(PhotoTitles.Photos));
         }
         #endregion
-                #region GetByIdAsync
+        #region GetByIdAsync
         public async Task<DataResult<PhotoDto>> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var photo = await _dapperPhotoRepository.GetByIdAsync(id);
+            if (photo == null)
+            {
+                return new ErrorDataResult<PhotoDto>(MessageExtensions.NotFound(PhotoTitles.Photo));
+            }
+            return new SuccessDataResult<PhotoDto>(photo);
         }
         #endregion
         #region GetAllAsync
         public async Task<DataResult<List<PhotoDto>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var photos = await _dapperPhotoRepository.GetAllAsync();
+            if (photos?.Count() == 0 || photos == null)
+            {
+                return new ErrorDataResult<List<PhotoDto>>(MessageExtensions.NotFound(PhotoTitles.Photo));
+            }
+            return new SuccessDataResult<List<PhotoDto>>(photos);
         }
         #endregion
         #region GetAllByTypeAndEntityIdAsync
         public async Task<DataResult<List<PhotoDto>>> GetAllByTypeAndEntityIdAsync(PhotoGetAllByTypeAndEntityIdDto model)
         {
-            throw new NotImplementedException();
+            var photos = await _dapperPhotoRepository.GetAllByTypeAndEntityIdAsync(model.Type,model.EntityId);
+            if (photos?.Count() == 0 || photos == null)
+            {
+                return new ErrorDataResult<List<PhotoDto>>(MessageExtensions.NotFound(PhotoTitles.Photo));
+            }
+            return new SuccessDataResult<List<PhotoDto>>(photos);
         }
         #endregion
         #region GetAllByTypeAsync
         public async Task<DataResult<List<PhotoDto>>> GetAllByTypeAsync(PhotoGetAllByTypeDto model)
         {
-            throw new NotImplementedException();
+            var photos = await _dapperPhotoRepository.GetAllByTypeAsync(model.Type);
+            if (photos?.Count() == 0 || photos == null)
+            {
+                return new ErrorDataResult<List<PhotoDto>>(MessageExtensions.NotFound(PhotoTitles.Photo));
+            }
+            return new SuccessDataResult<List<PhotoDto>>(photos);
         }
         #endregion
-
-
 
     }
 }

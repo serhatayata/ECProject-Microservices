@@ -2,9 +2,9 @@
 
 namespace EC.Services.PhotoStockAPI.Dtos
 {
-    public class PhotoDeleteDto:IDto
+    public class PhotoDeleteByTypeAndEntityIdDto:IDto
     {
-        public int Type { get; set; }
+        public int PhotoType { get; set; }
         public int EntityId { get; set; }
     }
 }

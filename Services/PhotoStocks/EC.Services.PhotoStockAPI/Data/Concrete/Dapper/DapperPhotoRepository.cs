@@ -14,12 +14,10 @@ namespace EC.Services.PhotoStockAPI.Data.Concrete.Dapper
     public class DapperPhotoRepository : IDapperPhotoRepository
     {
         private readonly IConfiguration _configuration;
-        private readonly IDapperManager _dapperManager;
 
-        public DapperPhotoRepository(IConfiguration configuration, IDapperManager dapperManager)
+        public DapperPhotoRepository(IConfiguration configuration)
         {
             _configuration = configuration;
-            _dapperManager = dapperManager;
         }
 
         #region AnyAsync
