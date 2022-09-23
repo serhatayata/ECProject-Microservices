@@ -70,7 +70,6 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
             {
                 return new ErrorResult(MessageExtensions.NotFound(PhotoTitles.Photo));
             }
-
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", photoExists.Url);
 
             await _efPhotoRepository.DeleteAsync(photoExists);
