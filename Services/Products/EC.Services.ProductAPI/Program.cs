@@ -1,5 +1,8 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Core.DependencyResolvers;
+using Core.Extensions;
+using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using EC.Services.ProductAPI.DependencyResolvers.Autofac;
 using EC.Services.ProductAPI.Extensions;
@@ -39,6 +42,11 @@ var sp = builder.Services.BuildServiceProvider();
 var productDatabaseSettings = sp.GetRequiredService<IProductDatabaseSettings>();
 SeedDataExtensions.Configure(productDatabaseSettings);
 SeedDataExtensions.AddSeedData();
+#endregion
+#region CoreModule
+builder.Services.AddDependencyResolvers(new ICoreModule[] {
+                new CoreModule()
+            });
 #endregion
 var app = builder.Build();
 #endregion

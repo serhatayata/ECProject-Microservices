@@ -114,6 +114,21 @@ namespace EC.IdentityServer.Configuration
                 }
             },
 	        #endregion
+            #region Product
+            new ApiResource("resource_photostock")
+            {
+                Scopes=
+                {
+                    "photostock_full",
+                    "photostock_read",
+                    "photostock_write"
+                },
+                ApiSecrets =
+                {
+                    new Secret("photostock_secret".Sha256())
+                }
+            },
+	        #endregion
 
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
         };
@@ -168,6 +183,11 @@ namespace EC.IdentityServer.Configuration
                 new ApiScope("product_full","Full permission for Product API"),
                 new ApiScope("product_read","Read permission for Product API"),
                 new ApiScope("product_write","Write permission for Product API"),
+	            #endregion
+                #region PhotoStock
+                new ApiScope("photostock_full","Full permission for PhotoStock API"),
+                new ApiScope("photostock_read","Read permission for PhotoStock API"),
+                new ApiScope("photostock_write","Write permission for PhotoStock API"),
 	            #endregion
                 #region Gateway
                 new ApiScope("gateway_full","Full permission for Gateway API"),
@@ -306,6 +326,16 @@ namespace EC.IdentityServer.Configuration
                     ClientSecrets= {new Secret("product_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
                     AllowedScopes={ "product_full", "product_write", "product_read" },
+                },
+	            #endregion
+                #region Product
+                new Client
+                {
+                    ClientName="PhotoStock Client",
+                    ClientId="photostock_client",
+                    ClientSecrets= {new Secret("photostock_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "photostock_full", "photostock_write", "photostock_read" },
                 },
 	            #endregion
 

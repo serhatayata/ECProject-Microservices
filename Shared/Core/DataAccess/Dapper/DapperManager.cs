@@ -9,13 +9,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace Core.DataAccess.Dapper
 {
-    public class Dapper : IDapper
+    public class DapperManager : IDapperManager
     {
         private readonly IConfiguration _config;
+        private readonly SqlConnection _sqlConnection;
 
-        public Dapper(IConfiguration config)
+        public DapperManager(IConfiguration config, string connectionString)
         {
             _config = config;
+            _sqlConnection = new SqlConnection(connectionString);
         }
         public void Dispose()
         {
@@ -24,45 +26,37 @@ namespace Core.DataAccess.Dapper
 
         public DbConnection GetDbConnection()
         {
-            try
-            {
-                var connectionString = _config.GetConnectionString("EWalletConnection");
-                if (!string.IsNullOrEmpty(connectionString)) return new SqlConnection(connectionString);
-                
-                Console.Write("Dapper: 'EWalletConnection' Config dosyasından okunamadı!");
-                throw new Exception("Dapper: 'EWalletConnection' Config dosyasından okunamadı!");
-            }
-            catch (Exception ex)
-            {
-                Console.Write("Dapper Connection Error :", ex);
-                throw ex;
-            }
+            return _sqlConnection;
         }
 
+        #region GetAsync<T>
         public async Task<T> GetAsync<T>(string sql, DynamicParameters parameters,
-            CommandType commandType = CommandType.Text)
+    CommandType commandType = CommandType.Text)
         {
             using IDbConnection db = GetDbConnection();
             return await db.QueryFirstOrDefaultAsync<T>(sql, parameters, commandType: commandType)
                 .ConfigureAwait(false);
         }
-
+        #endregion
+        #region GetAllAsync<T>
         public async Task<IEnumerable<T>> GetAllAsync<T>(string sql, DynamicParameters parameters,
-            CommandType commandType = CommandType.Text)
+    CommandType commandType = CommandType.Text)
         {
             using IDbConnection db = GetDbConnection();
             return await db.QueryAsync<T>(sql, parameters, commandType: commandType).ConfigureAwait(false);
         }
-
+        #endregion
+        #region ExecuteAsync<T>
         public async Task<T> ExecuteAsync<T>(string sql, DynamicParameters parameters,
-            CommandType commandType = CommandType.StoredProcedure)
+    CommandType commandType = CommandType.StoredProcedure)
         {
             using IDbConnection db = GetDbConnection();
             return await db.QueryFirstOrDefaultAsync<T>(sql, parameters, commandType: commandType).ConfigureAwait(false);
         }
-
+        #endregion
+        #region InsertAsync<T>
         public async Task<T> InsertAsync<T>(string sql, DynamicParameters parameters,
-            CommandType commandType = CommandType.StoredProcedure)
+    CommandType commandType = CommandType.StoredProcedure)
         {
             T result;
             using IDbConnection db = GetDbConnection();
@@ -95,9 +89,10 @@ namespace Core.DataAccess.Dapper
 
             return result;
         }
-
+        #endregion
+        #region UpdateAsync<T>
         public async Task<T> UpdateAsync<T>(string sql, DynamicParameters parameters,
-            CommandType commandType = CommandType.StoredProcedure)
+    CommandType commandType = CommandType.StoredProcedure)
         {
             T result;
             using IDbConnection db = GetDbConnection();
@@ -130,5 +125,7 @@ namespace Core.DataAccess.Dapper
 
             return result;
         }
+        #endregion
+
     }
 }

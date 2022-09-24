@@ -7,7 +7,7 @@ using Dapper;
 
 namespace Core.DataAccess.Dapper
 {
-    public interface IDapper: IDisposable
+    public interface IDapperManager: IDisposable
     {
         DbConnection GetDbConnection();
         Task<T> GetAsync<T>(string sql, DynamicParameters parameters, CommandType commandType = CommandType.Text);
