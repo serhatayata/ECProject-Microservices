@@ -17,7 +17,7 @@ IWebHostEnvironment Environment = builder.Environment;
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
 #endregion
-builder.Services.AddControllers();
+builder.Services.AddControllerSettings();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #region AUTO MAPPER

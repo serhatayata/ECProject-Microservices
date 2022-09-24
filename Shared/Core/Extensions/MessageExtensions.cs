@@ -282,6 +282,13 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region ErrorMaxLength
+        public static string ErrorMaxLength(string entity, int v)
+        {
+            var value = $"{entity} can have Maximum {v} charatecters";
+            return value;
+        }
+        #endregion
 
     }
 }
