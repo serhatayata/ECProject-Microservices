@@ -81,7 +81,7 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
 
             System.IO.File.Delete(path);
 
-            return new ErrorResult(MessageExtensions.NotDeleted(PhotoTitles.Photo));
+            return new SuccessResult(MessageExtensions.Deleted(PhotoTitles.Photo));
         }
         #endregion
         #region DeleteByUrlAsync
@@ -103,7 +103,7 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
 
             System.IO.File.Delete(path);
 
-            return new ErrorResult(MessageExtensions.NotDeleted(PhotoTitles.Photo));
+            return new SuccessResult(MessageExtensions.Deleted(PhotoTitles.Photo));
         }
         #endregion
         #region DeleteAllByTypeAndEntityIdAsync
