@@ -30,7 +30,7 @@ namespace Core.CrossCuttingConcerns.Logging.ElasticSearch
                 //.DisablePing()
                 //.SniffOnStartup(false)
                 //.SniffOnConnectionFault(false)
-                .DefaultIndex("foodthen");
+                .DefaultIndex("ecproject");
 
             //if (!string.IsNullOrEmpty(_elasticSearchConfigration.AuthUserName) && !string.IsNullOrEmpty(_elasticSearchConfigration.AuthPassWord))
             //    connectionString.BasicAuthentication(_elasticSearchConfigration.AuthUserName, _elasticSearchConfigration.AuthPassWord);

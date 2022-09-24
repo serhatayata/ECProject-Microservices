@@ -2,6 +2,7 @@
 using Autofac.Extras.DynamicProxy;
 using Castle.DynamicProxy;
 using Core.CrossCuttingConcerns.Caching.Redis;
+using Core.CrossCuttingConcerns.Logging.ElasticSearch;
 using Core.DataAccess.Dapper;
 using Core.Utilities.Interceptors;
 using EC.Services.PhotoStockAPI.Data.Abstract.Dapper;
@@ -22,11 +23,13 @@ namespace EC.Services.PhotoStockAPI.DependencyResolvers.Autofac
             #region Services - AddScoped
             builder.RegisterType<PhotoManager>().As<IPhotoService>().InstancePerLifetimeScope();
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerLifetimeScope();
+            builder.RegisterType<ElasticSearchManager>().As<IElasticSearchService>().InstancePerLifetimeScope();
             #endregion
             #region DataAccess - AddTransient
             builder.RegisterType<DapperPhotoRepository>().As<IDapperPhotoRepository>().InstancePerDependency();
             builder.RegisterType<EfPhotoRepository>().As<IEfPhotoRepository>().InstancePerDependency();
             builder.RegisterType<DapperManager>().As<IDapperManager>().InstancePerDependency();
+
 
             #endregion
 

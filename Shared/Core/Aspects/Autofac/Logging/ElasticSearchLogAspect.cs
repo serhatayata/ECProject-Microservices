@@ -44,13 +44,13 @@ namespace Core.Aspects.Autofac.Logging
 
             var logDetail = new LogDetail
             {
-                MethodName = invocation.Method.Name,
+                MethodName = invocation.Method.ReflectedType.FullName,
                 LogParameters = logParameters,
                 Risk = _risk,
                 LoggingTime = DateTime.Now.ToString()
             };
 
-            _client.Add(logDetail);
+            _client.Add(logDetail).GetAwaiter().GetResult();
             invocation.Proceed();
         }
     }

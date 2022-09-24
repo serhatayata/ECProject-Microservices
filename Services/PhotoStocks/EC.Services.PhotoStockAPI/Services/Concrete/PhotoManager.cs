@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
 using Core.Extensions;
 using Core.Utilities.Results;
@@ -143,7 +144,8 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         [RedisCacheAspect<DataResult<PhotoDto>>(duration: 60)]
         public async Task<DataResult<PhotoDto>> GetByIdAsync(int id)
         {
-            var photo = await _dapperPhotoRepository.GetByIdAsync(id);
+            var photoGet = await _dapperPhotoRepository.GetByIdAsync(id);
+            var photo = _mapper.Map<PhotoDto>(photoGet);
             if (photo == null)
             {
                 return new ErrorDataResult<PhotoDto>(MessageExtensions.NotFound(PhotoTitles.Photo));
@@ -152,10 +154,12 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region GetAllAsync
-        [RedisCacheAspect<DataResult<List<PhotoDto>>>(duration: 60)]
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
+        [RedisCacheAspect<DataResult<List<PhotoDto>>>(duration: 60,Priority =2)]
         public async Task<DataResult<List<PhotoDto>>> GetAllAsync()
         {
-            var photos = await _dapperPhotoRepository.GetAllAsync();
+            var photosGet = await _dapperPhotoRepository.GetAllAsync();
+            var photos = _mapper.Map<List<PhotoDto>>(photosGet);
             if (photos?.Count() == 0 || photos == null)
             {
                 return new ErrorDataResult<List<PhotoDto>>(MessageExtensions.NotFound(PhotoTitles.Photo));
@@ -167,7 +171,8 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         [RedisCacheAspect<DataResult<List<PhotoDto>>>(duration: 60)]
         public async Task<DataResult<List<PhotoDto>>> GetAllByTypeAndEntityIdAsync(PhotoGetAllByTypeAndEntityIdDto model)
         {
-            var photos = await _dapperPhotoRepository.GetAllByTypeAndEntityIdAsync(model.Type,model.EntityId);
+            var photosGet = await _dapperPhotoRepository.GetAllByTypeAndEntityIdAsync(model.Type,model.EntityId);
+            var photos = _mapper.Map<List<PhotoDto>>(photosGet);
             if (photos?.Count() == 0 || photos == null)
             {
                 return new ErrorDataResult<List<PhotoDto>>(MessageExtensions.NotFound(PhotoTitles.Photo));
@@ -179,7 +184,8 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         [RedisCacheAspect<DataResult<List<PhotoDto>>>(duration: 60)]
         public async Task<DataResult<List<PhotoDto>>> GetAllByTypeAsync(PhotoGetAllByTypeDto model)
         {
-            var photos = await _dapperPhotoRepository.GetAllByTypeAsync(model.Type);
+            var photosGet = await _dapperPhotoRepository.GetAllByTypeAsync(model.Type);
+            var photos = _mapper.Map<List<PhotoDto>>(photosGet);
             if (photos?.Count() == 0 || photos == null)
             {
                 return new ErrorDataResult<List<PhotoDto>>(MessageExtensions.NotFound(PhotoTitles.Photo));
