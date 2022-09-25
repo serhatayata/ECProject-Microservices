@@ -2,6 +2,7 @@
 {
     public static class PhotoExtensions
     {
+        #region GetPhotoExtent
         public static string GetPhotoExtent(IFormFile photo)
         {
             var extent = "";
@@ -14,7 +15,6 @@
             }
             return extent;
         }
-
-
+        #endregion
     }
 }

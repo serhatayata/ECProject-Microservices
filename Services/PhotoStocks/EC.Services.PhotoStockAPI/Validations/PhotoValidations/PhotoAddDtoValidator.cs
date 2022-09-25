@@ -15,6 +15,12 @@ namespace EC.Services.PhotoStockAPI.Validations.PhotoValidations
 
             RuleFor(x => x.EntityId).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PhotoTitles.PhotoEntityId));
             RuleFor(x => x.EntityId).GreaterThan(0).WithMessage(MessageExtensions.ErrorBiggerThan(PhotoTitles.PhotoEntityId,0));
+
+            RuleFor(x => x.Width).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PhotoTitles.PhotoWidth));
+            RuleFor(x => x.Width).GreaterThan(0).WithMessage(MessageExtensions.ErrorBiggerThan(PhotoTitles.PhotoWidth, 0));
+
+            RuleFor(x => x.Height).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PhotoTitles.PhotoHeight));
+            RuleFor(x => x.Height).GreaterThan(0).WithMessage(MessageExtensions.ErrorBiggerThan(PhotoTitles.PhotoHeight, 0));
         }
     }
 }

@@ -12,6 +12,8 @@ using EC.Services.PhotoStockAPI.Entities;
 using EC.Services.PhotoStockAPI.Extensions;
 using EC.Services.PhotoStockAPI.Services.Abstract;
 using Microsoft.Extensions.Caching.Memory;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
 using IResult = Core.Utilities.Results.IResult;
@@ -49,8 +51,7 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", uniqueFileName);
 
-            using var stream = new FileStream(path, FileMode.Create);
-            await model.Photo.CopyToAsync(stream);
+            ReSizingExtensions.SaveImage(model.Photo.OpenReadStream(),path,model.Width,model.Height,false);
 
             if (File.Exists(path))
             {

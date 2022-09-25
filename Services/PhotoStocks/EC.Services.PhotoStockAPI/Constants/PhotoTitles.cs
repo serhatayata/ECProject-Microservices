@@ -7,6 +7,8 @@
         public static string Photos = "Photos";
         public static string PhotoName = "Photo name";
         public static string PhotoType = "Photo type";
+        public static string PhotoWidth = "Photo width";
+        public static string PhotoHeight = "Photo height";
         public static string PhotoEntityId = "Entity Id";
         public static string PhotoUrl = "Photo Url";
 
