@@ -1,15 +1,21 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Core.CrossCuttingConcerns.Caching.Redis;
+using Core.CrossCuttingConcerns.Logging.ElasticSearch;
 using Core.DependencyResolvers;
+using Core.Entities.ElasticSearch.Abstract;
+using Core.Entities.ElasticSearch.Concrete;
 using Core.Extensions;
 using Core.Utilities.IoC;
 using EC.Services.CategoryAPI.DependencyResolvers.Autofac;
 using EC.Services.CategoryAPI.Extensions;
 using EC.Services.CategoryAPI.Mappings;
+using Serilog;
+using System.Configuration;
+using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
 
 var builder = WebApplication.CreateBuilder(args);
-ConfigurationManager Configuration = builder.Configuration;
+ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment Environment = builder.Environment;
 
 #region Services
@@ -27,20 +33,29 @@ builder.Services.AddControllerSettings();
 #region REDIS
 builder.Services.AddScoped<IRedisCacheManager, RedisCacheManager>();
 #endregion
-
+#region ENDPOINT
 builder.Services.AddEndpointsApiExplorer();
+#endregion
+#region SWAGGER
 builder.Services.AddSwaggerGen();
-
+#endregion
+#region ElasticSearch
+builder.Services.AddSingleton<IElasticSearchService, ElasticSearchManager>();
+builder.Services.AddSingleton<IElasticSearchConfigration, ElasticSearchConfigration>();
+builder.Host.UseSerilog();
+ElasticSearchExtensions.AddElasticSearch(builder.Services, configuration);
+ElasticSearchExtensions.AddELKLogSettings(builder.Services);
+#endregion
 #region CORE MODULE
 builder.Services.AddDependencyResolvers(new ICoreModule[] {
                 new CoreModule()
             });
 #endregion
 #region AuthExtensions
-builder.Services.AddAuth(Configuration);
+builder.Services.AddAuth(configuration);
 #endregion
 #region SeedData
-builder.Services.AddSeedData(Configuration);
+builder.Services.AddSeedData(configuration);
 #endregion
 #endregion
 

@@ -32,6 +32,7 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
 
         #region AddAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("IPhotoService", Priority = (int)CacheItemPriority.High)]
         public async Task<DataResult<string>> AddAsync(PhotoAddDto model)
@@ -69,6 +70,7 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region DeleteByIdAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("IPhotoService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteByIdAsync(int id)
@@ -93,6 +95,7 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region DeleteByUrlAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("IPhotoService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteByUrlAsync(string url)
@@ -117,6 +120,7 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region DeleteAllByTypeAndEntityIdAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("IPhotoService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAllByTypeAndEntityIdAsync(PhotoDeleteByTypeAndEntityIdDto model)
@@ -154,7 +158,6 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region GetAllAsync
-        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [RedisCacheAspect<DataResult<List<PhotoDto>>>(duration: 60,Priority =2)]
         public async Task<DataResult<List<PhotoDto>>> GetAllAsync()
         {
