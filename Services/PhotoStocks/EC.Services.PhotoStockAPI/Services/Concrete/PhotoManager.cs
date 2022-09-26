@@ -9,9 +9,11 @@ using EC.Services.PhotoStockAPI.Data.Abstract.Dapper;
 using EC.Services.PhotoStockAPI.Data.Abstract.EntityFramework;
 using EC.Services.PhotoStockAPI.Dtos;
 using EC.Services.PhotoStockAPI.Entities;
+using EC.Services.PhotoStockAPI.Entities.Options;
 using EC.Services.PhotoStockAPI.Extensions;
 using EC.Services.PhotoStockAPI.Services.Abstract;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System.Drawing;
@@ -25,12 +27,14 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         private readonly IDapperPhotoRepository _dapperPhotoRepository;
         private readonly IEfPhotoRepository _efPhotoRepository;
         private readonly IMapper _mapper;
+        private readonly ResizeSetting _resizeSettings;
 
-        public PhotoManager(IDapperPhotoRepository dapperPhotoRepository, IEfPhotoRepository efPhotoRepository, IMapper mapper)
+        public PhotoManager(IDapperPhotoRepository dapperPhotoRepository, IEfPhotoRepository efPhotoRepository, IMapper mapper, IOptions<ResizeSetting> resizeSettings)
         {
             _dapperPhotoRepository = dapperPhotoRepository;
             _efPhotoRepository = efPhotoRepository;
             _mapper = mapper;
+            _resizeSettings = resizeSettings.Value;
         }
 
         #region AddAsync
@@ -51,7 +55,10 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", uniqueFileName);
 
-            ReSizingExtensions.SaveImage(model.Photo.OpenReadStream(),path,model.Width,model.Height,false);
+            var width = _resizeSettings.Data.First(x => x.ResizeType == (int)ResizeTypeEnum.S).Width;
+            var height = _resizeSettings.Data.First(x => x.ResizeType == (int)ResizeTypeEnum.S).Height;
+
+            ReSizingExtensions.SaveImage(model.Photo.OpenReadStream(),path,width,height,false);
 
             if (File.Exists(path))
             {

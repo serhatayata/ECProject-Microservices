@@ -23,6 +23,9 @@ IWebHostEnvironment Environment = builder.Environment;
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
 #endregion
+#region IOPTION
+builder.Services.AddOptionSettings(configuration);
+#endregion
 #region CONTROLLER
 builder.Services.AddControllerSettings();
 builder.Services.AddEndpointsApiExplorer();

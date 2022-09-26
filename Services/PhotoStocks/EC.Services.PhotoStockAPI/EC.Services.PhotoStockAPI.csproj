@@ -51,4 +51,6 @@
     <Folder Include="wwwroot\photos\" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+
 </Project>
