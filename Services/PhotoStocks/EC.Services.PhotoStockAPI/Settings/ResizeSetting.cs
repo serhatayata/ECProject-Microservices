@@ -1,4 +1,4 @@
-﻿namespace EC.Services.PhotoStockAPI.Entities.Options
+﻿namespace EC.Services.PhotoStockAPI.Settings
 {
     public class ResizeSetting
     {
@@ -14,10 +14,10 @@
 
     public enum ResizeTypeEnum
     {
-        XS=1,
-        S=2,
-        M=3,
-        L=4,
-        XL=5
+        XS = 1,
+        S = 2,
+        M = 3,
+        L = 4,
+        XL = 5
     }
 }

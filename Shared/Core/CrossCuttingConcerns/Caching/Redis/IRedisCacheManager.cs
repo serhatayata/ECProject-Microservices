@@ -9,7 +9,7 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
 {
     public interface IRedisCacheManager
     {
-        IDatabase GetDatabase();
+        IDatabase GetDatabase(int db = 1);
 
         /// <summary>
         /// Caching with limitless time

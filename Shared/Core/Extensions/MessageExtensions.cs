@@ -52,10 +52,24 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region SavedOrUpdated
+        public static string SavedOrUpdated(string entity)
+        {
+            var value = $"{entity} saved or updated.";
+            return value;
+        }
+        #endregion
         #region NotAdded
         public static string NotAdded(string entity)
         {
             var value = $"{entity} not added.";
+            return value;
+        }
+        #endregion
+        #region NotSavedOrUpdated
+        public static string NotSavedOrUpdated(string entity)
+        {
+            var value = $"{entity} not saved or updated.";
             return value;
         }
         #endregion

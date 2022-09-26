@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Core.CrossCuttingConcerns.Caching.Redis;
 using Core.DependencyResolvers;
 using Core.Extensions;
 using Core.Utilities.IoC;
@@ -26,6 +27,9 @@ builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #endregion
 #region CONTROLLERS
 builder.Services.AddControllerSettings();
+#endregion
+#region REDIS
+builder.Services.AddScoped<IRedisCacheManager, RedisCacheManager>();
 #endregion
 
 builder.Services.AddEndpointsApiExplorer();

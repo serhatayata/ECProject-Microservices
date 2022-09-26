@@ -21,5 +21,8 @@ namespace Core.Utilities.Helpers
                 return _httpContextAccessor.HttpContext;
             }
         }
+
+        public string GetUserId => _httpContextAccessor.HttpContext.User.FindFirst("sub").Value;
+
     }
 }

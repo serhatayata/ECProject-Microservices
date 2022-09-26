@@ -1,4 +1,4 @@
-﻿using EC.Services.PhotoStockAPI.Entities.Options;
+﻿using EC.Services.PhotoStockAPI.Settings;
 
 namespace EC.Services.PhotoStockAPI.Extensions
 {

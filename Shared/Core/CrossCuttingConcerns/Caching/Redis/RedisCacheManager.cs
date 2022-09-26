@@ -42,9 +42,9 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
             _client = ConnectionMultiplexer.Connect(_configurationOptions);
         }
 
-        public IDatabase GetDatabase()
+        public IDatabase GetDatabase(int db=1)
         {
-            return _client.GetDatabase();
+            return _client.GetDatabase(db);
         }
 
         #region Get<T>
