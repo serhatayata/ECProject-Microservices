@@ -14,6 +14,9 @@ IWebHostEnvironment Environment = builder.Environment;
 
 #region Services
 
+#region HTTP
+builder.Services.AddHttpContextAccessor();
+#endregion
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
@@ -23,6 +26,9 @@ builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #endregion
 #region CONTROLLERS
 builder.Services.AddControllerSettings();
+#endregion
+#region AUTH
+builder.Services.AddAuth(Configuration);
 #endregion
 #region REDIS
 builder.Services.AddScoped<IRedisCacheManager, RedisCacheManager>();
@@ -55,6 +61,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 #endregion
 #region AUTH
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 #endregion
 #region CONTROLLERS

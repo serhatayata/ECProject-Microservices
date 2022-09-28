@@ -1,8 +1,11 @@
-﻿using Core.Utilities.Business.Abstract;
+﻿using Core.Utilities.Attributes;
+using Core.Utilities.Business.Abstract;
 using EC.Services.BasketAPI.Dtos;
 using EC.Services.BasketAPI.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EC.Services.BasketAPI.Controllers
 {
@@ -24,6 +27,7 @@ namespace EC.Services.BasketAPI.Controllers
         #region GetBasket
         [HttpGet]
         [Route("get")]
+        [AuthorizeAnyPolicy("FullBasket,ReadBasket")]
         public async Task<IActionResult> GetBasket()
         {
             var result = await _basketService.GetBasket(_userId);
@@ -33,15 +37,17 @@ namespace EC.Services.BasketAPI.Controllers
         #region SaveOrUpdateBasket
         [HttpPost]
         [Route("save-or-update")]
+        [AuthorizeAnyPolicy("FullBasket,WriteBasket")]
         public async Task<IActionResult> SaveOrUpdateBasket(BasketSaveOrUpdateDto basketDto)
         {
-            var result = await _basketService.SaveOrUpdate(basketDto);
+            var result = await _basketService.SaveOrUpdate(basketDto,_userId);
             return StatusCode(result.StatusCode,result);
         }
         #endregion
         #region DeleteBasket
         [HttpDelete]
         [Route("delete")]
+        [AuthorizeAnyPolicy("FullBasket,WriteBasket")]
         public async Task<IActionResult> DeleteBasket()
         {
             var result = await _basketService.Delete(_userId);
