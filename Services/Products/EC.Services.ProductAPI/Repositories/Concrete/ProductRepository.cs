@@ -2,6 +2,7 @@
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
+using Core.DataAccess.Queue;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.ProductAPI.Constants;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
 using Nest;
 using IResult = Core.Utilities.Results.IResult;
+using Mass = MassTransit;
 
 namespace EC.Services.ProductAPI.Repositories.Concrete
 {
@@ -21,11 +23,13 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
     {
         private readonly IProductContext _context;
         private readonly IMapper _mapper;
+        private readonly Mass.IPublishEndpoint _publishEndpoint;
 
-        public ProductRepository(IProductContext context, IMapper mapper)
+        public ProductRepository(IProductContext context, IMapper mapper, Mass.IPublishEndpoint publishEndpoint)
         {
             _context = context;
             _mapper = mapper;
+            _publishEndpoint = publishEndpoint;
         }
 
         #region CreateAsync
@@ -88,6 +92,17 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             var updateResult = await _context.Products.ReplaceOneAsync(g => g.Id == entity.Id, productUpdated);
             if (updateResult.IsAcknowledged && updateResult.ModifiedCount > 0)
             {
+                await _publishEndpoint.Publish<ProductChangedEvent>(
+                        new ProductChangedEvent { 
+                                ProductId = productUpdated.Id,
+                                ProductName=productUpdated.Name,
+                                Price=productUpdated.Price,
+                                Status=productUpdated.Status,
+                                Line=productUpdated.Line,
+                                Link=productUpdated.Link,
+                                CategoryId=productUpdated.CategoryId
+                        });
+
                 return new SuccessResult(MessageExtensions.Updated(ProductEntities.Product));
             }
             return new ErrorResult(MessageExtensions.NotUpdated(ProductEntities.Product));
