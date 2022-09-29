@@ -18,6 +18,9 @@ IWebHostEnvironment Environment = builder.Environment;
 
 #region Services
 
+#region MASSTRANSIT RABBITMQ
+builder.Services.AddRabbitMqProducer(Configuration);
+#endregion
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));

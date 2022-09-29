@@ -27,6 +27,9 @@ builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #region CONTROLLERS
 builder.Services.AddControllerSettings();
 #endregion
+#region MASSTRANSIT RABBITMQ
+builder.Services.AddRabbitMqConsumer(Configuration);
+#endregion
 #region AUTH
 builder.Services.AddAuth(Configuration);
 #endregion
