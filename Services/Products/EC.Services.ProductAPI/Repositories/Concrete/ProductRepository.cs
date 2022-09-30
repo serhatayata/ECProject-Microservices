@@ -92,17 +92,6 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             var updateResult = await _context.Products.ReplaceOneAsync(g => g.Id == entity.Id, productUpdated);
             if (updateResult.IsAcknowledged && updateResult.ModifiedCount > 0)
             {
-                await _publishEndpoint.Publish<ProductChangedEvent>(
-                        new ProductChangedEvent { 
-                                ProductId = productUpdated.Id,
-                                ProductName=productUpdated.Name,
-                                Price=productUpdated.Price,
-                                Status=productUpdated.Status,
-                                Line=productUpdated.Line,
-                                Link=productUpdated.Link,
-                                CategoryId=productUpdated.CategoryId
-                        });
-
                 return new SuccessResult(MessageExtensions.Updated(ProductEntities.Product));
             }
             return new ErrorResult(MessageExtensions.NotUpdated(ProductEntities.Product));
@@ -118,6 +107,12 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             DeleteResult deleteResult = await _context.Products.DeleteOneAsync(filter);
             if (deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0)
             {
+                await _publishEndpoint.Publish<ProductDeletedEvent>(
+                        new ProductDeletedEvent
+                        {
+                            ProductId = id,
+                        });
+
                 return new SuccessResult(MessageExtensions.Deleted(ProductEntities.Product));
             }
             return new ErrorResult(MessageExtensions.NotDeleted(ProductEntities.Product));

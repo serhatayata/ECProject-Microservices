@@ -14,7 +14,7 @@ namespace EC.Services.BasketAPI.Extensions
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<ProductChangedEventConsumer>();
+                x.AddConsumer<ProductDeletedEventConsumer>();
                 // Default Port : 5672
                 x.UsingRabbitMq((context, cfg) =>
                 {
@@ -24,9 +24,9 @@ namespace EC.Services.BasketAPI.Extensions
                         host.Password(settings.Password);
                     });
 
-                    cfg.ReceiveEndpoint("product-changed-event-basket-service", e =>
+                    cfg.ReceiveEndpoint("product-deleted-event-basket-service", e =>
                     {
-                        e.ConfigureConsumer<ProductChangedEventConsumer>(context);
+                        e.ConfigureConsumer<ProductDeletedEventConsumer>(context);
                     });
                 });
             });
