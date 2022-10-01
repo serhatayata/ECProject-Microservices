@@ -21,7 +21,7 @@ namespace EC.Services.BasketAPI.Services.Concrete
         #region SaveOrUpdate
         public async Task<IResult> SaveOrUpdate(BasketSaveOrUpdateDto basketDto,string userId)
         {
-            var status = await _cacheManager.GetDatabase(db:BasketTitles.BasketDb).StringSetAsync(userId, JsonSerializer.Serialize(basketDto));
+            var status = await _cacheManager.GetDatabase(db:BasketTitles.BasketDb).StringSetAsync("basket_"+userId, JsonSerializer.Serialize(basketDto));
 
             return status ? new SuccessResult(MessageExtensions.SavedOrUpdated(BasketTitles.Basket)) : new ErrorResult(MessageExtensions.NotSavedOrUpdated(BasketTitles.Basket), StatusCodes.Status500InternalServerError);
         }
@@ -29,20 +29,21 @@ namespace EC.Services.BasketAPI.Services.Concrete
         #region GetBasket
         public async Task<DataResult<BasketDto>> GetBasket(string userId)
         {
-            var existBasket = await _cacheManager.GetDatabase(db:BasketTitles.BasketDb).StringGetAsync(userId);
+            var existBasket = await _cacheManager.GetDatabase(db:BasketTitles.BasketDb).StringGetAsync("basket_"+userId);
 
             if (String.IsNullOrEmpty(existBasket))
             {
                 return new ErrorDataResult<BasketDto>(MessageExtensions.NotFound(BasketTitles.Basket),StatusCodes.Status200OK);
             }
             var basket = JsonSerializer.Deserialize<BasketDto>(existBasket);
+            basket.UserId = userId;
             return new SuccessDataResult<BasketDto>(basket);
         }
         #endregion
         #region Delete
         public async Task<IResult> Delete(string userId)
         {
-            var status = await _cacheManager.GetDatabase(db:BasketTitles.BasketDb).KeyDeleteAsync(userId);
+            var status = await _cacheManager.GetDatabase(db:BasketTitles.BasketDb).KeyDeleteAsync("basket_"+userId);
 
             return status ? new SuccessDataResult<bool>(true) : new ErrorDataResult<bool>("Basket not found", 404);
         }

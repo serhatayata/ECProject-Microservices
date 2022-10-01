@@ -19,6 +19,9 @@ namespace EC.Services.BasketAPI.DependencyResolvers.Autofac
             builder.RegisterType<BasketService>().As<IBasketService>().InstancePerLifetimeScope();
             builder.RegisterType<SharedIdentityService>().As<ISharedIdentityService>().InstancePerLifetimeScope();
             #endregion
+            #region Consumer - AddScoped
+            //builder.RegisterType<ProductDeletedEventConsumer>().InstancePerLifetimeScope();
+            #endregion
 
             var assembly = Assembly.GetExecutingAssembly();
 

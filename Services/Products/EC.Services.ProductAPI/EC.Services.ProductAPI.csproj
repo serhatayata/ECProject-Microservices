@@ -33,4 +33,8 @@
     <ProjectReference Include="..\..\..\Shared\Core\Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Settings\Abstract\" />
+  </ItemGroup>
+
 </Project>

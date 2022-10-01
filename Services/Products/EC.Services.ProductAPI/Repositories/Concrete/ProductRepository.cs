@@ -13,6 +13,7 @@ using EC.Services.ProductAPI.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Nest;
 using IResult = Core.Utilities.Results.IResult;
 using Mass = MassTransit;
@@ -103,16 +104,15 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         [RedisCacheRemoveAspect("IProductRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAsync(string id)
         {
+            var entity = _context.ProductsAsQueryable.FirstOrDefault(x => x.Id == id);
+            if (entity == null)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(ProductEntities.Product));
+            }
             var filter = Builders<Product>.Filter.Eq(m => m.Id, id);
             DeleteResult deleteResult = await _context.Products.DeleteOneAsync(filter);
             if (deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0)
             {
-                await _publishEndpoint.Publish<ProductDeletedEvent>(
-                        new ProductDeletedEvent
-                        {
-                            ProductId = id,
-                        });
-
                 return new SuccessResult(MessageExtensions.Deleted(ProductEntities.Product));
             }
             return new ErrorResult(MessageExtensions.NotDeleted(ProductEntities.Product));

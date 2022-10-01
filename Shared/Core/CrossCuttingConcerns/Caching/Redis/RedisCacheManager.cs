@@ -42,6 +42,19 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
             _client = ConnectionMultiplexer.Connect(_configurationOptions);
         }
 
+        public ConnectionMultiplexer GetConnection(int db=1)
+        {
+            _configurationOptions.DefaultDatabase = db;
+            var _client = ConnectionMultiplexer.Connect(_configurationOptions);
+            return _client;
+        }
+
+        public IServer GetServer()
+        {
+            var server = _client.GetServer(_client.GetEndPoints().First());
+            return server;
+        }
+
         public IDatabase GetDatabase(int db=1)
         {
             return _client.GetDatabase(db);
@@ -130,8 +143,10 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
         }
         #endregion
 
-        public async void RemoveByPattern(string pattern)
+        public async void RemoveByPattern(string pattern,int db)
         {
+            _configurationOptions.DefaultDatabase = db;
+            var _client = ConnectionMultiplexer.Connect(_configurationOptions);
             var server = _client.GetServer(_client.GetEndPoints().First());
 
             if (!server.IsConnected)

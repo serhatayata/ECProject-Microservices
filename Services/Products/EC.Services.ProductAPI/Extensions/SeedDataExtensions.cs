@@ -1,6 +1,6 @@
 ﻿using Core.Extensions;
 using EC.Services.ProductAPI.Entities;
-using EC.Services.ProductAPI.Settings.Abstract;
+using EC.Services.ProductAPI.Settings.Concrete;
 using MongoDB.Driver;
 
 namespace EC.Services.ProductAPI.Extensions
@@ -8,10 +8,10 @@ namespace EC.Services.ProductAPI.Extensions
     public static class SeedDataExtensions
     {
         private static IMongoDatabase _database;
-        private static IProductDatabaseSettings _settings;
+        private static ProductDatabaseSettings _settings;
         private static MongoClient _client;
        
-        public static void Configure(IProductDatabaseSettings settings)
+        public static void Configure(ProductDatabaseSettings settings)
         {
             _settings = settings;
             _client = new MongoClient(settings.ConnectionString);

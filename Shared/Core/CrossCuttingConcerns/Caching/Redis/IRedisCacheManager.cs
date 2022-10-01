@@ -9,7 +9,9 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
 {
     public interface IRedisCacheManager
     {
+        ConnectionMultiplexer GetConnection(int db=1);
         IDatabase GetDatabase(int db = 1);
+        IServer GetServer();
 
         /// <summary>
         /// Caching with limitless time
@@ -74,7 +76,7 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
 
         bool KeyExists(string key);
         Task<bool> KeyExistsAsync(string key);
-        void RemoveByPattern(string pattern);
+        void RemoveByPattern(string pattern,int db=1);
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using EC.Services.ProductAPI.Data.Abstract;
 using EC.Services.ProductAPI.Entities;
-using EC.Services.ProductAPI.Settings.Abstract;
+using EC.Services.ProductAPI.Settings.Concrete;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -8,20 +9,23 @@ namespace EC.Services.ProductAPI.Data.Concrete
 {
     public class ProductContext : IProductContext
     {
-        public ProductContext(IProductDatabaseSettings settings)
+        private readonly ProductDatabaseSettings _settings;
+        public ProductContext(IOptions<ProductDatabaseSettings> settings)
         {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
+            _settings = settings.Value;
 
-            Products = database.GetCollection<Product>(settings.ProductsCollection);
-            ProductVariants = database.GetCollection<ProductVariant>(settings.ProductVariantsCollection);
-            Variants = database.GetCollection<Variant>(settings.VariantsCollection);
-            Stocks = database.GetCollection<Stock>(settings.StocksCollection);
+            var client = new MongoClient(_settings.ConnectionString);
+            var database = client.GetDatabase(_settings.DatabaseName);
+
+            Products = database.GetCollection<Product>(_settings.ProductsCollection);
+            ProductVariants = database.GetCollection<ProductVariant>(_settings.ProductVariantsCollection);
+            Variants = database.GetCollection<Variant>(_settings.VariantsCollection);
+            Stocks = database.GetCollection<Stock>(_settings.StocksCollection);
             //Queryable
-            ProductsAsQueryable = database.GetCollection<Product>(settings.ProductsCollection).AsQueryable<Product>();
-            ProductVariantsAsQueryable = database.GetCollection<ProductVariant>(settings.ProductVariantsCollection).AsQueryable<ProductVariant>();
-            VariantsAsQueryable = database.GetCollection<Variant>(settings.VariantsCollection).AsQueryable<Variant>();
-            StocksAsQueryable = database.GetCollection<Stock>(settings.StocksCollection).AsQueryable<Stock>();
+            ProductsAsQueryable = database.GetCollection<Product>(_settings.ProductsCollection).AsQueryable<Product>();
+            ProductVariantsAsQueryable = database.GetCollection<ProductVariant>(_settings.ProductVariantsCollection).AsQueryable<ProductVariant>();
+            VariantsAsQueryable = database.GetCollection<Variant>(_settings.VariantsCollection).AsQueryable<Variant>();
+            StocksAsQueryable = database.GetCollection<Stock>(_settings.StocksCollection).AsQueryable<Stock>();
         }
         public IMongoCollection<Product> Products { get; }
         public IMongoQueryable<Product> ProductsAsQueryable { get; }

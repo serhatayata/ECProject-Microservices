@@ -43,7 +43,7 @@ namespace EC.Services.ProductAPI.Controllers
         [HttpDelete]
         [Route("delete")]
         [AuthorizeAnyPolicy("WriteProduct,FullProduct")]
-        public async Task<IActionResult> DeleteAsync(string id)
+        public async Task<IActionResult> DeleteAsync([FromQuery] string id)
         {
             var result = await _productRepository.DeleteAsync(id);
             return StatusCode(result.StatusCode, result);
