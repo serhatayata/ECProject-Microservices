@@ -34,7 +34,6 @@ namespace EC.Services.DiscountAPI.Data.Contexts
             modelBuilder.Entity<Discount>(entity =>
             {
                 entity.HasKey(x => x.Id);
-                entity.Property(x => x.UserId).HasColumnType("nvarchar(50)");
                 entity.Property(x => x.Code).HasColumnType("nvarchar(50)");
                 entity.Property(x => x.CDate).HasColumnType("datetime2").HasDefaultValueSql("getdate()");
             });

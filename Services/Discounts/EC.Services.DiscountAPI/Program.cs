@@ -1,14 +1,21 @@
+using EC.Services.DiscountAPI.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
+IWebHostEnvironment Environment = builder.Environment;
 
 #region SERVICES
 
-#region Controllers
-builder.Services.AddControllers();
+#region AUTH
+builder.Services.AddAuth(configuration);
+#endregion
+#region CONTROLLERS
+builder.Services.AddControllerSettings();
 #endregion
 #region ENDPOINTS
 builder.Services.AddEndpointsApiExplorer();
 #endregion
-#region MyRegion
+#region SWAGGER
 builder.Services.AddSwaggerGen();
 #endregion
 

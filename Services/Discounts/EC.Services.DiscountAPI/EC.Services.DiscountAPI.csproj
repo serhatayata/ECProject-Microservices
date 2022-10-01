@@ -41,9 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\" />
     <Folder Include="Mappings\" />
-    <Folder Include="Extensions\" />
     <Folder Include="Validations\" />
     <Folder Include="Settings\" />
   </ItemGroup>
