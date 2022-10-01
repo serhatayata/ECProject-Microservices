@@ -22,6 +22,7 @@ namespace EC.Services.BasketAPI.Extensions
 
             #region Basket
             services.AddValidatorsFromAssemblyContaining<BasketSaveOrUpdateDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<BasketItemValidator>();
             #endregion
 
             services.AddFluentValidationAutoValidation();

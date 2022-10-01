@@ -10,6 +10,7 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
     public interface IRedisCacheManager
     {
         ConnectionMultiplexer GetConnection(int db=1);
+        List<RedisKey> GetKeys(int db=1);
         IDatabase GetDatabase(int db = 1);
         IServer GetServer();
 

@@ -42,6 +42,13 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
             _client = ConnectionMultiplexer.Connect(_configurationOptions);
         }
 
+        public List<RedisKey> GetKeys(int db = 1)
+        {
+            _configurationOptions.DefaultDatabase = db;
+            var _client = ConnectionMultiplexer.Connect(_configurationOptions);
+            return _client.GetServer(_client.GetEndPoints().First()).Keys(db).ToList();
+        }
+
         public ConnectionMultiplexer GetConnection(int db=1)
         {
             _configurationOptions.DefaultDatabase = db;
