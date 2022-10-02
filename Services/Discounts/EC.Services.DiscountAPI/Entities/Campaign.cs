@@ -4,24 +4,22 @@ using MongoDB.Bson;
 
 namespace EC.Services.DiscountAPI.Entities
 {
-    public class Discount
+    public class Campaign
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public string Name { get; set; }
-        public int DiscountType { get; set; }
-        public int Rate { get; set; }
-        public string Code { get; set; }
+        public int Name { get; set; }
+        public int CampaignType { get; set; }
         public bool Status { get; set; }
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime CDate { get; set; }
-
+        public List<int> Products { get; set; }
     }
 
-    public enum DiscountTypes
+    public enum CampaignTypes
     {
-        Price=1,
-        Percentage=2
+        Price = 1,
+        Percentage = 2
     }
 }

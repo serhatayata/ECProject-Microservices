@@ -2,7 +2,6 @@
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
-using Core.DataAccess.Queue;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.ProductAPI.Constants;
@@ -14,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using Nest;
 using IResult = Core.Utilities.Results.IResult;
 using Mass = MassTransit;
 
