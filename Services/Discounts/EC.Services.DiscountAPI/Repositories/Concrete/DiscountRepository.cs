@@ -32,7 +32,6 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         #region CreateAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IDiscountRepository", Priority = (int)CacheItemPriority.Normal)]
         public async Task<IResult> CreateAsync(DiscountAddDto entity)
         {
             var discountAdded = _mapper.Map<Discount>(entity);
@@ -41,6 +40,7 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
 
             discountAdded.CDate = DateTime.Now;
             discountAdded.Status = true;
+            discountAdded.Code = code;
 
             await _context.Discounts.InsertOneAsync(discountAdded);
             var checkDiscount = await _context.DiscountsAsQueryable.AnyAsync(x => x.Id == discountAdded.Id);
@@ -54,7 +54,6 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         #region UpdateAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IDiscountRepository", Priority = (int)CacheItemPriority.Normal)]
         public async Task<IResult> UpdateAsync(DiscountUpdateDto entity)
         {
             var discountExists = await _context.DiscountsAsQueryable.FirstOrDefaultAsync(x => x.Id == entity.Id);
@@ -76,7 +75,6 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         #region DeleteAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IDiscountRepository", Priority = (int)CacheItemPriority.Normal)]
         public async Task<IResult> DeleteAsync(string id)
         {
             var entity = _context.DiscountsAsQueryable.FirstOrDefault(x => x.Id == id);
@@ -94,7 +92,6 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         }
         #endregion
         #region GetAllAsync
-        [RedisCacheAspect<DataResult<List<DiscountDto>>>(duration: 60)]
         public async Task<DataResult<List<DiscountDto>>> GetAllAsync()
         {
             var query = await _context.Discounts.FindAsync(p => p.Status);
@@ -114,14 +111,13 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
             var result = await query.FirstOrDefaultAsync();
             if (result != null)
             {
-                var product = _mapper.Map<DiscountDto>(result);
-                return new SuccessDataResult<DiscountDto>(product);
+                var discount = _mapper.Map<DiscountDto>(result);
+                return new SuccessDataResult<DiscountDto>(discount);
             }
             return new ErrorDataResult<DiscountDto>(MessageExtensions.NotFound(DiscountConstantValues.Discount));
         }
         #endregion
         #region GetDiscountByCodeAsync
-        [RedisCacheAspect<DataResult<List<DiscountDto>>>(duration: 60)]
         public async Task<DataResult<DiscountDto>> GetDiscountByCodeAsync(string code)
         {
             var query = await _context.Discounts.FindAsync(p => p.Code == code && p.Status);

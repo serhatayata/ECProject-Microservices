@@ -9,12 +9,12 @@ namespace EC.Services.DiscountAPI.Entities
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
         public int CampaignType { get; set; }
         public bool Status { get; set; }
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime CDate { get; set; }
-        public List<int> Products { get; set; }
+        public List<string> Products { get; set; }
     }
 
     public enum CampaignTypes

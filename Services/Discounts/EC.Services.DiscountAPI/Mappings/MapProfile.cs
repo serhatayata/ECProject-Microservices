@@ -21,7 +21,8 @@ namespace EC.Services.DiscountAPI.Mappings
             CreateMap<Campaign, CampaignAddDto>().ReverseMap();
             CreateMap<Campaign, CampaignUpdateDto>().ReverseMap()
                 .ForMember(x => x.Status, opt => opt.Ignore())
-                .ForMember(x => x.CDate, opt => opt.Ignore());
+                .ForMember(x => x.CDate, opt => opt.Ignore())
+                .ForMember(x => x.Products, opt => opt.Ignore());
             CreateMap<Campaign, CampaignDto>().ReverseMap();
             #endregion
         }
