@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Validations\" />
+    <Folder Include="Validations\DiscountValidations\" />
   </ItemGroup>
 
   <ItemGroup>
