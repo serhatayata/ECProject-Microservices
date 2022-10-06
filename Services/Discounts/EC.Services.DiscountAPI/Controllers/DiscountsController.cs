@@ -1,4 +1,5 @@
-﻿using Core.Utilities.Attributes;
+﻿using Core.Dtos;
+using Core.Utilities.Attributes;
 using EC.Services.DiscountAPI.Dtos.Discount;
 using EC.Services.DiscountAPI.Repositories.Abstract;
 using Microsoft.AspNetCore.Http;
@@ -41,24 +42,24 @@ namespace EC.Services.DiscountAPI.Controllers
         [HttpDelete]
         [Route("delete")]
         [AuthorizeAnyPolicy("WriteDiscount,FullDiscount")]
-        public async Task<IActionResult> DeleteAsync([FromBody] string id)
+        public async Task<IActionResult> DeleteAsync([FromBody] DeleteStringDto model)
         {
-            var result = await _discountRepository.DeleteAsync(id);
+            var result = await _discountRepository.DeleteAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
         #region GetAsync
-        [HttpPost]
+        [HttpGet]
         [Route("get")]
         [AuthorizeAnyPolicy("ReadDiscount,FullDiscount")]
-        public async Task<IActionResult> GetAsync([FromBody] string id)
+        public async Task<IActionResult> GetAsync([FromQuery] DiscountGetByIdDto model)
         {
-            var result = await _discountRepository.GetAsync(id);
+            var result = await _discountRepository.GetAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
         #region GetAllAsync
-        [HttpPost]
+        [HttpGet]
         [Route("getall")]
         [AuthorizeAnyPolicy("ReadDiscount,FullDiscount")]
         public async Task<IActionResult> GetAllAsync()
@@ -68,12 +69,12 @@ namespace EC.Services.DiscountAPI.Controllers
         }
         #endregion
         #region GetDiscountByCodeAsync
-        [HttpPost]
+        [HttpGet]
         [Route("get-discount-bycode")]
         [AuthorizeAnyPolicy("ReadDiscount,FullDiscount")]
-        public async Task<IActionResult> GetDiscountByCodeAsync([FromBody]string code)
+        public async Task<IActionResult> GetDiscountByCodeAsync([FromQuery]DiscountGetByCodeDto model)
         {
-            var result = await _discountRepository.GetDiscountByCodeAsync(code);
+            var result = await _discountRepository.GetDiscountByCodeAsync(model);
             return StatusCode(result.StatusCode, result);
         }
         #endregion

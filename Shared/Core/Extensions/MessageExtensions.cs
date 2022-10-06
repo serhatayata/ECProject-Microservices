@@ -66,6 +66,13 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region NotInvalid
+        public static string NotInvalid(string entity)
+        {
+            var value = $"{entity} is invalid.";
+            return value;
+        }
+        #endregion
         #region NotSavedOrUpdated
         public static string NotSavedOrUpdated(string entity)
         {
@@ -286,6 +293,13 @@ namespace Core.Extensions
         public static string ErrorBetween(string entity,int bottom, int top)
         {
             var value = $"{entity} must be between {bottom} and {top}";
+            return value;
+        }
+        #endregion
+        #region ErrorLength
+        public static string ErrorLength(string entity, int v)
+        {
+            var value = $"{entity} must be {v} characters";
             return value;
         }
         #endregion

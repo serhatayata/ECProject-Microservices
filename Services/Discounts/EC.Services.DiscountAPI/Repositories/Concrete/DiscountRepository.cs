@@ -6,6 +6,7 @@ using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.DiscountAPI.Constants;
 using EC.Services.DiscountAPI.Data.Abstract;
+using EC.Services.DiscountAPI.Dtos.Campaign;
 using EC.Services.DiscountAPI.Dtos.Discount;
 using EC.Services.DiscountAPI.Entities;
 using EC.Services.DiscountAPI.Extensions;
@@ -118,9 +119,9 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         }
         #endregion
         #region GetDiscountByCodeAsync
-        public async Task<DataResult<DiscountDto>> GetDiscountByCodeAsync(string code)
+        public async Task<DataResult<DiscountDto>> GetDiscountByCodeAsync(DiscountGetByCodeDto model)
         {
-            var query = await _context.Discounts.FindAsync(p => p.Code == code && p.Status);
+            var query = await _context.Discounts.FindAsync(p => p.Code == model.Code && p.Status);
             var result = await query.FirstOrDefaultAsync();
             if (result != null)
             {

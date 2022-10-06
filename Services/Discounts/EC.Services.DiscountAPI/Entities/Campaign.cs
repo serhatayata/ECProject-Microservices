@@ -11,6 +11,7 @@ namespace EC.Services.DiscountAPI.Entities
         public string Id { get; set; }
         public string Name { get; set; }
         public int CampaignType { get; set; }
+        public int Rate { get; set; }
         public bool Status { get; set; }
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime CDate { get; set; }
@@ -20,6 +21,8 @@ namespace EC.Services.DiscountAPI.Entities
     public enum CampaignTypes
     {
         Price = 1,
-        Percentage = 2
+        Percentage = 2,
+        OverPrice=3,
+        OverPercentage=4
     }
 }

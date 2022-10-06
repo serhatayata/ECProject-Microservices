@@ -69,17 +69,17 @@ namespace EC.Services.DiscountAPI.Controllers
         }
         #endregion
         #region GetAsync
-        [HttpPost]
+        [HttpGet]
         [Route("get")]
         [AuthorizeAnyPolicy("ReadDiscount,FullDiscount")]
-        public async Task<IActionResult> GetAsync([FromBody] string id)
+        public async Task<IActionResult> GetAsync([FromQuery] CampaignGetByIdDto model)
         {
-            var result = await _campaignRepository.GetAsync(id);
+            var result = await _campaignRepository.GetAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
         #region GetAllAsync
-        [HttpPost]
+        [HttpGet]
         [Route("getall")]
         [AuthorizeAnyPolicy("ReadDiscount,FullDiscount")]
         public async Task<IActionResult> GetAllAsync()
@@ -89,10 +89,10 @@ namespace EC.Services.DiscountAPI.Controllers
         }
         #endregion
         #region GetProductCampaignsAsync
-        [HttpPost]
+        [HttpGet]
         [Route("get-byproductid")]
         [AuthorizeAnyPolicy("ReadDiscount,FullDiscount")]
-        public async Task<IActionResult> GetProductCampaignsAsync([FromBody] string productId)
+        public async Task<IActionResult> GetProductCampaignsAsync([FromQuery] string productId)
         {
             var result = await _campaignRepository.GetProductCampaignsAsync(productId);
             return StatusCode(result.StatusCode, result);

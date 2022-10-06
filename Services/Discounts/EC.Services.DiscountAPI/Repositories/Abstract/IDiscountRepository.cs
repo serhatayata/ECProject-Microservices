@@ -6,6 +6,6 @@ namespace EC.Services.DiscountAPI.Repositories.Abstract
 {
     public interface IDiscountRepository : IBaseRepository<DiscountDto, DiscountAddDto, DiscountUpdateDto>
     {
-        Task<DataResult<DiscountDto>> GetDiscountByCodeAsync(string code);
+        Task<DataResult<DiscountDto>> GetDiscountByCodeAsync(DiscountGetByCodeDto model);
     }
 }

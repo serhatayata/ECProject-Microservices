@@ -25,6 +25,18 @@ namespace Core.Extensions
             return options;
         }
 
+        public static IRuleBuilderOptions<T, string> MongoDbOjectId<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            var options = ruleBuilder.NotEmpty().Must(IsMongoDbObjectIdValid);
+            return options;
+        }
+
+        public static bool IsMongoDbObjectIdValid(string arg)
+        {
+            return !string.IsNullOrEmpty(arg) && Regex.IsMatch(arg,
+                @"^[0-9a-fA-F]{24}$");
+        }
+
         public static IRuleBuilderOptions<T, string> PasswordWithoutMessage<T>(this IRuleBuilder<T, string> ruleBuilder,
             int minimumLength = 6, int maximumLength = 14)
         {

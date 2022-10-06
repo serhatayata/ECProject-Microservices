@@ -2,6 +2,8 @@
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using EC.Services.DiscountAPI.Validations.CampaignValidations;
+using EC.Services.DiscountAPI.Validations.DiscountValidations;
 
 namespace EC.Services.DiscountAPI.Extensions
 {
@@ -19,7 +21,19 @@ namespace EC.Services.DiscountAPI.Extensions
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddValidatorsFromAssemblyContaining<CategoryUpdateDtoValidator>();
+            #region Campaign
+            services.AddValidatorsFromAssemblyContaining<CampaignAddDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<CampaignAddProductDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<CampaignUpdateDtoValidator>();
+            #endregion
+            #region Discount
+            services.AddValidatorsFromAssemblyContaining<DiscountAddDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<DiscountUpdateDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<DiscountGetByIdDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<DiscountGetByCodeDtoValidator>();
+
+            #endregion
+
 
             services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters(); // for client side
