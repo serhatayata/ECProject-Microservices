@@ -38,10 +38,11 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
 
             campaignAdded.CDate = DateTime.Now;
             campaignAdded.Status = true;
+            campaignAdded.Products = new List<string>();
 
             await _context.Campaigns.InsertOneAsync(campaignAdded);
             var checkCampaign = await _context.CampaignsAsQueryable.AnyAsync(x => x.Id == campaignAdded.Id);
-            if (checkCampaign)
+            if (!checkCampaign)
             {
                 return new ErrorResult(MessageExtensions.NotAdded(DiscountConstantValues.Campaign));
             }
@@ -53,7 +54,7 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> UpdateAsync(CampaignUpdateDto entity)
         {
-            var campaignExists = await _context.CampaignsAsQueryable.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var campaignExists = await _context.CampaignsAsQueryable.FirstOrDefaultAsync(x => x.Id == entity.Id && x.Status);
             if (campaignExists == null)
             {
                 return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
@@ -74,17 +75,23 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAsync(string id)
         {
-            var entity = _context.CampaignsAsQueryable.FirstOrDefault(x => x.Id == id);
+            var entity = _context.CampaignsAsQueryable.FirstOrDefault(x => x.Id == id && x.Status);
             if (entity == null)
             {
                 return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
             }
-            var filter = Builders<Campaign>.Filter.Eq(m => m.Id, id);
-            DeleteResult deleteResult = await _context.Campaigns.DeleteOneAsync(filter);
-            if (deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0)
+            entity.Status = false;
+            var updateResult = await _context.Campaigns.ReplaceOneAsync(g => g.Id == entity.Id, entity);
+            if (updateResult.IsAcknowledged && updateResult.ModifiedCount > 0)
             {
                 return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Campaign));
             }
+            //var filter = Builders<Campaign>.Filter.Eq(m => m.Id, id);
+            //DeleteResult deleteResult = await _context.Campaigns.DeleteOneAsync(filter);
+            //if (deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0)
+            //{
+            //    return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Campaign));
+            //}
             return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Campaign));
         }
         #endregion
@@ -93,17 +100,17 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteProductAsync(CampaignDeleteProductDto model)
         {
-            var entity = _context.CampaignsAsQueryable.FirstOrDefault(x => x.Id == model.CampaignId);
+            var entity = _context.CampaignsAsQueryable.FirstOrDefault(x => x.Id == model.CampaignId && x.Status);
             if (entity == null)
             {
-                return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
+                return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.CampaignProductId));
             }
 
             var products = entity.Products;
             var deletedProducts = products.RemoveAll(x => x == model.ProductId);
             if (deletedProducts <= 0)
             {
-                return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Campaign));
+                return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.CampaignProductId));
             }
 
             entity.Products = products;
@@ -111,9 +118,9 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
             var updateResult = await _context.Campaigns.ReplaceOneAsync(g => g.Id == entity.Id, entity);
             if (updateResult.IsAcknowledged && updateResult.ModifiedCount > 0)
             {
-                return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Campaign));
+                return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.CampaignProductId));
             }
-            return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Campaign));
+            return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.CampaignProductId));
         }
         #endregion
         #region AddProductsAsync

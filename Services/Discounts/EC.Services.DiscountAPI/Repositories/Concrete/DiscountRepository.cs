@@ -45,7 +45,7 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
 
             await _context.Discounts.InsertOneAsync(discountAdded);
             var checkDiscount = await _context.DiscountsAsQueryable.AnyAsync(x => x.Id == discountAdded.Id);
-            if (checkDiscount)
+            if (!checkDiscount)
             {
                 return new ErrorResult(MessageExtensions.NotAdded(DiscountConstantValues.Discount));
             }
@@ -57,7 +57,7 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> UpdateAsync(DiscountUpdateDto entity)
         {
-            var discountExists = await _context.DiscountsAsQueryable.FirstOrDefaultAsync(x => x.Id == entity.Id);
+            var discountExists = await _context.DiscountsAsQueryable.FirstOrDefaultAsync(x => x.Id == entity.Id && x.Status);
             if (discountExists == null)
             {
                 return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.Discount));
@@ -78,17 +78,23 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAsync(string id)
         {
-            var entity = _context.DiscountsAsQueryable.FirstOrDefault(x => x.Id == id);
+            var entity = _context.DiscountsAsQueryable.FirstOrDefault(x => x.Id == id && x.Status);
             if (entity == null)
             {
                 return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.Discount));
             }
-            var filter = Builders<Discount>.Filter.Eq(m => m.Id, id);
-            DeleteResult deleteResult = await _context.Discounts.DeleteOneAsync(filter);
-            if (deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0)
+            entity.Status = false;
+            var updateResult = await _context.Discounts.ReplaceOneAsync(g => g.Id == entity.Id, entity);
+            if (updateResult.IsAcknowledged && updateResult.ModifiedCount > 0)
             {
                 return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Discount));
             }
+            //var filter = Builders<Discount>.Filter.Eq(m => m.Id, id);
+            //DeleteResult deleteResult = await _context.Discounts.DeleteOneAsync(filter);
+            //if (deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0)
+            //{
+            //    return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Discount));
+            //}
             return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Discount));
         }
         #endregion

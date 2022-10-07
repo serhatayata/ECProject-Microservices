@@ -1,4 +1,5 @@
-﻿using Core.Utilities.Attributes;
+﻿using Core.Dtos;
+using Core.Utilities.Attributes;
 using EC.Services.DiscountAPI.Dtos.Campaign;
 using EC.Services.DiscountAPI.Repositories.Abstract;
 using Microsoft.AspNetCore.Http;
@@ -42,9 +43,9 @@ namespace EC.Services.DiscountAPI.Controllers
         [HttpDelete]
         [Route("delete")]
         [AuthorizeAnyPolicy("WriteDiscount,FullDiscount")]
-        public async Task<IActionResult> DeleteAsync([FromBody]string id)
+        public async Task<IActionResult> DeleteAsync([FromBody]DeleteStringDto model)
         {
-            var result = await _campaignRepository.DeleteAsync(id);
+            var result = await _campaignRepository.DeleteAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
