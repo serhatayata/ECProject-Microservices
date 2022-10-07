@@ -5,9 +5,9 @@ using FluentValidation;
 
 namespace EC.Services.ProductAPI.Validations.ProductVariantValidations
 {
-    public class ProductVariantDeleteDtoValidator : AbstractValidator<ProductVariantDeleteDto>
+    public class ProductVariantGetDtoValidator : AbstractValidator<ProductVariantGetDto>
     {
-        public ProductVariantDeleteDtoValidator()
+        public ProductVariantGetDtoValidator() 
         {
             RuleFor(x => x.ProductId).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(ProductEntities.ProductId));
             RuleFor(x => x.ProductId).NotNull().WithMessage(MessageExtensions.ErrorNotNull(ProductEntities.ProductId));
@@ -18,9 +18,6 @@ namespace EC.Services.ProductAPI.Validations.ProductVariantValidations
             RuleFor(x => x.VariantId).NotNull().WithMessage(MessageExtensions.ErrorNotNull(ProductEntities.VariantId));
             RuleFor(x => x.VariantId).Length(24).WithMessage(MessageExtensions.ErrorLength(ProductEntities.VariantId, 24));
             RuleFor(x => x.VariantId).MongoDbOjectId().WithMessage(MessageExtensions.NotInvalid(ProductEntities.VariantId));
-
-
         }
-
     }
 }

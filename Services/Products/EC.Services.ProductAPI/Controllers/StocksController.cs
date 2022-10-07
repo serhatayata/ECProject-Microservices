@@ -48,9 +48,9 @@ namespace EC.Services.ProductAPI.Controllers
         #region GetAsync
         [HttpGet]
         [Route("get")]
-        public async Task<IActionResult> GetAsync([FromQuery] string id)
+        public async Task<IActionResult> GetAsync([FromQuery] StockGetByIdDto model)
         {
-            var result = await _stockRepository.GetAsync(id);
+            var result = await _stockRepository.GetAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion

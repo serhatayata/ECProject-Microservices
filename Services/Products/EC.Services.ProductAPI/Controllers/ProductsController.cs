@@ -43,9 +43,9 @@ namespace EC.Services.ProductAPI.Controllers
         [HttpDelete]
         [Route("delete")]
         [AuthorizeAnyPolicy("WriteProduct,FullProduct")]
-        public async Task<IActionResult> DeleteAsync([FromQuery] string id)
+        public async Task<IActionResult> DeleteAsync([FromQuery] DeleteStringDto model)
         {
-            var result = await _productRepository.DeleteAsync(id);
+            var result = await _productRepository.DeleteAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
@@ -53,9 +53,9 @@ namespace EC.Services.ProductAPI.Controllers
         [HttpGet]
         [Route("get")]
         [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
-        public async Task<IActionResult> GetAsync([FromQuery]string id)
+        public async Task<IActionResult> GetAsync([FromQuery]ProductGetByIdDto model)
         {
-            var result = await _productRepository.GetAsync(id);
+            var result = await _productRepository.GetAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
