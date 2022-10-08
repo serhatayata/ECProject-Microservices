@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
 using Core.Extensions;
 using Core.Utilities.Results;
@@ -30,6 +31,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         }
 
         #region AddAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("ICategoryService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> AddAsync(CategoryAddDto categoryModel)
@@ -86,6 +88,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         }
         #endregion
         #region UpdateAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("ICategoryService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> UpdateAsync(CategoryUpdateDto model)
@@ -120,6 +123,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         }
         #endregion
         #region DeleteAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("ICategoryService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAsync(CategoryDeleteDto model)

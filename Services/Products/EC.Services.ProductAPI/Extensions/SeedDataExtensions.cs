@@ -1,6 +1,6 @@
 ﻿using Core.Extensions;
 using EC.Services.ProductAPI.Entities;
-using EC.Services.ProductAPI.Settings.Abstract;
+using EC.Services.ProductAPI.Settings.Concrete;
 using MongoDB.Driver;
 
 namespace EC.Services.ProductAPI.Extensions
@@ -8,17 +8,17 @@ namespace EC.Services.ProductAPI.Extensions
     public static class SeedDataExtensions
     {
         private static IMongoDatabase _database;
-        private static IProductDatabaseSettings _settings;
+        private static ProductDatabaseSettings _settings;
         private static MongoClient _client;
        
-        public static void Configure(IProductDatabaseSettings settings)
+        public static void Configure(ProductDatabaseSettings settings)
         {
             _settings = settings;
             _client = new MongoClient(settings.ConnectionString);
             _database = _client.GetDatabase(settings.DatabaseName);
         }
 
-        public static void AddSeedData()
+        public async static Task AddSeedData()
         {
             var products = _database.GetCollection<Product>(_settings.ProductsCollection);
             var productVariants = _database.GetCollection<ProductVariant>(_settings.ProductVariantsCollection);
@@ -32,19 +32,19 @@ namespace EC.Services.ProductAPI.Extensions
 
             if (!existsProduct)
             {
-                products.InsertManyAsync(GetSeedDataProducts());
+                await products.InsertManyAsync(GetSeedDataProducts());
             }
             if (!existsVariant)
             {
-                variants.InsertManyAsync(GetSeedDataVariants());
+                await variants.InsertManyAsync(GetSeedDataVariants());
             }
             if (!existsProductVariant)
             {
-                productVariants.InsertManyAsync(GetSeedDataProductVariants());
+                await productVariants.InsertManyAsync(GetSeedDataProductVariants());
             }
             if (!existsStock)
             {
-                stocks.InsertManyAsync(GetSeedDataStocks());
+                await stocks.InsertManyAsync(GetSeedDataStocks());
             }
         }
 

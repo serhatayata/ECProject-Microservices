@@ -52,10 +52,31 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region SavedOrUpdated
+        public static string SavedOrUpdated(string entity)
+        {
+            var value = $"{entity} saved or updated.";
+            return value;
+        }
+        #endregion
         #region NotAdded
         public static string NotAdded(string entity)
         {
             var value = $"{entity} not added.";
+            return value;
+        }
+        #endregion
+        #region NotInvalid
+        public static string NotInvalid(string entity)
+        {
+            var value = $"{entity} is invalid.";
+            return value;
+        }
+        #endregion
+        #region NotSavedOrUpdated
+        public static string NotSavedOrUpdated(string entity)
+        {
+            var value = $"{entity} not saved or updated.";
             return value;
         }
         #endregion
@@ -275,10 +296,24 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region ErrorLength
+        public static string ErrorLength(string entity, int v)
+        {
+            var value = $"{entity} must be {v} characters";
+            return value;
+        }
+        #endregion
         #region ErrorBiggerThan
         public static string ErrorBiggerThan(string entity, int v)
         {
             var value = $"{entity} must be bigger than {v}";
+            return value;
+        }
+        #endregion
+        #region ErrorMaxLength
+        public static string ErrorMaxLength(string entity, int v)
+        {
+            var value = $"{entity} can have Maximum {v} charatecters";
             return value;
         }
         #endregion

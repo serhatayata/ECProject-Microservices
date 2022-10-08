@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Core.CrossCuttingConcerns.Caching.Redis;
 using Microsoft.Extensions.DependencyInjection;
 
 /*Inversion of Control(Kontrolün Tersine Çevrilmesi):  Ioc ile Uygulama içerisindeki obje instance’larının yönetimi sağlanarak,
@@ -13,6 +14,7 @@ namespace Core.Utilities.IoC
         public static IServiceProvider ServiceProvider { get; set; }
         public static IServiceCollection Create( IServiceCollection services)
         {
+            services.AddScoped<IRedisCacheManager,RedisCacheManager>();
             ServiceProvider = services.BuildServiceProvider();
             return services;
         }

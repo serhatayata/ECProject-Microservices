@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
+using Core.DataAccess.Queue;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.ProductAPI.Constants;
@@ -11,8 +13,9 @@ using EC.Services.ProductAPI.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
-using Nest;
+using MongoDB.Driver.Linq;
 using IResult = Core.Utilities.Results.IResult;
+using Mass = MassTransit;
 
 namespace EC.Services.ProductAPI.Repositories.Concrete
 {
@@ -20,14 +23,17 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
     {
         private readonly IProductContext _context;
         private readonly IMapper _mapper;
+        private readonly Mass.IPublishEndpoint _publishEndpoint;
 
-        public ProductRepository(IProductContext context, IMapper mapper)
+        public ProductRepository(IProductContext context, IMapper mapper, Mass.IPublishEndpoint publishEndpoint)
         {
             _context = context;
             _mapper = mapper;
+            _publishEndpoint = publishEndpoint;
         }
 
         #region CreateAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("IProductRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> CreateAsync(ProductAddDto entity)
@@ -58,6 +64,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region UpdateAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("IProductRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> UpdateAsync(ProductUpdateDto entity)
@@ -91,14 +98,21 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region DeleteAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("IProductRepository", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAsync(string id)
         {
+            var entity = _context.ProductsAsQueryable.FirstOrDefault(x => x.Id == id);
+            if (entity == null)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(ProductEntities.Product));
+            }
             var filter = Builders<Product>.Filter.Eq(m => m.Id, id);
             DeleteResult deleteResult = await _context.Products.DeleteOneAsync(filter);
             if (deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0)
             {
+                await _publishEndpoint.Publish<ProductDeletedEvent>(new ProductDeletedEvent { ProductId=id });
                 return new SuccessResult(MessageExtensions.Deleted(ProductEntities.Product));
             }
             return new ErrorResult(MessageExtensions.NotDeleted(ProductEntities.Product));

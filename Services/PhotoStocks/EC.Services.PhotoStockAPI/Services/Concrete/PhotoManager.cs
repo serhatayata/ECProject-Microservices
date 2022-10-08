@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Logging;
+using Core.Aspects.Autofac.Transaction;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.PhotoStockAPI.Constants;
@@ -8,6 +11,11 @@ using EC.Services.PhotoStockAPI.Dtos;
 using EC.Services.PhotoStockAPI.Entities;
 using EC.Services.PhotoStockAPI.Extensions;
 using EC.Services.PhotoStockAPI.Services.Abstract;
+using EC.Services.PhotoStockAPI.Settings;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System.Drawing;
 using static System.Net.Mime.MediaTypeNames;
 using IResult = Core.Utilities.Results.IResult;
@@ -19,15 +27,20 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         private readonly IDapperPhotoRepository _dapperPhotoRepository;
         private readonly IEfPhotoRepository _efPhotoRepository;
         private readonly IMapper _mapper;
+        private readonly ResizeSetting _resizeSettings;
 
-        public PhotoManager(IDapperPhotoRepository dapperPhotoRepository, IEfPhotoRepository efPhotoRepository, IMapper mapper)
+        public PhotoManager(IDapperPhotoRepository dapperPhotoRepository, IEfPhotoRepository efPhotoRepository, IMapper mapper, IOptions<ResizeSetting> resizeSettings)
         {
             _dapperPhotoRepository = dapperPhotoRepository;
             _efPhotoRepository = efPhotoRepository;
             _mapper = mapper;
+            _resizeSettings = resizeSettings.Value;
         }
 
         #region AddAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
+        [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
+        [RedisCacheRemoveAspect("IPhotoService", Priority = (int)CacheItemPriority.High)]
         public async Task<DataResult<string>> AddAsync(PhotoAddDto model)
         {
             if (model.Photo == null || model.Photo?.FileName == null || model.Photo.Length <= 0)
@@ -42,8 +55,10 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", uniqueFileName);
 
-            using var stream = new FileStream(path, FileMode.Create);
-            await model.Photo.CopyToAsync(stream);
+            var width = _resizeSettings.Data.First(x => x.ResizeType == (int)ResizeTypeEnum.S).Width;
+            var height = _resizeSettings.Data.First(x => x.ResizeType == (int)ResizeTypeEnum.S).Height;
+
+            ReSizingExtensions.SaveImage(model.Photo.OpenReadStream(),path,width,height,false);
 
             if (File.Exists(path))
             {
@@ -63,6 +78,9 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region DeleteByIdAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
+        [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
+        [RedisCacheRemoveAspect("IPhotoService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteByIdAsync(int id)
         {
             var photoExists = await _dapperPhotoRepository.GetByIdAsync(id);
@@ -85,6 +103,9 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region DeleteByUrlAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
+        [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
+        [RedisCacheRemoveAspect("IPhotoService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteByUrlAsync(string url)
         {
             var photoExists = await _efPhotoRepository.GetAsync(x => x.Url == url);
@@ -107,6 +128,9 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region DeleteAllByTypeAndEntityIdAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
+        [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
+        [RedisCacheRemoveAspect("IPhotoService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> DeleteAllByTypeAndEntityIdAsync(PhotoDeleteByTypeAndEntityIdDto model)
         {
             var allPhotos = await _dapperPhotoRepository.GetAllByTypeAndEntityIdAsync(model.PhotoType, model.EntityId);
@@ -129,9 +153,11 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region GetByIdAsync
+        [RedisCacheAspect<DataResult<PhotoDto>>(duration: 60)]
         public async Task<DataResult<PhotoDto>> GetByIdAsync(int id)
         {
-            var photo = await _dapperPhotoRepository.GetByIdAsync(id);
+            var photoGet = await _dapperPhotoRepository.GetByIdAsync(id);
+            var photo = _mapper.Map<PhotoDto>(photoGet);
             if (photo == null)
             {
                 return new ErrorDataResult<PhotoDto>(MessageExtensions.NotFound(PhotoTitles.Photo));
@@ -140,9 +166,11 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region GetAllAsync
+        [RedisCacheAspect<DataResult<List<PhotoDto>>>(duration: 60,Priority =2)]
         public async Task<DataResult<List<PhotoDto>>> GetAllAsync()
         {
-            var photos = await _dapperPhotoRepository.GetAllAsync();
+            var photosGet = await _dapperPhotoRepository.GetAllAsync();
+            var photos = _mapper.Map<List<PhotoDto>>(photosGet);
             if (photos?.Count() == 0 || photos == null)
             {
                 return new ErrorDataResult<List<PhotoDto>>(MessageExtensions.NotFound(PhotoTitles.Photo));
@@ -151,9 +179,11 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region GetAllByTypeAndEntityIdAsync
+        [RedisCacheAspect<DataResult<List<PhotoDto>>>(duration: 60)]
         public async Task<DataResult<List<PhotoDto>>> GetAllByTypeAndEntityIdAsync(PhotoGetAllByTypeAndEntityIdDto model)
         {
-            var photos = await _dapperPhotoRepository.GetAllByTypeAndEntityIdAsync(model.Type,model.EntityId);
+            var photosGet = await _dapperPhotoRepository.GetAllByTypeAndEntityIdAsync(model.Type,model.EntityId);
+            var photos = _mapper.Map<List<PhotoDto>>(photosGet);
             if (photos?.Count() == 0 || photos == null)
             {
                 return new ErrorDataResult<List<PhotoDto>>(MessageExtensions.NotFound(PhotoTitles.Photo));
@@ -162,9 +192,11 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         }
         #endregion
         #region GetAllByTypeAsync
+        [RedisCacheAspect<DataResult<List<PhotoDto>>>(duration: 60)]
         public async Task<DataResult<List<PhotoDto>>> GetAllByTypeAsync(PhotoGetAllByTypeDto model)
         {
-            var photos = await _dapperPhotoRepository.GetAllByTypeAsync(model.Type);
+            var photosGet = await _dapperPhotoRepository.GetAllByTypeAsync(model.Type);
+            var photos = _mapper.Map<List<PhotoDto>>(photosGet);
             if (photos?.Count() == 0 || photos == null)
             {
                 return new ErrorDataResult<List<PhotoDto>>(MessageExtensions.NotFound(PhotoTitles.Photo));

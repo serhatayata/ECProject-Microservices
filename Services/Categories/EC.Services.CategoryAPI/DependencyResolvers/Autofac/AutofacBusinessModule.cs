@@ -2,6 +2,7 @@
 using Autofac.Extras.DynamicProxy;
 using Castle.DynamicProxy;
 using Core.CrossCuttingConcerns.Caching.Redis;
+using Core.CrossCuttingConcerns.Logging.ElasticSearch;
 using Core.Utilities.Interceptors;
 using EC.Services.CategoryAPI.Data.Abstract.Dapper;
 using EC.Services.CategoryAPI.Data.Abstract.EntityFramework;
@@ -21,6 +22,7 @@ namespace EC.Services.CategoryAPI.DependencyResolvers.Autofac
             #region Services - AddScoped
             builder.RegisterType<CategoryManager>().As<ICategoryService>().InstancePerLifetimeScope();
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerLifetimeScope();
+            builder.RegisterType<ElasticSearchManager>().As<IElasticSearchService>().InstancePerLifetimeScope();
             #endregion
             #region DataAccess - AddTransient
             builder.RegisterType<CategoryRepository>().As<ICategoryRepository>().InstancePerDependency();

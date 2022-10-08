@@ -38,18 +38,18 @@ namespace EC.Services.ProductAPI.Controllers
         #region DeleteAsync
         [HttpDelete]
         [Route("delete")]
-        public async Task<IActionResult> DeleteAsync(string id)
+        public async Task<IActionResult> DeleteAsync(DeleteStringDto model)
         {
-            var result = await _variantRepository.DeleteAsync(id);
+            var result = await _variantRepository.DeleteAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
         #region GetAsync
         [HttpGet]
         [Route("get")]
-        public async Task<IActionResult> GetAsync([FromQuery] string id)
+        public async Task<IActionResult> GetAsync([FromQuery] VariantGetByIdDto model)
         {
-            var result = await _variantRepository.GetAsync(id);
+            var result = await _variantRepository.GetAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion

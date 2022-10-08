@@ -250,7 +250,9 @@ namespace EC.IdentityServer.Configuration
                         IdentityServerConstants.StandardScopes.OfflineAccess,
                         "order_full",
                         "basket_full",
-                        "orders.signalrhub",
+                        "basket_read",
+                        "basket_write",
+                        "orders.signalrhub"
                     },
                     AccessTokenLifetime = 60*60*2, // 2 hours
                     IdentityTokenLifetime= 60*60*2, // 2 hours

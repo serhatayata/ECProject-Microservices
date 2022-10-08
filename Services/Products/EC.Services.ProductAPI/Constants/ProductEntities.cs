@@ -4,6 +4,7 @@
     {
         #region Product
         public static string Product = "Product";
+        public static string ProductId = "Product Id";
         public static string ProductLink = "Link";
         public static string ProductPrice = "Price";
         public static string ProductLine = "Line";

@@ -1,4 +1,5 @@
 ﻿using Core.Extensions;
+using EC.Services.PhotoStockAPI.Constants;
 using EC.Services.PhotoStockAPI.Dtos;
 using FluentValidation;
 
@@ -8,12 +9,13 @@ namespace EC.Services.PhotoStockAPI.Validations.PhotoValidations
     {
         public PhotoAddDtoValidator()
         {
-            //RuleFor(x => x.Photo).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(CategoryEntities.CategoryName));
+            RuleFor(x => x.Photo).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PhotoTitles.Photo));
 
+            RuleFor(x => x.PhotoType).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PhotoTitles.PhotoType));
 
-            //RuleFor(x => x.Name).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(CategoryEntities.CategoryName));
-            //RuleFor(x => x.Name).NotNull().WithMessage(MessageExtensions.ErrorNotNull(CategoryEntities.CategoryName));
-            //RuleFor(x => x.Name).Length(2, 50).WithMessage(MessageExtensions.ErrorBetween(CategoryEntities.CategoryName, 2, 50));
+            RuleFor(x => x.EntityId).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PhotoTitles.PhotoEntityId));
+            RuleFor(x => x.EntityId).GreaterThan(0).WithMessage(MessageExtensions.ErrorBiggerThan(PhotoTitles.PhotoEntityId,0));
+
         }
     }
 }
