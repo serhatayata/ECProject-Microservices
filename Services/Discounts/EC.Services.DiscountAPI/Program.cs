@@ -22,6 +22,9 @@ builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
 #endregion
+#region MASSTRANSIT
+builder.Services.AddRabbitMqConsumer(configuration);
+#endregion
 #region SEEDDATA
 var sp = builder.Services.BuildServiceProvider();
 var discountDatabaseSettings = sp.GetRequiredService<IOptions<DiscountDatabaseSettings>>();

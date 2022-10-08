@@ -4,6 +4,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using EC.Services.DiscountAPI.Validations.CampaignValidations;
 using EC.Services.DiscountAPI.Validations.DiscountValidations;
+using Core.Utilities.Validations;
 
 namespace EC.Services.DiscountAPI.Extensions
 {
@@ -21,6 +22,11 @@ namespace EC.Services.DiscountAPI.Extensions
                 options.SuppressModelStateInvalidFilter = true;
             });
 
+            #region Base
+            services.AddValidatorsFromAssemblyContaining<DeleteStringDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<DeleteIntDtoValidator>();
+
+            #endregion
             #region Campaign
             services.AddValidatorsFromAssemblyContaining<CampaignAddDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CampaignAddProductDtoValidator>();

@@ -7,23 +7,23 @@ namespace EC.Services.ProductAPI.Extensions
     public static class QueueExtensions
     {
         #region AddRabbitMqProducer
-        //public static void AddRabbitMqProducer(this IServiceCollection services, IConfiguration configuration)
-        //{
-        //    var settings = configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
+        public static void AddRabbitMqProducer(this IServiceCollection services, IConfiguration configuration)
+        {
+            var settings = configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
 
-        //    services.AddMassTransit(x =>
-        //    {
-        //        // Default Port : 5672
-        //        x.UsingRabbitMq((context, cfg) =>
-        //        {
-        //            cfg.Host(settings.Host, settings.Port, "/", host =>
-        //            {
-        //                host.Username(settings.Username);
-        //                host.Password(settings.Password);
-        //            });
-        //        });
-        //    });
-        //}
+            services.AddMassTransit(x =>
+            {
+                // Default Port : 5672
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(settings.Host, settings.Port, "/", host =>
+                    {
+                        host.Username(settings.Username);
+                        host.Password(settings.Password);
+                    });
+                });
+            });
+        }
         #endregion
         #region AddRabbitMqConsumer
         //public static void AddRabbitMqConsumer(this IServiceCollection services, IConfiguration configuration)

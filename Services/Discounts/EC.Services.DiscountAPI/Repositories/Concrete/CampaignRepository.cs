@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
+using Core.Dtos;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.DiscountAPI.Constants;
@@ -123,6 +124,25 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
             return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.CampaignProductId));
         }
         #endregion
+        #region DeleteAllProductsAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
+        [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
+        public async Task<IResult> DeleteAllProductsAsync(DeleteStringDto model)
+        {
+            var entities = _context.CampaignsAsQueryable.ToList().Where(p => p.Products.Exists(a => a == model.Id) && p.Status).ToList();
+            if (entities == null || entities.Count() <= 0)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.CampaignProductId));
+            }
+
+            foreach (var entity in entities)
+            {
+                entity.Products.Remove(model.Id);
+                var updateResult = await _context.Campaigns.ReplaceOneAsync(g => g.Id == entity.Id, entity);
+            }
+            return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.CampaignProductId));
+        }
+        #endregion
         #region AddProductsAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
@@ -147,7 +167,7 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         #region GetProductCampaignsAsync
         public async Task<DataResult<List<CampaignDto>>> GetProductCampaignsAsync(string productId)
         {
-            var query = await _context.Campaigns.FindAsync(p => p.Products.Contains(productId) && p.Status);
+            var query = await _context.Campaigns.FindAsync(p => p.Products.Exists(a => a == productId) && p.Status);
             var result = await query.ToListAsync();
             if (result != null)
             {

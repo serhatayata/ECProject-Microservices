@@ -2,6 +2,7 @@
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
+using Core.DataAccess.Queue;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.ProductAPI.Constants;
@@ -111,6 +112,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             DeleteResult deleteResult = await _context.Products.DeleteOneAsync(filter);
             if (deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0)
             {
+                await _publishEndpoint.Publish<ProductDeletedEvent>(new ProductDeletedEvent { ProductId=id });
                 return new SuccessResult(MessageExtensions.Deleted(ProductEntities.Product));
             }
             return new ErrorResult(MessageExtensions.NotDeleted(ProductEntities.Product));
