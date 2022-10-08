@@ -66,8 +66,8 @@ namespace Core.Extensions
             return value;
         }
         #endregion
-        #region NotInvalid
-        public static string NotInvalid(string entity)
+        #region NotValid
+        public static string NotValid(string entity)
         {
             var value = $"{entity} is invalid.";
             return value;

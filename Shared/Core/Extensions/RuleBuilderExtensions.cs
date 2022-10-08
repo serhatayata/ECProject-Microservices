@@ -87,6 +87,18 @@ namespace Core.Extensions
             return options;
         }
 
+        public static IRuleBuilderOptions<T, string> ValidMonth<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            var options = ruleBuilder.Must(IsValidMonth);
+            return options;
+        }
+
+        public static IRuleBuilderOptions<T, string> ValidOverTheYear<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            var options = ruleBuilder.Must(IsValidOverTheYear);
+            return options;
+        }
+
         public static IRuleBuilder<T, string> Letter<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             var options = ruleBuilder
@@ -137,6 +149,20 @@ namespace Core.Extensions
         {
             return !string.IsNullOrEmpty(arg) && !Regex.IsMatch(arg,
                 "(012|123|234|345|456|567|678|789|890|098|987|876|765|654|543|432|321|210)");
+        }
+
+        //Ayları içerir
+        public static bool IsValidMonth(string arg)
+        {
+            return !string.IsNullOrEmpty(arg) && Regex.IsMatch(arg,
+                "(1|2|3|4|5|6|7|8|9|10|11|12)");
+        }
+
+        public static bool IsValidOverTheYear(string arg)
+        {
+            int year;
+            var conv = int.TryParse(arg, out year);
+            return !string.IsNullOrEmpty(arg) && conv && year > DateTime.Now.Year;
         }
 
         //Tekrarlı sayı içerir

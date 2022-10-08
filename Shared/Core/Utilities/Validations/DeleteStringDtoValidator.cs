@@ -16,7 +16,7 @@ namespace Core.Utilities.Validations
             RuleFor(x => x.Id).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty("Id"));
             RuleFor(x => x.Id).NotNull().WithMessage(MessageExtensions.ErrorNotNull("Id"));
             RuleFor(x => x.Id).Length(24).WithMessage(MessageExtensions.ErrorLength("Id", 24));
-            RuleFor(x => x.Id).MongoDbOjectId().WithMessage(MessageExtensions.NotInvalid("Id"));
+            RuleFor(x => x.Id).MongoDbOjectId().WithMessage(MessageExtensions.NotValid("Id"));
         }
     }
 }
