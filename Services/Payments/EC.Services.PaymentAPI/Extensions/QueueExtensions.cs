@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using MassTransit;
 
 namespace EC.Services.PaymentAPI.Extensions
 {
@@ -31,6 +32,7 @@ namespace EC.Services.PaymentAPI.Extensions
         //    services.AddMassTransit(x =>
         //    {
         //        x.AddConsumer<ProductChangedEventConsumer>();
+
         //        // Default Port : 5672
         //        x.UsingRabbitMq((context, cfg) =>
         //        {
@@ -42,11 +44,15 @@ namespace EC.Services.PaymentAPI.Extensions
 
         //            cfg.ReceiveEndpoint("product-changed-event-basket-service", e =>
         //            {
+        //                e.UseMessageRetry(x=>x.Interval(5,1000));
         //                e.ConfigureConsumer<ProductChangedEventConsumer>(context);
+        //                e.ConfigureConsumer<MessageFaultConsumer>(context);
         //            });
         //        });
         //    });
         //}
         #endregion
     }
+
+   
 }

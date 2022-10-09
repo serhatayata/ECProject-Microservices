@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Text;
 using System.Text.RegularExpressions;
 using Core.Utilities.Messages;
@@ -39,6 +40,58 @@ namespace Core.Extensions
         {
             return !string.IsNullOrEmpty(arg) && Regex.IsMatch(arg,
                 @"^[0-9a-fA-F]{24}$");
+        }
+        #endregion
+        #region CreditCard
+        public static IRuleBuilderOptions<T, string> CreditCardCheck<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            var options = ruleBuilder.Must(CreditCardNoLength)
+                                     .Must(CreditCardNumeric)
+                                     .Must(CreditCardNoSumCheck);
+            return options;
+        }
+        public static bool CreditCardNoSumCheck(string arg)
+        {
+            int even_sum = 0;
+            int odd_sum = 0;
+            for (int i = 0; i < arg.Length; i++)
+            {
+                int value = Convert.ToInt32(arg[i].ToString());
+                if (i % 2 == 0)
+                    even_sum += SumDigitPlaces(value * 2);
+                else
+                    odd_sum += value;
+            }
+            int sonuc = (odd_sum + even_sum) % 10;
+            if (sonuc == 0)
+                return true;
+            else
+                return false;
+        }
+
+        public static bool CreditCardNoLength(string arg)
+        {
+            return !string.IsNullOrEmpty(arg) && arg.Length == 16;
+        }
+
+        public static bool CreditCardNumeric(string arg)
+        {
+            foreach (char chr in arg)
+            {
+                if (!Char.IsNumber(chr)) return false;
+            }
+            return true;
+        }
+
+        public static int SumDigitPlaces(int value)
+        {
+            int sum = 0;
+            while (value > 0)
+            {
+                sum += value % 10;
+                value /= 10;
+            }
+            return sum;
         }
         #endregion
         #region PasswordWithoutMessage

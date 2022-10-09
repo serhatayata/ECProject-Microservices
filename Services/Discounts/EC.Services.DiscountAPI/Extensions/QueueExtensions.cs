@@ -45,6 +45,7 @@ namespace EC.Services.DiscountAPI.Extensions
                     cfg.ReceiveEndpoint("product-deleted-event-service", e =>
                     {
                         e.ConfigureConsumer<ProductDeletedEventConsumer>(context);
+                        e.ConfigureConsumer<MessageFaultConsumer>(context);
                     });
                 });
             });

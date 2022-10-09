@@ -25,7 +25,7 @@ namespace EC.Services.PaymentAPI.Validations.PaymentValidations
 
             RuleFor(x => x.CardNumber).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentCardNumber));
             RuleFor(x => x.CardNumber).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentCardNumber));
-            RuleFor(x => x.CardNumber).Length(26).WithMessage(MessageExtensions.ErrorLength(PaymentConstantValues.PaymentCardNumber, 26));
+            RuleFor(x => x.CardNumber).CreditCard().WithMessage(MessageExtensions.NotValid(PaymentConstantValues.PaymentCardNumber));
 
             RuleFor(x => x.ExpirationMonth).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentCardExpirationMonth));
             RuleFor(x => x.ExpirationMonth).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentCardExpirationMonth));
