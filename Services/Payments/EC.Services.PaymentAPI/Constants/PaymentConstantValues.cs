@@ -9,6 +9,14 @@
         public static string PaymentCVV = "CVV";
         public static string PaymentCardExpirationMonth = "Month";
         public static string PaymentCardExpirationYear = "Year";
+        public static string PaymentTotalPrice = "Total price";
+        public static string PaymentCountryName = "Country";
+        public static string PaymentCityName = "City";
+        public static string PaymentCountyName = "County";
+        public static string PaymentAddressDetail = "Address detail";
+        public static string PaymentZipCode= "Zip code";
+
+
 
     }
 }

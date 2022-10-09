@@ -310,6 +310,13 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region ErrorEqualOrBiggerThan
+        public static string ErrorEqualOrBiggerThan(string entity, int v)
+        {
+            var value = $"{entity} must be equal or bigger than {v}";
+            return value;
+        }
+        #endregion
         #region ErrorMaxLength
         public static string ErrorMaxLength(string entity, int v)
         {
