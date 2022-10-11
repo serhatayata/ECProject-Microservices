@@ -21,20 +21,20 @@ namespace EC.Services.PaymentAPI.Extensions
 
             services.AddAuthorization(_ =>
             {
-                _.AddPolicy("ReadCategory", policy =>
+                _.AddPolicy("ReadPayment", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "category_read");
+                    policy.RequireClaim("scope", "payment_read");
                 });
-                _.AddPolicy("WriteCategory", policy =>
+                _.AddPolicy("WritePayment", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "category_write");
+                    policy.RequireClaim("scope", "payment_write");
                 });
-                _.AddPolicy("FullCategory", policy =>
+                _.AddPolicy("FullPayment", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "category_full");
+                    policy.RequireClaim("scope", "payment_full");
                 });
             });
         }
