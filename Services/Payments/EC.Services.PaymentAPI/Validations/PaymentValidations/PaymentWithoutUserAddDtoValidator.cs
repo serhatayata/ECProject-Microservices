@@ -3,17 +3,13 @@ using EC.Services.PaymentAPI.Constants;
 using EC.Services.PaymentAPI.Dtos.PaymentDtos;
 using EC.Services.PaymentAPI.Validations.BasketValidations;
 using FluentValidation;
-using System;
 
 namespace EC.Services.PaymentAPI.Validations.PaymentValidations
 {
-    public class PaymentAddDtoValidator : AbstractValidator<PaymentAddDto>
+    public class PaymentWithoutUserAddDtoValidator : AbstractValidator<PaymentWithoutUserAddDto>
     {
-        public PaymentAddDtoValidator()
+        public PaymentWithoutUserAddDtoValidator()
         {
-            RuleFor(x => x.UserId).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentUser));
-            RuleFor(x => x.UserId).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentUser));
-
             RuleFor(x => x.PhoneCountry).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentPhoneNumber));
             RuleFor(x => x.PhoneCountry).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentPhoneNumber));
             RuleFor(x => x.PhoneCountry).MaximumLength(3).WithMessage(MessageExtensions.ErrorMaxLength(PaymentConstantValues.PaymentPhoneNumber, 3));
@@ -25,7 +21,7 @@ namespace EC.Services.PaymentAPI.Validations.PaymentValidations
 
             RuleFor(x => x.CardName).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentCardName));
             RuleFor(x => x.CardName).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentCardName));
-            RuleFor(x => x.CardName).Length(6,100).WithMessage(MessageExtensions.ErrorBetween(PaymentConstantValues.PaymentCardName, 6,100));
+            RuleFor(x => x.CardName).Length(6, 100).WithMessage(MessageExtensions.ErrorBetween(PaymentConstantValues.PaymentCardName, 6, 100));
 
             RuleFor(x => x.CardNumber).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentCardNumber));
             RuleFor(x => x.CardNumber).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentCardNumber));
@@ -44,7 +40,7 @@ namespace EC.Services.PaymentAPI.Validations.PaymentValidations
             RuleFor(x => x.CVV).Length(3).WithMessage(MessageExtensions.ErrorLength(PaymentConstantValues.PaymentCVV, 3));
 
             RuleFor(x => x.TotalPrice).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentTotalPrice));
-            RuleFor(x => x.TotalPrice).GreaterThanOrEqualTo(0).WithMessage(MessageExtensions.ErrorEqualOrBiggerThan(PaymentConstantValues.PaymentTotalPrice,0));
+            RuleFor(x => x.TotalPrice).GreaterThanOrEqualTo(0).WithMessage(MessageExtensions.ErrorEqualOrBiggerThan(PaymentConstantValues.PaymentTotalPrice, 0));
 
             RuleFor(x => x.CountryName).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentCountryName));
             RuleFor(x => x.CountryName).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentCountryName));
@@ -66,8 +62,7 @@ namespace EC.Services.PaymentAPI.Validations.PaymentValidations
             RuleFor(x => x.ZipCode).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentZipCode));
             RuleFor(x => x.ZipCode).Length(5).WithMessage(MessageExtensions.ErrorLength(PaymentConstantValues.PaymentZipCode, 5));
 
-            //RuleFor(x => x.Basket).SetValidator(new BasketDtoValidator());
-
+            RuleFor(x => x.Basket).SetValidator(new BasketDtoValidator());
         }
     }
 }

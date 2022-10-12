@@ -3,12 +3,12 @@ using EC.Services.PaymentAPI.Dtos.BasketDtos;
 
 namespace EC.Services.PaymentAPI.Dtos.PaymentDtos
 {
-    public class PaymentAddDto:IDto
+    public class PaymentWithoutUserAddDto:IDto
     {
         //User
         public string PhoneCountry { get; set; }
         public string PhoneNumber { get; set; }
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public string DiscountCode { get; set; }
 
         //Card Payment
@@ -24,6 +24,8 @@ namespace EC.Services.PaymentAPI.Dtos.PaymentDtos
         public string CountyName { get; set; }
         public string AddressDetail { get; set; }
         public string ZipCode { get; set; }
+        //If user is not authenticated, 
+        public BasketDto Basket { get; set; }
 
     }
 }

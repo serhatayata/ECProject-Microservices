@@ -37,4 +37,6 @@
     <Folder Include="Settings\Abstract\" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+
 </Project>

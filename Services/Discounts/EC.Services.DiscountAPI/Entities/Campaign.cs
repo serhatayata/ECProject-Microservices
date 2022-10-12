@@ -6,6 +6,8 @@ namespace EC.Services.DiscountAPI.Entities
 {
     public class Campaign
     {
+        //In terms of campaign type, campaign could be a total price discount or specific product discount and more
+
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }

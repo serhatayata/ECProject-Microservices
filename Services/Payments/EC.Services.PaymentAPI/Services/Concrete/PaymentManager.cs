@@ -2,18 +2,22 @@
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
+using Core.CrossCuttingConcerns.Caching.Redis;
 using Core.Dtos;
 using Core.Extensions;
 using Core.Utilities.Results;
 using EC.Services.PaymentAPI.Constants;
 using EC.Services.PaymentAPI.Data.Abstract.Dapper;
 using EC.Services.PaymentAPI.Data.Abstract.EntityFramework;
+using EC.Services.PaymentAPI.Dtos.BasketDtos;
 using EC.Services.PaymentAPI.Dtos.PaymentDtos;
 using EC.Services.PaymentAPI.Entities;
 using EC.Services.PaymentAPI.Services.Abstract;
+using MassTransit.Transports;
 using Microsoft.Extensions.Caching.Memory;
 using System.Drawing.Printing;
 using IResult = Core.Utilities.Results.IResult;
+using Mass = MassTransit;
 
 namespace EC.Services.PaymentAPI.Services.Concrete
 {
@@ -22,23 +26,73 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         private readonly IEfPaymentRepository _efRepository;
         private readonly IDapperPaymentRepository _dapperRepository;
         private readonly IMapper _mapper;
+        private readonly IRedisCacheManager _redisCacheManager;
+        private readonly Mass.IPublishEndpoint _publishEndpoint;
 
-        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository, IMapper mapper)
+        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper, Mass.IPublishEndpoint publishEndpoint)
         {
             _efRepository = efRepository;
             _dapperRepository = dapperRepository;
             _mapper = mapper;
+            _publishEndpoint = publishEndpoint;
+            _redisCacheManager = redisCacheManager;
         }
 
         #region PayAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         [RedisCacheRemoveAspect("IPaymentService", Priority = (int)CacheItemPriority.High)]
-        public async Task<IResult> PayAsync(PaymentAddDto paymentModel)
+        public async Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel)
         {
+            #region Basket Total Price Control
+            var basketValues = await _redisCacheManager.GetAsync<BasketDto>($"Basket_{paymentModel.UserId}");
+
+            if (basketValues == null)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentBasket));
+            }
+
+            decimal modelTotalPrice = paymentModel.TotalPrice;
+
+            if (!string.IsNullOrEmpty(basketValues.DiscountCode) && basketValues.DiscountRate != null)
+            {
+
+
+
+            }
+
+
+            #endregion
+
             //Payment Integration will be here
 
-            
+            #region Add Order
+            //await _publishEndpoint.Publish<CourseNameChangedEvent>(new CourseNameChangedEvent { CourseId = updateCourse.Id, UpdatedName = courseUpdateDto.Name });
+            #endregion
+
+            var model = _mapper.Map<Payment>(paymentModel);
+            await _efRepository.AddAsync(model);
+            var addedCheck = await _efRepository.AnyAsync(x => x.Id == model.Id);
+            if (!addedCheck)
+            {
+                return new ErrorResult(MessageExtensions.NotAdded(PaymentConstantValues.Payment));
+            }
+            return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
+        }
+        #endregion
+        #region PayAsync
+        [ElasticSearchLogAspect(risk: 1, Priority = 1)]
+        [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
+        [RedisCacheRemoveAspect("IPaymentService", Priority = (int)CacheItemPriority.High)]
+        public async Task<IResult> PayWithoutUserAsync(PaymentWithoutUserAddDto paymentModel)
+        {
+            #region Basket Total Price Control
+            var basketValues = _redisCacheManager.GetAsync<BasketDto>($"Basket_{paymentModel.BasketCode}");
+            #endregion
+
+            //Payment Integration will be here
+
+            await _publishEndpoint.Publish<CourseNameChangedEvent>(new CourseNameChangedEvent { CourseId = updateCourse.Id, UpdatedName = courseUpdateDto.Name });
 
             var model = _mapper.Map<Payment>(paymentModel);
             await _efRepository.AddAsync(model);

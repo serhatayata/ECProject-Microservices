@@ -5,6 +5,23 @@ namespace EC.Services.PaymentAPI.Extensions
 {
     public static class QueueExtensions
     {
+        #region AddMassTransitSettings
+        public static void AddMassTransitSettings(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddMassTransit(x =>
+            {
+                // Default Port : 5672
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(configuration["RabbitMQUrl"], "/", host =>
+                    {
+                        host.Username("guest");
+                        host.Password("guest");
+                    });
+                });
+            });
+        }
+        #endregion
         #region AddRabbitMqProducer
         //public static void AddRabbitMqProducer(this IServiceCollection services, IConfiguration configuration)
         //{
@@ -52,7 +69,9 @@ namespace EC.Services.PaymentAPI.Extensions
         //    });
         //}
         #endregion
+
+
     }
 
-   
+
 }
