@@ -14,7 +14,7 @@ namespace EC.Services.PaymentAPI.Services.Abstract
         Task<DataResult<List<PaymentDto>>> GetAllByUserIdPagingAsync(string userId,int page = 1, int pageSize = 8);
         Task<DataResult<PaymentDto>> GetByIdAsync(int id);
         Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel);
-        Task<IResult> PayWithoutUserAsync(PaymentAddDto paymentModel);
+        Task<IResult> PayWithoutUserAsync(PaymentWithoutUserAddDto paymentModel);
         Task<IResult> AddAsync(PaymentAddDto paymentModel);
         Task<IResult> DeleteAsync(DeleteIntDto model);
     }

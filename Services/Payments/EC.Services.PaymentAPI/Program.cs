@@ -12,6 +12,7 @@ using Serilog;
 using Core.DependencyResolvers;
 using Core.Utilities.IoC;
 using Core.Entities;
+using EC.Services.PaymentAPI.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -56,6 +57,7 @@ builder.Services.AddHttpClientServices(configuration);
 
 builder.Services.Configure<ServiceApiSettings>(configuration.GetSection("ServiceApiSettings"));
 builder.Services.Configure<ClientSettings>(configuration.GetSection("ClientSettings"));
+builder.Services.Configure<ApiEndpoint>(configuration.GetSection("ApiEndpoint"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

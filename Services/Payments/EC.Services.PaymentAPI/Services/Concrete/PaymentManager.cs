@@ -6,6 +6,7 @@ using Core.CrossCuttingConcerns.Caching.Redis;
 using Core.Dtos;
 using Core.Extensions;
 using Core.Utilities.Results;
+using EC.Services.PaymentAPI.ApiServices.Discount.Abstract;
 using EC.Services.PaymentAPI.Constants;
 using EC.Services.PaymentAPI.Data.Abstract.Dapper;
 using EC.Services.PaymentAPI.Data.Abstract.EntityFramework;
@@ -27,21 +28,22 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         private readonly IDapperPaymentRepository _dapperRepository;
         private readonly IMapper _mapper;
         private readonly IRedisCacheManager _redisCacheManager;
+        private readonly IDiscountApiService _discountApiService;
         private readonly Mass.IPublishEndpoint _publishEndpoint;
 
-        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper, Mass.IPublishEndpoint publishEndpoint)
+        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper, Mass.IPublishEndpoint publishEndpoint,IDiscountApiService discountApiService)
         {
             _efRepository = efRepository;
             _dapperRepository = dapperRepository;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
             _redisCacheManager = redisCacheManager;
+            _discountApiService = discountApiService;
         }
-
+        
         #region PayAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IPaymentService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel)
         {
             #region Basket Total Price Control
@@ -58,9 +60,16 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             {
 
 
+                var allCampaigns = await _discountApiService.GetAllCampaignsAsync();
+                if (allCampaigns.Success && allCampaigns?.Data?.Count > 0)
+                {
+                    string[] productIds = basketValues.basketItems.Select(x => x.ProductId).ToArray();
+                }
+
+                
+                
 
             }
-
 
             #endregion
 
@@ -83,7 +92,6 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         #region PayAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IPaymentService", Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> PayWithoutUserAsync(PaymentWithoutUserAddDto paymentModel)
         {
             #region Basket Total Price Control
@@ -152,7 +160,6 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         }
         #endregion
         #region GetAllByUserIdAsync
-        [RedisCacheAspect<DataResult<List<PaymentDto>>>(duration: 60)]
         public async Task<DataResult<List<PaymentDto>>> GetAllByUserIdAsync(string userId)
         {
             var payments = await _dapperRepository.GetAllByUserIdAsync(userId);
@@ -164,7 +171,6 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         }
         #endregion
         #region GetAllByUserIdPagingAsync
-        [RedisCacheAspect<DataResult<List<PaymentDto>>>(duration: 60)]
         public async Task<DataResult<List<PaymentDto>>> GetAllByUserIdPagingAsync(string userId, int page = 1, int pageSize = 8)
         {
             var payments = await _dapperRepository.GetAllByUserIdPagingAsync(userId,page,pageSize);
@@ -176,7 +182,6 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         }
         #endregion
         #region GetAllPagingAsync
-        [RedisCacheAspect<DataResult<List<PaymentDto>>>(duration: 60)]
         public async Task<DataResult<List<PaymentDto>>> GetAllPagingAsync(int page = 1, int pageSize = 8)
         {
             var payments = await _dapperRepository.GetAllPagingAsync(page, pageSize);

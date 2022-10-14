@@ -18,6 +18,8 @@
         public static string PaymentAddressDetail = "Address detail";
         public static string PaymentZipCode= "Zip code";
 
+        public static string PaymentDiscount= "Discount";
+
 
 
     }
