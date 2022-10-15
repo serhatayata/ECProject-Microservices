@@ -20,6 +20,7 @@
         public static string PaymentZipCode= "Zip code";
 
         public static string PaymentDiscount= "Discount";
+        public static string PaymentIncorrect= "A problem occured while getting the payment";
 
 
 

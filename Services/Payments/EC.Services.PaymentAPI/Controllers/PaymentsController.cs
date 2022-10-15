@@ -24,8 +24,37 @@ namespace EC.Services.PaymentAPI.Controllers
         [AuthorizeAnyPolicy("WritePayment,FullPayment")]
         public async Task<IActionResult> PayAsync(PaymentAddDto model)
         {
-            var result = await _paymentService.PayAsync(model);
+            var result = await _paymentService.PayWithUserAsync(model);
             return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region PayWithoutUserAsync
+        [HttpPost]
+        [Route("pay")]
+        public async Task<IActionResult> PayWithoutUserAsync(PaymentWithoutUserAddDto model)
+        {
+            var result = await _paymentService.PayWithoutUserAsync(model);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region PaymentSuccessAsync
+        [HttpPost]
+        [Route("payment-success")]
+        public async Task<IActionResult> PaymentSuccessAsync()
+        {
+            //var result = await _paymentService.PayAsync(model);
+            //return StatusCode(result.StatusCode, result);
+            return Ok();
+        }
+        #endregion
+        #region PaymentFailedAsync
+        [HttpPost]
+        [Route("payment-failed")]
+        public async Task<IActionResult> PaymentFailedAsync()
+        {
+            //var result = await _paymentService.PayAsync(model);
+            //return StatusCode(result.StatusCode, result);
+            return Ok();
         }
         #endregion
         #region DeleteAsync

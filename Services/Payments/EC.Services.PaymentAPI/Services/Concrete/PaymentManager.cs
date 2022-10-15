@@ -58,7 +58,6 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             }
 
             decimal modelTotalPrice = paymentModel.TotalPrice;
-            decimal calculatedTotalPrice=0;
 
             string[] productIds = basketValues.basketItems.Select(x => x.ProductId).ToArray();
 
@@ -75,29 +74,38 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             var products = productsGet.Data;
 
-            calculatedTotalPrice = products.Select(x => x.Price).Sum();
+            var calculatedTotalPrice = products.Select(x => x.Price).Sum();
 
-            if (!string.IsNullOrEmpty(basketValues.DiscountCode) && basketValues.DiscountRate != null)
+            if (!string.IsNullOrEmpty(basketValues.DiscountCode))
             {
+                var discount = await _discountApiService.GetDiscountByCodeAsync(basketValues.DiscountCode);
 
+                //Discount check
+                if (!discount.Success)
+                {
+                    return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentDiscount));
+                }
 
+                calculatedTotalPrice = calculatedTotalPrice * discount.Data.Rate;
+            }
 
-                
-
-                
-                
-
+            if (calculatedTotalPrice != modelTotalPrice)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentIncorrect));
             }
 
             #endregion
 
             //Payment Integration will be here
 
+            //PAYMENT CHECK, IF DOESN'T RETURN SUCCESS, RETURN ERROR
+
             #region Add Order
             //await _publishEndpoint.Publish<CourseNameChangedEvent>(new CourseNameChangedEvent { CourseId = updateCourse.Id, UpdatedName = courseUpdateDto.Name });
             #endregion
 
             var model = _mapper.Map<Payment>(paymentModel);
+            model.Status = (int)PaymentStatus.Waiting;
             await _efRepository.AddAsync(model);
             var addedCheck = await _efRepository.AnyAsync(x => x.Id == model.Id);
             if (!addedCheck)
@@ -113,8 +121,6 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         public async Task<IResult> PayWithoutUserAsync(PaymentWithoutUserAddDto paymentModel)
         {
             //Payment Integration will be here
-
-            //await _publishEndpoint.Publish<CourseNameChangedEvent>(new CourseNameChangedEvent { CourseId = updateCourse.Id, UpdatedName = courseUpdateDto.Name });
 
             var model = _mapper.Map<Payment>(paymentModel);
             await _efRepository.AddAsync(model);

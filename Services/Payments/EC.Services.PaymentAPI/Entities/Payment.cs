@@ -6,6 +6,7 @@ namespace EC.Services.PaymentAPI.Entities
     {
         public int Id { get; set; }
         public DateTime CDate { get; set; }
+        public short Status { get; set; }
         //User
         public string PhoneCountry { get; set; }
         public string PhoneNumber { get; set; }
@@ -24,5 +25,12 @@ namespace EC.Services.PaymentAPI.Entities
         public string AddressDetail { get; set; }
         public string ZipCode { get; set; }
 
+    }
+
+    public enum PaymentStatus
+    {
+        Completed=1,
+        Waiting=2,
+        Canceled=3
     }
 }
