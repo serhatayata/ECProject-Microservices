@@ -56,6 +56,18 @@ namespace EC.Services.PaymentAPI.Data.Concrete.Dapper
             }
         }
         #endregion
+        #region GetByPaymentNoAsync
+        public async Task<Payment> GetByPaymentNoAsync(string paymentNo)
+        {
+            var sql = "SELECT * FROM Payments WHERE PaymentNo=@PaymentNo";
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                connection.Open();
+                var result = await connection.QuerySingleOrDefaultAsync<Payment>(sql, new { PaymentNo = paymentNo });
+                return result;
+            }
+        }
+        #endregion
         #region GetAllByUserIdAsync
         public async Task<List<Payment>> GetAllByUserIdAsync(string userId)
         {

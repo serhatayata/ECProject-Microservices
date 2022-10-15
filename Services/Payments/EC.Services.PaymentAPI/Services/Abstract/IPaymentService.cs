@@ -13,8 +13,11 @@ namespace EC.Services.PaymentAPI.Services.Abstract
         Task<DataResult<List<PaymentDto>>> GetAllPagingAsync(int page = 1, int pageSize = 8);
         Task<DataResult<List<PaymentDto>>> GetAllByUserIdPagingAsync(string userId,int page = 1, int pageSize = 8);
         Task<DataResult<PaymentDto>> GetByIdAsync(int id);
+        Task<DataResult<PaymentTotalPriceModel>> PaymentBasketControlAsync(PaymentBasketControlDto paymentBasketDto);
         Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel);
         Task<IResult> PayWithoutUserAsync(PaymentWithoutUserAddDto paymentModel);
+        Task<IResult> PaymentSuccessAsync(PaymentResultDto paymentModel);
+        Task<IResult> PaymentFailedAsync(PaymentResultDto paymentModel);
         Task<IResult> AddAsync(PaymentAddDto paymentModel);
         Task<IResult> DeleteAsync(DeleteIntDto model);
     }

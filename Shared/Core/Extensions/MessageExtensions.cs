@@ -37,10 +37,24 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region Completed
+        public static string Completed(string entity)
+        {
+            var value = $"{entity} completed";
+            return value;
+        }
+        #endregion
         #region NotCorrect
         public static string NotCorrect(string entity)
         {
-            var value = $"{entity} not correct !";
+            var value = $"{entity} not correct";
+            return value;
+        }
+        #endregion
+        #region Correct
+        public static string Correct(string entity)
+        {
+            var value = $"{entity} correct";
             return value;
         }
         #endregion

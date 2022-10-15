@@ -11,6 +11,7 @@ namespace EC.Services.PaymentAPI.Mappings
             #region Payment
             CreateMap<Payment, PaymentDto>().ReverseMap();
             CreateMap<Payment, PaymentAddDto>().ReverseMap();
+            CreateMap<PaymentAddDto, PaymentWithoutUserAddDto>().ReverseMap();
 
             #endregion
         }

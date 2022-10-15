@@ -5,6 +5,7 @@ namespace EC.Services.PaymentAPI.Dtos.PaymentDtos
     public class PaymentDto:IDto
     {
         public int Id { get; set; }
+        public string PaymentNo { get; set; }
         public DateTime CDate { get; set; }
         //User
         public string PhoneCountry { get; set; }

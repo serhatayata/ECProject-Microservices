@@ -1,6 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
-namespace EC.Services.DiscountAPI.Extensions
+namespace Core.Extensions
 {
     public static class RandomExtensions
     {

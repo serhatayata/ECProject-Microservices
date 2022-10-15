@@ -40,21 +40,19 @@ namespace EC.Services.PaymentAPI.Controllers
         #region PaymentSuccessAsync
         [HttpPost]
         [Route("payment-success")]
-        public async Task<IActionResult> PaymentSuccessAsync()
+        public async Task<IActionResult> PaymentSuccessAsync(PaymentResultDto model)
         {
-            //var result = await _paymentService.PayAsync(model);
-            //return StatusCode(result.StatusCode, result);
-            return Ok();
+            var result = await _paymentService.PaymentSuccessAsync(model);
+            return StatusCode(result.StatusCode, result);
         }
         #endregion
         #region PaymentFailedAsync
         [HttpPost]
         [Route("payment-failed")]
-        public async Task<IActionResult> PaymentFailedAsync()
+        public async Task<IActionResult> PaymentFailedAsync(PaymentResultDto model)
         {
-            //var result = await _paymentService.PayAsync(model);
-            //return StatusCode(result.StatusCode, result);
-            return Ok();
+            var result = await _paymentService.PaymentFailedAsync(model);
+            return StatusCode(result.StatusCode, result);
         }
         #endregion
         #region DeleteAsync

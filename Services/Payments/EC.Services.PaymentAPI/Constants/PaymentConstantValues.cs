@@ -3,6 +3,8 @@
     public static class PaymentConstantValues
     {
         public static string Payment = "Payment";
+        public static string PaymentControl = "Payment control";
+        public static string PaymentStatus = "Payment status";
         public static string PaymentBasket = "Basket";
         public static string PaymentProduct = "Product";
         public static string PaymentUser = "User";

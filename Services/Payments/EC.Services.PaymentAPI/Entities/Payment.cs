@@ -5,6 +5,7 @@ namespace EC.Services.PaymentAPI.Entities
     public class Payment:IEntity
     {
         public int Id { get; set; }
+        public string PaymentNo { get; set; }
         public DateTime CDate { get; set; }
         public short Status { get; set; }
         //User
@@ -31,6 +32,7 @@ namespace EC.Services.PaymentAPI.Entities
     {
         Completed=1,
         Waiting=2,
-        Canceled=3
+        Failed=3,
+        Canceled=4
     }
 }

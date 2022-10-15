@@ -57,54 +57,27 @@ namespace EC.Services.PaymentAPI.Services.Concrete
                 return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentProduct));
             }
 
-            decimal modelTotalPrice = paymentModel.TotalPrice;
-
-            string[] productIds = basketValues.basketItems.Select(x => x.ProductId).ToArray();
-
-            ProductGetByProductIdsDto productModel = new()
+            PaymentBasketControlDto paymentControlModel = new()
             {
-                Ids = productIds
+                Basket = basketValues,
+                TotalPrice = paymentModel.TotalPrice
             };
 
-            var productsGet = await _productApiService.GetProductsByProductIdsAsync(productModel);
-            if (!productsGet.Success)
+            var paymentControl = await this.PaymentBasketControlAsync(paymentControlModel);
+
+            if (!paymentControl.Success)
             {
-                return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentProduct));
+                return new ErrorResult(paymentControl.Message);
             }
-
-            var products = productsGet.Data;
-
-            var calculatedTotalPrice = products.Select(x => x.Price).Sum();
-
-            if (!string.IsNullOrEmpty(basketValues.DiscountCode))
-            {
-                var discount = await _discountApiService.GetDiscountByCodeAsync(basketValues.DiscountCode);
-
-                //Discount check
-                if (!discount.Success)
-                {
-                    return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentDiscount));
-                }
-
-                calculatedTotalPrice = calculatedTotalPrice * discount.Data.Rate;
-            }
-
-            if (calculatedTotalPrice != modelTotalPrice)
-            {
-                return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentIncorrect));
-            }
-
             #endregion
 
             //Payment Integration will be here
 
             //PAYMENT CHECK, IF DOESN'T RETURN SUCCESS, RETURN ERROR
 
-            #region Add Order
-            //await _publishEndpoint.Publish<CourseNameChangedEvent>(new CourseNameChangedEvent { CourseId = updateCourse.Id, UpdatedName = courseUpdateDto.Name });
-            #endregion
-
             var model = _mapper.Map<Payment>(paymentModel);
+            string paymentNo = RandomExtensions.RandomString(14);
+            model.PaymentNo = paymentNo;
             model.Status = (int)PaymentStatus.Waiting;
             await _efRepository.AddAsync(model);
             var addedCheck = await _efRepository.AnyAsync(x => x.Id == model.Id);
@@ -120,9 +93,38 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> PayWithoutUserAsync(PaymentWithoutUserAddDto paymentModel)
         {
+            #region Basket Control
+            var basketValues = paymentModel.Basket;
+
+            if (basketValues == null)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentProduct));
+            }
+
+            PaymentBasketControlDto paymentControlModel = new()
+            {
+                Basket = basketValues,
+                TotalPrice = paymentModel.TotalPrice
+            };
+
+            var paymentControl = await this.PaymentBasketControlAsync(paymentControlModel);
+
+            if (!paymentControl.Success)
+            {
+                return new ErrorResult(paymentControl.Message);
+            }
+            #endregion
+
+            var calculatedTotalPrice = paymentControl.Data.TotalPrice;
+
             //Payment Integration will be here
 
+            //PAYMENT CHECK, IF DOESN'T RETURN SUCCESS, RETURN ERROR
+
             var model = _mapper.Map<Payment>(paymentModel);
+            string paymentNo = RandomExtensions.RandomString(14);
+            model.PaymentNo = paymentNo;
+            model.Status = (int)PaymentStatus.Waiting;
             await _efRepository.AddAsync(model);
             var addedCheck = await _efRepository.AnyAsync(x => x.Id == model.Id);
             if (!addedCheck)
@@ -130,6 +132,54 @@ namespace EC.Services.PaymentAPI.Services.Concrete
                 return new ErrorResult(MessageExtensions.NotAdded(PaymentConstantValues.Payment));
             }
             return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
+        }
+        #endregion
+        #region PaymentBasketControlAsync
+        public async Task<DataResult<PaymentTotalPriceModel>> PaymentBasketControlAsync(PaymentBasketControlDto paymentBasketDto)
+        {
+            decimal modelTotalPrice = paymentBasketDto.TotalPrice;
+
+            string[] productIds = paymentBasketDto.Basket.basketItems.Select(x => x.ProductId).ToArray();
+
+            ProductGetByProductIdsDto productModel = new()
+            {
+                Ids = productIds
+            };
+
+            var productsGet = await _productApiService.GetProductsByProductIdsAsync(productModel);
+            if (!productsGet.Success)
+            {
+                return new ErrorDataResult<PaymentTotalPriceModel>(MessageExtensions.NotFound(PaymentConstantValues.PaymentProduct));
+            }
+
+            var products = productsGet.Data;
+
+            var calculatedTotalPrice = products.Select(x => x.Price).Sum();
+
+            if (!string.IsNullOrEmpty(paymentBasketDto.Basket.DiscountCode))
+            {
+                var discount = await _discountApiService.GetDiscountByCodeAsync(paymentBasketDto.Basket.DiscountCode);
+
+                //Discount check
+                if (!discount.Success)
+                {
+                    return new ErrorDataResult<PaymentTotalPriceModel>(MessageExtensions.NotFound(PaymentConstantValues.PaymentDiscount));
+                }
+
+                calculatedTotalPrice = calculatedTotalPrice * discount.Data.Rate;
+            }
+
+            if (calculatedTotalPrice != modelTotalPrice)
+            {
+                return new ErrorDataResult<PaymentTotalPriceModel>(MessageExtensions.NotFound(PaymentConstantValues.PaymentIncorrect));
+            }
+
+            PaymentTotalPriceModel total = new()
+            {
+                TotalPrice = calculatedTotalPrice
+            };
+
+            return new SuccessDataResult<PaymentTotalPriceModel>(total,MessageExtensions.Correct(PaymentConstantValues.PaymentControl));
         }
         #endregion
         #region AddAsync
@@ -223,6 +273,45 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             return new SuccessDataResult<PaymentDto>(payments);
         }
         #endregion
+        #region PaymentSuccessAsync
+        public async Task<IResult> PaymentSuccessAsync(PaymentResultDto paymentModel)
+        {
+            var payment = await _dapperRepository.GetByPaymentNoAsync(paymentModel.PaymentNo);
+            payment.Status = (int)PaymentStatus.Completed;
+
+            await _efRepository.UpdateAsync(payment);
+            var exists = await _dapperRepository.GetByIdAsync(payment.Id);
+
+            if (exists.Status != (int)PaymentStatus.Completed)
+            {
+                return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
+            }
+
+            #region Add Order
+            //await _publishEndpoint.Publish<OrderAddEvent>(new OrderAddEvent {  });
+            #endregion
+
+            return new SuccessResult(MessageExtensions.Completed(PaymentConstantValues.Payment));
+        }
+        #endregion
+        #region PaymentFailedAsync
+
+        public async Task<IResult> PaymentFailedAsync(PaymentResultDto paymentModel)
+        {
+            var payment = await _dapperRepository.GetByPaymentNoAsync(paymentModel.PaymentNo);
+            payment.Status = (int)PaymentStatus.Failed;
+
+            await _efRepository.UpdateAsync(payment);
+
+            var exists = await _dapperRepository.GetByIdAsync(payment.Id);
+            if (exists.Status != (int)PaymentStatus.Failed)
+            {
+                return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
+            }
+            return new SuccessResult(MessageExtensions.Updated(PaymentConstantValues.PaymentStatus));
+        }
+        #endregion
+
 
     }
 }
