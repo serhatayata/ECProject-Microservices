@@ -6,12 +6,13 @@ using Core.CrossCuttingConcerns.Caching.Redis;
 using Core.Dtos;
 using Core.Extensions;
 using Core.Utilities.Results;
-using EC.Services.PaymentAPI.ApiServices.Discount.Abstract;
+using EC.Services.PaymentAPI.ApiServices.Abstract;
 using EC.Services.PaymentAPI.Constants;
 using EC.Services.PaymentAPI.Data.Abstract.Dapper;
 using EC.Services.PaymentAPI.Data.Abstract.EntityFramework;
 using EC.Services.PaymentAPI.Dtos.BasketDtos;
 using EC.Services.PaymentAPI.Dtos.PaymentDtos;
+using EC.Services.PaymentAPI.Dtos.ProductDtos;
 using EC.Services.PaymentAPI.Entities;
 using EC.Services.PaymentAPI.Services.Abstract;
 using MassTransit.Transports;
@@ -29,9 +30,10 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         private readonly IMapper _mapper;
         private readonly IRedisCacheManager _redisCacheManager;
         private readonly IDiscountApiService _discountApiService;
+        private readonly IProductApiService _productApiService;
         private readonly Mass.IPublishEndpoint _publishEndpoint;
 
-        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper, Mass.IPublishEndpoint publishEndpoint,IDiscountApiService discountApiService)
+        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper, Mass.IPublishEndpoint publishEndpoint,IDiscountApiService discountApiService,IProductApiService productApiService)
         {
             _efRepository = efRepository;
             _dapperRepository = dapperRepository;
@@ -39,6 +41,7 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             _publishEndpoint = publishEndpoint;
             _redisCacheManager = redisCacheManager;
             _discountApiService = discountApiService;
+            _productApiService = productApiService;
         }
         
         #region PayAsync
@@ -51,20 +54,35 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             if (basketValues == null)
             {
-                return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentBasket));
+                return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentProduct));
             }
 
             decimal modelTotalPrice = paymentModel.TotalPrice;
+            decimal calculatedTotalPrice=0;
+
+            string[] productIds = basketValues.basketItems.Select(x => x.ProductId).ToArray();
+
+            ProductGetByProductIdsDto productModel = new()
+            {
+                Ids = productIds
+            };
+
+            var productsGet = await _productApiService.GetProductsByProductIdsAsync(productModel);
+            if (!productsGet.Success)
+            {
+                return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentProduct));
+            }
+
+            var products = productsGet.Data;
+
+            calculatedTotalPrice = products.Select(x => x.Price).Sum();
 
             if (!string.IsNullOrEmpty(basketValues.DiscountCode) && basketValues.DiscountRate != null)
             {
 
 
-                var allCampaigns = await _discountApiService.GetAllCampaignsAsync();
-                if (allCampaigns.Success && allCampaigns?.Data?.Count > 0)
-                {
-                    string[] productIds = basketValues.basketItems.Select(x => x.ProductId).ToArray();
-                }
+
+                
 
                 
                 
@@ -89,18 +107,14 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
         }
         #endregion
-        #region PayAsync
+        #region PayWithoutUserAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> PayWithoutUserAsync(PaymentWithoutUserAddDto paymentModel)
         {
-            #region Basket Total Price Control
-            var basketValues = _redisCacheManager.GetAsync<BasketDto>($"Basket_{paymentModel.BasketCode}");
-            #endregion
-
             //Payment Integration will be here
 
-            await _publishEndpoint.Publish<CourseNameChangedEvent>(new CourseNameChangedEvent { CourseId = updateCourse.Id, UpdatedName = courseUpdateDto.Name });
+            //await _publishEndpoint.Publish<CourseNameChangedEvent>(new CourseNameChangedEvent { CourseId = updateCourse.Id, UpdatedName = courseUpdateDto.Name });
 
             var model = _mapper.Map<Payment>(paymentModel);
             await _efRepository.AddAsync(model);

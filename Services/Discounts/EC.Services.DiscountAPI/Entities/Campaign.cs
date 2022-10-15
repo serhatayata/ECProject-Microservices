@@ -17,6 +17,7 @@ namespace EC.Services.DiscountAPI.Entities
         public bool Status { get; set; }
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime CDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
         public List<string> Products { get; set; }
     }
 

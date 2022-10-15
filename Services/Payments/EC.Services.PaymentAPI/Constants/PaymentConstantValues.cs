@@ -4,6 +4,7 @@
     {
         public static string Payment = "Payment";
         public static string PaymentBasket = "Basket";
+        public static string PaymentProduct = "Product";
         public static string PaymentUser = "User";
         public static string PaymentPhoneNumber = "Phone number";
         public static string PaymentCardName = "Phone number";

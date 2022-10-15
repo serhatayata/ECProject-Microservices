@@ -2,7 +2,7 @@
 using Core.Utilities.Messages;
 using Core.Utilities.Results;
 using EC.Services.PaymentAPI.ApiDtos;
-using EC.Services.PaymentAPI.ApiServices.Discount.Abstract;
+using EC.Services.PaymentAPI.ApiServices.Abstract;
 using EC.Services.PaymentAPI.Constants;
 using EC.Services.PaymentAPI.Entities;
 using MassTransit.Configuration;
@@ -11,17 +11,17 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace EC.Services.PaymentAPI.ApiServices.Discount.Concrete
+namespace EC.Services.PaymentAPI.ApiServices.Concrete
 {
     public class DiscountApiService : IDiscountApiService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ApiEndpoint _apiEndpoint; 
+        private readonly ApiEndpoint _apiEndpoint;
 
-        public DiscountApiService(IOptions<ApiEndpoint> apiEndpoint,IHttpClientFactory httpClientFactory)
+        public DiscountApiService(IOptions<ApiEndpoint> apiEndpoint, IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
-            _apiEndpoint=apiEndpoint.Value;
+            _apiEndpoint = apiEndpoint.Value;
         }
 
         #region GetDiscountByCodeAsync

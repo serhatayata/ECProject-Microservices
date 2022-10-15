@@ -99,5 +99,17 @@ namespace EC.Services.ProductAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
         #endregion
+        #region GetProductsByProductIdsAsync
+        [HttpPost]
+        [Route("get-products-by-ids")]
+        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
+        public async Task<IActionResult> GetProductsByProductIdsAsync([FromBody] ProductGetProductsByIdsDto model)
+        {
+            var result = await _productRepository.GetProductsByProductIds(model);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+
+        
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Core.Utilities.Results;
 using EC.Services.PaymentAPI.ApiDtos;
 
-namespace EC.Services.PaymentAPI.ApiServices.Discount.Abstract
+namespace EC.Services.PaymentAPI.ApiServices.Abstract
 {
     public interface IDiscountApiService
     {

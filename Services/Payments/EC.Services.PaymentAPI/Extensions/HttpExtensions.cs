@@ -15,7 +15,12 @@ namespace EC.Services.PaymentAPI.Extensions
                 opt.BaseAddress = new Uri($"{serviceApiSettings.DiscountBaseUri}");
             }).AddHttpMessageHandler<TokenDiscountInterceptorHandler>();
             #endregion
-
+            #region Product
+            services.AddHttpClient("product", opt =>
+            {
+                opt.BaseAddress = new Uri($"{serviceApiSettings.ProductBaseUri}");
+            }).AddHttpMessageHandler<TokenProductInterceptorHandler>();
+            #endregion
 
 
 

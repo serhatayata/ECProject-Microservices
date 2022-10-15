@@ -167,7 +167,7 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         #region GetProductCampaignsAsync
         public async Task<DataResult<List<CampaignDto>>> GetProductCampaignsAsync(string productId)
         {
-            var query = await _context.Campaigns.FindAsync(p => p.Products.Exists(a => a == productId) && p.Status);
+            var query = await _context.Campaigns.FindAsync(p => p.Products.Exists(a => a == productId) && p.Status && p.ExpirationDate < DateTime.Now);
             var result = await query.ToListAsync();
             if (result != null)
             {
@@ -180,7 +180,7 @@ namespace EC.Services.DiscountAPI.Repositories.Concrete
         #region GetAllAsync
         public async Task<DataResult<List<CampaignDto>>> GetAllAsync()
         {
-            var query = await _context.Campaigns.FindAsync(p=> p.Status);
+            var query = await _context.Campaigns.FindAsync(p=> p.Status && p.ExpirationDate < DateTime.Now);
             var result = await query.ToListAsync();
             if (result != null)
             {

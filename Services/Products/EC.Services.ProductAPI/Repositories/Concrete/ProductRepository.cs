@@ -12,8 +12,10 @@ using EC.Services.ProductAPI.Entities;
 using EC.Services.ProductAPI.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Nest;
 using IResult = Core.Utilities.Results.IResult;
 using Mass = MassTransit;
 
@@ -184,6 +186,24 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
             return new ErrorDataResult<List<ProductDto>>(MessageExtensions.NotFound(ProductEntities.Product));
         }
         #endregion
+        #region GetProductsByProductIds
+        public async Task<DataResult<List<ProductDto>>> GetProductsByProductIds(ProductGetProductsByIdsDto model)
+        {
+            var builder = Builders<Product>.Filter;
+            var filter = builder.In(x => x.Id, model.Ids);
+            var filterStatus = builder.Eq(x => x.Status,true);
+
+            var resultGet = await _context.Products.FindAsync(filter & filterStatus);
+            if (resultGet != null)
+            {
+                var result = resultGet.ToList();
+                var product = _mapper.Map<List<ProductDto>>(result);
+                return new SuccessDataResult<List<ProductDto>>(product);
+            }
+            return new ErrorDataResult<List<ProductDto>>(MessageExtensions.NotFound(ProductEntities.Product));
+        }
+        #endregion
+
 
     }
 }
