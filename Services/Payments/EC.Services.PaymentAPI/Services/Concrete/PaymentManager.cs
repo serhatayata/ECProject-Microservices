@@ -76,9 +76,12 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             //PAYMENT CHECK, IF DOESN'T RETURN SUCCESS, RETURN ERROR
 
             var model = _mapper.Map<Payment>(paymentModel);
+
             string paymentNo = RandomExtensions.RandomString(14);
             model.PaymentNo = paymentNo;
-            model.Status = (int)PaymentStatus.Waiting;
+
+            model.CardNumber=model.CardNumber.Substring(model.CardNumber.Length - 4);
+
             await _efRepository.AddAsync(model);
             var addedCheck = await _efRepository.AnyAsync(x => x.Id == model.Id);
             if (!addedCheck)
@@ -122,9 +125,12 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             //PAYMENT CHECK, IF DOESN'T RETURN SUCCESS, RETURN ERROR
 
             var model = _mapper.Map<Payment>(paymentModel);
+
             string paymentNo = RandomExtensions.RandomString(14);
             model.PaymentNo = paymentNo;
-            model.Status = (int)PaymentStatus.Waiting;
+
+            model.CardNumber = model.CardNumber.Substring(model.CardNumber.Length - 4);
+
             await _efRepository.AddAsync(model);
             var addedCheck = await _efRepository.AnyAsync(x => x.Id == model.Id);
             if (!addedCheck)
@@ -180,6 +186,44 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             };
 
             return new SuccessDataResult<PaymentTotalPriceModel>(total,MessageExtensions.Correct(PaymentConstantValues.PaymentControl));
+        }
+        #endregion
+        #region PaymentSuccessAsync
+        public async Task<IResult> PaymentSuccessAsync(PaymentResultDto paymentModel)
+        {
+            var payment = await _dapperRepository.GetByPaymentNoAsync(paymentModel.PaymentNo);
+            payment.Status = (int)PaymentStatus.Completed;
+
+            await _efRepository.UpdateAsync(payment);
+            var exists = await _dapperRepository.GetByIdAsync(payment.Id);
+
+            if (exists.Status != (int)PaymentStatus.Completed)
+            {
+                return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
+            }
+
+            #region Add Order
+            //await _publishEndpoint.Publish<OrderAddEvent>(new OrderAddEvent {  });
+            #endregion
+
+            return new SuccessResult(MessageExtensions.Completed(PaymentConstantValues.Payment));
+        }
+        #endregion
+        #region PaymentFailedAsync
+
+        public async Task<IResult> PaymentFailedAsync(PaymentResultDto paymentModel)
+        {
+            var payment = await _dapperRepository.GetByPaymentNoAsync(paymentModel.PaymentNo);
+            payment.Status = (int)PaymentStatus.Failed;
+
+            await _efRepository.UpdateAsync(payment);
+
+            var exists = await _dapperRepository.GetByIdAsync(payment.Id);
+            if (exists.Status != (int)PaymentStatus.Failed)
+            {
+                return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
+            }
+            return new SuccessResult(MessageExtensions.Updated(PaymentConstantValues.PaymentStatus));
         }
         #endregion
         #region AddAsync
@@ -273,44 +317,7 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             return new SuccessDataResult<PaymentDto>(payments);
         }
         #endregion
-        #region PaymentSuccessAsync
-        public async Task<IResult> PaymentSuccessAsync(PaymentResultDto paymentModel)
-        {
-            var payment = await _dapperRepository.GetByPaymentNoAsync(paymentModel.PaymentNo);
-            payment.Status = (int)PaymentStatus.Completed;
 
-            await _efRepository.UpdateAsync(payment);
-            var exists = await _dapperRepository.GetByIdAsync(payment.Id);
-
-            if (exists.Status != (int)PaymentStatus.Completed)
-            {
-                return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
-            }
-
-            #region Add Order
-            //await _publishEndpoint.Publish<OrderAddEvent>(new OrderAddEvent {  });
-            #endregion
-
-            return new SuccessResult(MessageExtensions.Completed(PaymentConstantValues.Payment));
-        }
-        #endregion
-        #region PaymentFailedAsync
-
-        public async Task<IResult> PaymentFailedAsync(PaymentResultDto paymentModel)
-        {
-            var payment = await _dapperRepository.GetByPaymentNoAsync(paymentModel.PaymentNo);
-            payment.Status = (int)PaymentStatus.Failed;
-
-            await _efRepository.UpdateAsync(payment);
-
-            var exists = await _dapperRepository.GetByIdAsync(payment.Id);
-            if (exists.Status != (int)PaymentStatus.Failed)
-            {
-                return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
-            }
-            return new SuccessResult(MessageExtensions.Updated(PaymentConstantValues.PaymentStatus));
-        }
-        #endregion
 
 
     }

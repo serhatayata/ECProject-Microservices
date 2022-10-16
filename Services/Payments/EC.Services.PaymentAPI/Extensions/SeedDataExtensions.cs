@@ -16,12 +16,12 @@ namespace EC.Services.PaymentAPI.Extensions
 
             context.Database.Migrate();
 
-            AddCategories(context);
+            AddPayments(context);
 
         }
 
         #region AddCategories
-        public static void AddCategories(PaymentDbContext context)
+        public static void AddPayments(PaymentDbContext context)
         {
             //if (!context.Payments.Any())
             //{

@@ -13,7 +13,7 @@ namespace EC.Services.PaymentAPI.Entities
         public string PhoneNumber { get; set; }
         public string? UserId { get; set; }
         //Card Payment
-        public string CardName { get; set; }
+        public string? CardName { get; set; }
         public string CardNumber { get; set; }
         //public string ExpirationMonth { get; set; }
         //public string ExpirationYear { get; set; }
