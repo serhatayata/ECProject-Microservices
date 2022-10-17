@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Castle.DynamicProxy;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
 using Core.CrossCuttingConcerns.Caching.Redis;
+using Core.CrossCuttingConcerns.Logging;
+using Core.CrossCuttingConcerns.Logging.ElasticSearch;
 using Core.Dtos;
 using Core.Extensions;
 using Core.Utilities.Results;
@@ -20,6 +23,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Drawing.Printing;
 using IResult = Core.Utilities.Results.IResult;
 using Mass = MassTransit;
+using System.Reflection;
 
 namespace EC.Services.PaymentAPI.Services.Concrete
 {
@@ -31,9 +35,10 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         private readonly IRedisCacheManager _redisCacheManager;
         private readonly IDiscountApiService _discountApiService;
         private readonly IProductApiService _productApiService;
+        private readonly IElasticSearchService _elasticSearchService;
         private readonly Mass.IPublishEndpoint _publishEndpoint;
 
-        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper, Mass.IPublishEndpoint publishEndpoint,IDiscountApiService discountApiService,IProductApiService productApiService)
+        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper, Mass.IPublishEndpoint publishEndpoint,IDiscountApiService discountApiService,IProductApiService productApiService, IElasticSearchService elasticSearchService)
         {
             _efRepository = efRepository;
             _dapperRepository = dapperRepository;
@@ -42,8 +47,9 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             _redisCacheManager = redisCacheManager;
             _discountApiService = discountApiService;
             _productApiService = productApiService;
+            _elasticSearchService = elasticSearchService;
         }
-        
+
         #region PayAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
@@ -191,6 +197,8 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         #region PaymentSuccessAsync
         public async Task<IResult> PaymentSuccessAsync(PaymentResultDto paymentModel)
         {
+            var method = MethodBase.GetCurrentMethod();
+
             var payment = await _dapperRepository.GetByPaymentNoAsync(paymentModel.PaymentNo);
             payment.Status = (int)PaymentStatus.Completed;
 
@@ -199,11 +207,23 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             if (exists.Status != (int)PaymentStatus.Completed)
             {
+                #region Logging
+                var logDetailError = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.NotCompleted(PaymentConstantValues.Payment));
+
+                await _elasticSearchService.AddAsync(logDetailError);
+                #endregion
+
                 return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
             }
 
             #region Add Order
             //await _publishEndpoint.Publish<OrderAddEvent>(new OrderAddEvent {  });
+            #endregion
+
+            #region Logging
+            var logDetail = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.Completed(PaymentConstantValues.Payment));
+
+            await _elasticSearchService.AddAsync(logDetail);
             #endregion
 
             return new SuccessResult(MessageExtensions.Completed(PaymentConstantValues.Payment));
@@ -213,6 +233,8 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
         public async Task<IResult> PaymentFailedAsync(PaymentResultDto paymentModel)
         {
+            var method = MethodBase.GetCurrentMethod();
+
             var payment = await _dapperRepository.GetByPaymentNoAsync(paymentModel.PaymentNo);
             payment.Status = (int)PaymentStatus.Failed;
 
@@ -221,8 +243,21 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             var exists = await _dapperRepository.GetByIdAsync(payment.Id);
             if (exists.Status != (int)PaymentStatus.Failed)
             {
+                #region Logging
+                var logDetailError = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
+
+                await _elasticSearchService.AddAsync(logDetailError);
+                #endregion
+
                 return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
             }
+
+            #region Logging
+            var logDetail = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.NotCompleted(PaymentConstantValues.Payment));
+
+            await _elasticSearchService.AddAsync(logDetail);
+            #endregion
+
             return new SuccessResult(MessageExtensions.Updated(PaymentConstantValues.PaymentStatus));
         }
         #endregion

@@ -38,7 +38,7 @@ namespace Core.CrossCuttingConcerns.Logging.ElasticSearch
             return new ElasticClient(connectionString);
         }
         #region Search
-        public async Task<List<LogDetail>> Search(string keyword)
+        public async Task<List<LogDetail>> SearchAsync(string keyword)
         {
             var results = await ElasticSearchClient.SearchAsync<LogDetail>(
                 s => s.Query(
@@ -52,9 +52,9 @@ namespace Core.CrossCuttingConcerns.Logging.ElasticSearch
         }
         #endregion
         #region Add
-        public async Task<LogDetail> Add(LogDetail logDetail)
+        public async Task<LogDetail> AddAsync(LogDetail logDetail)
         {
-            await ElasticSearchClient.IndexDocumentAsync(logDetail);
+            var result = await ElasticSearchClient.IndexDocumentAsync(logDetail);
             return logDetail;
         }
         #endregion

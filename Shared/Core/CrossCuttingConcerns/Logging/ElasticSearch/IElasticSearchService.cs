@@ -11,8 +11,8 @@ namespace Core.CrossCuttingConcerns.Logging.ElasticSearch
 {
     public interface IElasticSearchService
     {
-        Task<List<LogDetail>> Search(string keyword);
-        Task<LogDetail> Add(LogDetail logDetail);
+        Task<List<LogDetail>> SearchAsync(string keyword);
+        Task<LogDetail> AddAsync(LogDetail logDetail);
 
 
     }

@@ -44,6 +44,13 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region NotCompleted
+        public static string NotCompleted(string entity)
+        {
+            var value = $"{entity} not completed";
+            return value;
+        }
+        #endregion
         #region NotCorrect
         public static string NotCorrect(string entity)
         {
