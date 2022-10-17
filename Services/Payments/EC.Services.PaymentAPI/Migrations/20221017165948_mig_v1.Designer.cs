@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC.Services.PaymentAPI.Migrations
 {
     [DbContext(typeof(PaymentDbContext))]
-    [Migration("20221016082902_mig_v1")]
+    [Migration("20221017165948_mig_v1")]
     partial class mig_v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

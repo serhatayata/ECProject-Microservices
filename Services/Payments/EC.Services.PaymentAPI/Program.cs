@@ -21,7 +21,7 @@ IWebHostEnvironment Environment = builder.Environment;
 #region SERVICES
 
 #region MASSTRANSIT
-builder.Services.AddMassTransitSettings(configuration);
+//builder.Services.AddMassTransitSettings(configuration);
 #endregion
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -54,6 +54,8 @@ builder.Services.AddDependencyResolvers(new ICoreModule[] {
 #region HTTP
 builder.Services.AddHttpClientServices(configuration);
 #endregion
+
+builder.Services.AddSeedData(configuration);
 
 builder.Services.Configure<ServiceApiSettings>(configuration.GetSection("ServiceApiSettings"));
 builder.Services.Configure<ClientSettings>(configuration.GetSection("ClientSettings"));

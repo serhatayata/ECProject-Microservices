@@ -1,5 +1,6 @@
 ﻿using Core.Extensions;
 using EC.Services.PaymentAPI.Data.Contexts;
+using EC.Services.PaymentAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EC.Services.PaymentAPI.Extensions
@@ -23,13 +24,47 @@ namespace EC.Services.PaymentAPI.Extensions
         #region AddCategories
         public static void AddPayments(PaymentDbContext context)
         {
-            //if (!context.Payments.Any())
-            //{
-                
+            if (!context.Payments.Any())
+            {
+                Payment[] payments =
+                {
+                    new Payment()
+                    {
+                       AddressDetail="Address detail test 1",
+                       CardName="Mehmet Kaya",
+                       CardNumber="3333",
+                       CDate=DateTime.Now,
+                       CityName="Istanbul",
+                       CountryName="Turkiye",
+                       CountyName="Umraniye",
+                       PaymentNo="asdfg12345asdf",
+                       PhoneCountry="TR",
+                       PhoneNumber="5555555555",
+                       Status=(int)PaymentStatus.Waiting,
+                       TotalPrice=234.20M,
+                       ZipCode="34774"
+                    },
+                    new Payment()
+                    {
+                       AddressDetail="Address detail test 2",
+                       CardName="Merve Tekin",
+                       CardNumber="1111",
+                       CDate=DateTime.Now,
+                       CityName="Ankara",
+                       CountryName="Turkiye",
+                       CountyName="Kecioren",
+                       PaymentNo="lkjhg54123rewq",
+                       PhoneCountry="TR",
+                       PhoneNumber="6666666666",
+                       Status=(int)PaymentStatus.Waiting,
+                       TotalPrice=654.23M,
+                       ZipCode="34565"
+                    }
+                };
 
-            //    context.Payments.AddRange(categories);
-            //    context.SaveChanges();
-            //}
+                context.Payments.AddRange(payments);
+                context.SaveChanges();
+            }
         }
 
         #endregion
