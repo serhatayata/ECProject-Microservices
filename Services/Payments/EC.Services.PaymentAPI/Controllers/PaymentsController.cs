@@ -30,7 +30,7 @@ namespace EC.Services.PaymentAPI.Controllers
         #endregion
         #region PayWithoutUserAsync
         [HttpPost]
-        [Route("pay")]
+        [Route("pay-without-user")]
         public async Task<IActionResult> PayWithoutUserAsync(PaymentWithoutUserAddDto model)
         {
             var result = await _paymentService.PayWithoutUserAsync(model);
@@ -95,13 +95,23 @@ namespace EC.Services.PaymentAPI.Controllers
             return StatusCode(result.StatusCode, result);
         }
         #endregion
-        #region GetAllPagingAsync
+        #region GetByIdAsync
         [HttpGet]
         [Route("get-byid")]
         [AuthorizeAnyPolicy("ReadPayment,FullPayment")]
         public async Task<IActionResult> GetByIdAsync([FromQuery] int id)
         {
             var result = await _paymentService.GetByIdAsync(id);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region GetByPaymentNoAsync
+        [HttpGet]
+        [Route("get-bypaymentno")]
+        [AuthorizeAnyPolicy("ReadPayment,FullPayment")]
+        public async Task<IActionResult> GetByPaymentNoAsync([FromQuery] string paymentNo)
+        {
+            var result = await _paymentService.GetByPaymentNoAsync(paymentNo);
             return StatusCode(result.StatusCode, result);
         }
         #endregion

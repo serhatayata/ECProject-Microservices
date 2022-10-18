@@ -6,6 +6,8 @@ using Core.DependencyResolvers;
 using Core.Entities.ElasticSearch.Abstract;
 using Core.Entities.ElasticSearch.Concrete;
 using Core.Extensions;
+using Core.Utilities.Business.Abstract;
+using Core.Utilities.Business.Concrete;
 using Core.Utilities.IoC;
 using EC.Services.CategoryAPI.DependencyResolvers.Autofac;
 using EC.Services.CategoryAPI.Extensions;
@@ -23,6 +25,9 @@ IWebHostEnvironment Environment = builder.Environment;
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
+#endregion
+#region DI
+//builder.Services.AddScoped<ISharedIdentityService, SharedIdentityService>();
 #endregion
 #region AUTO MAPPER
 builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);

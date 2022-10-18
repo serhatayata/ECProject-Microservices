@@ -13,6 +13,8 @@ using Core.DependencyResolvers;
 using Core.Utilities.IoC;
 using Core.Entities;
 using EC.Services.PaymentAPI.Entities;
+using Core.Utilities.Business.Abstract;
+using Core.Utilities.Business.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -21,7 +23,7 @@ IWebHostEnvironment Environment = builder.Environment;
 #region SERVICES
 
 #region MASSTRANSIT
-//builder.Services.AddMassTransitSettings(configuration);
+builder.Services.AddMassTransitSettings(configuration);
 #endregion
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());

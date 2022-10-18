@@ -24,6 +24,7 @@ using System.Drawing.Printing;
 using IResult = Core.Utilities.Results.IResult;
 using Mass = MassTransit;
 using System.Reflection;
+using Nest;
 
 namespace EC.Services.PaymentAPI.Services.Concrete
 {
@@ -305,7 +306,8 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             {
                 return new ErrorDataResult<List<PaymentDto>>(MessageExtensions.NotFound(PaymentConstantValues.Payment));
             }
-            return new SuccessDataResult<List<PaymentDto>>(payments);
+            var result = _mapper.Map<List<PaymentDto>>(payments);
+            return new SuccessDataResult<List<PaymentDto>>(result);
         }
         #endregion
         #region GetAllByUserIdAsync
@@ -316,7 +318,8 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             {
                 return new ErrorDataResult<List<PaymentDto>>(MessageExtensions.NotFound(PaymentConstantValues.Payment));
             }
-            return new SuccessDataResult<List<PaymentDto>>(payments);
+            var result = _mapper.Map<List<PaymentDto>>(payments);
+            return new SuccessDataResult<List<PaymentDto>>(result);
         }
         #endregion
         #region GetAllByUserIdPagingAsync
@@ -327,7 +330,8 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             {
                 return new ErrorDataResult<List<PaymentDto>>(MessageExtensions.NotFound(PaymentConstantValues.Payment));
             }
-            return new SuccessDataResult<List<PaymentDto>>(payments);
+            var result = _mapper.Map<List<PaymentDto>>(payments);
+            return new SuccessDataResult<List<PaymentDto>>(result);
         }
         #endregion
         #region GetAllPagingAsync
@@ -338,7 +342,8 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             {
                 return new ErrorDataResult<List<PaymentDto>>(MessageExtensions.NotFound(PaymentConstantValues.Payment));
             }
-            return new SuccessDataResult<List<PaymentDto>>(payments);
+            var result = _mapper.Map<List<PaymentDto>>(payments);
+            return new SuccessDataResult<List<PaymentDto>>(result);
         }
         #endregion
         #region GetByIdAsync
@@ -349,10 +354,22 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             {
                 return new ErrorDataResult<PaymentDto>(MessageExtensions.NotFound(PaymentConstantValues.Payment));
             }
-            return new SuccessDataResult<PaymentDto>(payments);
+            var result = _mapper.Map<PaymentDto>(payments);
+            return new SuccessDataResult<PaymentDto>(result);
         }
         #endregion
-
+        #region GetByPaymentNoAsync
+        public async Task<DataResult<PaymentDto>> GetByPaymentNoAsync(string paymentNo)
+        {
+            var payments = await _dapperRepository.GetByPaymentNoAsync(paymentNo);
+            if (payments == null)
+            {
+                return new ErrorDataResult<PaymentDto>(MessageExtensions.NotFound(PaymentConstantValues.Payment));
+            }
+            var result = _mapper.Map<PaymentDto>(payments);
+            return new SuccessDataResult<PaymentDto>(result);
+        }
+        #endregion
 
 
     }
