@@ -12,11 +12,15 @@ namespace EC.Services.PaymentAPI.Validations.PaymentValidations
         {
             RuleFor(x => x.PhoneCountry).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentPhoneNumber));
             RuleFor(x => x.PhoneCountry).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentPhoneNumber));
-            RuleFor(x => x.PhoneCountry).MaximumLength(3).WithMessage(MessageExtensions.ErrorMaxLength(PaymentConstantValues.PaymentPhoneNumber, 3));
+            RuleFor(x => x.PhoneCountry).MaximumLength(2).WithMessage(MessageExtensions.ErrorMaxLength(PaymentConstantValues.PaymentPhoneNumber, 3));
 
             RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentPhoneNumber));
             RuleFor(x => x.PhoneNumber).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentPhoneNumber));
             RuleFor(x => x.PhoneNumber).Length(10).WithMessage(MessageExtensions.ErrorLength(PaymentConstantValues.PaymentPhoneNumber, 10));
+            RuleFor(x => x).Must((a) =>
+            {
+                return PhoneNumberExtensions.ValidatePhoneNumber(a.PhoneNumber, a.PhoneCountry).Success;
+            }).WithMessage(MessageExtensions.NotValid(PaymentConstantValues.PaymentPhoneNumber));
 
             RuleFor(x => x.CardName).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentCardName));
             RuleFor(x => x.CardName).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentCardName));

@@ -69,7 +69,7 @@ namespace Core.Extensions
         #region Added
         public static string Added(string entity)
         {
-            var value = $"{entity} added.";
+            var value = $"{entity} added";
             return value;
         }
         #endregion
@@ -83,14 +83,14 @@ namespace Core.Extensions
         #region NotAdded
         public static string NotAdded(string entity)
         {
-            var value = $"{entity} not added.";
+            var value = $"{entity} not added";
             return value;
         }
         #endregion
         #region NotValid
         public static string NotValid(string entity)
         {
-            var value = $"{entity} is invalid.";
+            var value = $"{entity} is invalid";
             return value;
         }
         #endregion
