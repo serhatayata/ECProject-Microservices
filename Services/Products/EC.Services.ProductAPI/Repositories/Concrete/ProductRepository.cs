@@ -16,6 +16,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Nest;
+using System.Collections.Generic;
 using IResult = Core.Utilities.Results.IResult;
 using Mass = MassTransit;
 

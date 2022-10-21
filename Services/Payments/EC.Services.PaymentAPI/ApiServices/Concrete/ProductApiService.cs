@@ -28,7 +28,7 @@ namespace EC.Services.PaymentAPI.ApiServices.Concrete
         {
             var client = _httpClientFactory.CreateClient("product");
 
-            string uri = _apiEndpoint.DiscountGetByDiscountCode;
+            string uri = _apiEndpoint.GetProductsByProductIds;
 
             var serialized = JsonConvert.SerializeObject(model);
             var stringContent = new StringContent(serialized, Encoding.UTF8, "application/json");
@@ -38,7 +38,8 @@ namespace EC.Services.PaymentAPI.ApiServices.Concrete
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                return new SuccessDataResult<List<ProductApiDto>>(result);
+                var returnValue = JsonConvert.DeserializeObject<DataResult<List<ProductApiDto>>>(result);
+                return new SuccessDataResult<List<ProductApiDto>>(returnValue.Data);
             }
             return new ErrorDataResult<List<ProductApiDto>>(MessageExtensions.NotFound(PaymentConstantValues.PaymentProduct));
         }

@@ -4,6 +4,7 @@
     {
         public string DiscountGetByDiscountCode { get; set; }
         public string CampaignGetAll { get; set; }
+        public string GetProductsByProductIds { get; set; }
 
     }
 }

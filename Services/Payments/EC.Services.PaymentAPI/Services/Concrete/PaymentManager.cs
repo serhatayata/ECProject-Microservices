@@ -25,6 +25,8 @@ using IResult = Core.Utilities.Results.IResult;
 using Mass = MassTransit;
 using System.Reflection;
 using Nest;
+using Core.CrossCuttingConcerns.Caching;
+using System.Text.Json;
 
 namespace EC.Services.PaymentAPI.Services.Concrete
 {
@@ -57,12 +59,15 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         public async Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel)
         {
             #region Basket Total Price Control
-            var basketValues = await _redisCacheManager.GetAsync<BasketDto>($"Basket_{paymentModel.UserId}");
+            var existBasket = await _redisCacheManager.GetDatabase(db: BasketConstantValues.BasketDb).StringGetAsync("basket_" + paymentModel.UserId);
+            //var basketValues = await _redisCacheManager.GetAsync<BasketDto>($"Basket_{paymentModel.UserId}");
 
-            if (basketValues == null)
+            if (String.IsNullOrEmpty(existBasket))
             {
                 return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentProduct));
             }
+
+            var basketValues = JsonSerializer.Deserialize<BasketDto>(existBasket);
 
             PaymentBasketControlDto paymentControlModel = new()
             {

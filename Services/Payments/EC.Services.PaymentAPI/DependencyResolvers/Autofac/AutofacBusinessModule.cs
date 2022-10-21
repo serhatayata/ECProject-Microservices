@@ -10,6 +10,7 @@ using EC.Services.PaymentAPI.ApiServices.Abstract;
 using EC.Services.PaymentAPI.ApiServices.Concrete;
 using EC.Services.PaymentAPI.Data.Abstract.Dapper;
 using EC.Services.PaymentAPI.Data.Concrete.Dapper;
+using EC.Services.PaymentAPI.Handlers.TokenHandlers;
 using EC.Services.PaymentAPI.Services.Abstract;
 using EC.Services.PaymentAPI.Services.Concrete;
 using System.Reflection;
@@ -27,6 +28,8 @@ namespace EC.Services.PaymentAPI.DependencyResolvers.Autofac
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerLifetimeScope();
             builder.RegisterType<ElasticSearchManager>().As<IElasticSearchService>().InstancePerLifetimeScope();
             builder.RegisterType<SharedIdentityService>().As<ISharedIdentityService>().InstancePerLifetimeScope();
+            builder.RegisterType<TokenDiscountInterceptorHandler>().InstancePerLifetimeScope();
+            builder.RegisterType<TokenProductInterceptorHandler>().InstancePerLifetimeScope();
 
             #endregion
             #region DataAccess - AddTransient

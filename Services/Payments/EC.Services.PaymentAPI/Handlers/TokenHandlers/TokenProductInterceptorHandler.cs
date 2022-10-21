@@ -34,8 +34,8 @@ namespace EC.Services.PaymentAPI.Handlers.TokenHandlers
 
             var clientCredentialTokenRequest = new ClientCredentialsTokenRequest
             {
-                ClientId = _clientSettings.ProductsClient.ClientId,
-                ClientSecret = _clientSettings.ProductsClient.ClientSecret,
+                ClientId = _clientSettings.ProductClient.ClientId,
+                ClientSecret = _clientSettings.ProductClient.ClientSecret,
                 Address = disco.TokenEndpoint
             };
 

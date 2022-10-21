@@ -43,7 +43,8 @@ namespace EC.Services.PaymentAPI.ApiServices.Concrete
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                return new SuccessDataResult<DiscountApiDto>(result);
+                var returnValue = JsonConvert.DeserializeObject<DataResult<DiscountApiDto>>(result);
+                return new SuccessDataResult<DiscountApiDto>(returnValue.Data);
             }
             return new ErrorDataResult<DiscountApiDto>(MessageExtensions.NotFound(PaymentConstantValues.PaymentDiscount));
         }
@@ -60,7 +61,8 @@ namespace EC.Services.PaymentAPI.ApiServices.Concrete
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                return new SuccessDataResult<List<CampaignApiDto>>(result);
+                var returnValue = JsonConvert.DeserializeObject<DataResult<List<CampaignApiDto>>>(result);
+                return new SuccessDataResult<List<CampaignApiDto>>(returnValue.Data);
             }
             return new ErrorDataResult<List<CampaignApiDto>>(MessageExtensions.NotFound(PaymentConstantValues.PaymentDiscount));
         }
