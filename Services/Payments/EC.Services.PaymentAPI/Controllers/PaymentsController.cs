@@ -35,6 +35,7 @@ namespace EC.Services.PaymentAPI.Controllers
         #region PayWithoutUserAsync
         [HttpPost]
         [Route("pay-without-user")]
+        [AuthorizeAnyPolicy("WritePayment,FullPayment")]
         public async Task<IActionResult> PayWithoutUserAsync(PaymentWithoutUserAddDto model)
         {
             var result = await _paymentService.PayWithoutUserAsync(model);

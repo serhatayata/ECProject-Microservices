@@ -102,8 +102,6 @@ namespace EC.Services.PaymentAPI.Services.Concrete
                 return new ErrorResult(MessageExtensions.NotAdded(PaymentConstantValues.Payment));
             }
 
-            //Order will be added here by using RabbitMQ Queue
-
             return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
         }
         #endregion
@@ -153,8 +151,6 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             {
                 return new ErrorResult(MessageExtensions.NotAdded(PaymentConstantValues.Payment));
             }
-
-            //Order will be added here by using RabbitMQ Queue
 
             return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
         }

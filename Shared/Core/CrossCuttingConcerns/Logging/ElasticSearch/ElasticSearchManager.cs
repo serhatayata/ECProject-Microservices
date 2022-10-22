@@ -37,11 +37,29 @@ namespace Core.CrossCuttingConcerns.Logging.ElasticSearch
 
             return new ElasticClient(connectionString);
         }
-        #region Search
+        #region SearchAsync
         public async Task<List<LogDetail>> SearchAsync(string keyword)
         {
             var results = await ElasticSearchClient.SearchAsync<LogDetail>(
                 s => s.Query(
+                    q => q.QueryString(
+                        d => d.Query('*' + keyword + '*')
+                    )
+                ).Size(1000)
+            );
+
+            return results.Documents.ToList();
+        }
+        #endregion
+        #region SearchPagingAsync
+        public async Task<List<LogDetail>> SearchPagingAsync(string keyword,int page,int pageSize)
+        {
+            int from = (page - 1) * pageSize;
+            var results = await ElasticSearchClient.SearchAsync<LogDetail>(
+                s => s
+                .From(from)
+                .Size(pageSize)
+                .Query(
                     q => q.QueryString(
                         d => d.Query('*' + keyword + '*')
                     )
