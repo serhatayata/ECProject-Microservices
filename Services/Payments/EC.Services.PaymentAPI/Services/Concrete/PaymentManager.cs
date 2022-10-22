@@ -27,6 +27,7 @@ using System.Reflection;
 using Nest;
 using Core.CrossCuttingConcerns.Caching;
 using System.Text.Json;
+using Core.Entities;
 
 namespace EC.Services.PaymentAPI.Services.Concrete
 {
@@ -56,10 +57,10 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         #region PayAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        public async Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel)
+        public async Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel,string userId)
         {
             #region Basket Total Price Control
-            var existBasket = await _redisCacheManager.GetDatabase(db: BasketConstantValues.BasketDb).StringGetAsync("basket_" + paymentModel.UserId);
+            var existBasket = await _redisCacheManager.GetDatabase(db: BasketConstantValues.BasketDb).StringGetAsync("basket_" + userId);
             //var basketValues = await _redisCacheManager.GetAsync<BasketDto>($"Basket_{paymentModel.UserId}");
 
             if (String.IsNullOrEmpty(existBasket))
@@ -91,7 +92,7 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             string paymentNo = RandomExtensions.RandomString(14);
             model.PaymentNo = paymentNo;
-
+            model.UserId = userId;
             model.CardNumber=model.CardNumber.Substring(model.CardNumber.Length - 4);
 
             await _efRepository.AddAsync(model);
@@ -100,6 +101,9 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             {
                 return new ErrorResult(MessageExtensions.NotAdded(PaymentConstantValues.Payment));
             }
+
+            //Order will be added here by using RabbitMQ Queue
+
             return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
         }
         #endregion
@@ -149,6 +153,9 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             {
                 return new ErrorResult(MessageExtensions.NotAdded(PaymentConstantValues.Payment));
             }
+
+            //Order will be added here by using RabbitMQ Queue
+
             return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
         }
         #endregion
@@ -157,7 +164,9 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         {
             decimal modelTotalPrice = paymentBasketDto.TotalPrice;
 
-            string[] productIds = paymentBasketDto.Basket.basketItems.Select(x => x.ProductId).ToArray();
+            var basketItems = paymentBasketDto.Basket.basketItems;
+
+            string[] productIds = basketItems.Select(x => x.ProductId).ToArray();
 
             ProductGetByProductIdsDto productModel = new()
             {
@@ -172,7 +181,13 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             var products = productsGet.Data;
 
-            var calculatedTotalPrice = products.Select(x => x.Price).Sum();
+            #region TotalPrice Calculation
+            decimal totalPrice = 0;
+            foreach (var product in products)
+            {
+                totalPrice += product.Price * basketItems.First(x => x.ProductId == product.Id).Quantity;
+            }
+            #endregion
 
             if (!string.IsNullOrEmpty(paymentBasketDto.Basket.DiscountCode))
             {
@@ -184,17 +199,20 @@ namespace EC.Services.PaymentAPI.Services.Concrete
                     return new ErrorDataResult<PaymentTotalPriceModel>(MessageExtensions.NotFound(PaymentConstantValues.PaymentDiscount));
                 }
 
-                calculatedTotalPrice = calculatedTotalPrice * discount.Data.Rate;
+                #region Discount Calculation
+                var discountValues = discount.Data;
+                totalPrice = DiscountExtensions.CalculateDiscount((DiscountTypes)discountValues.DiscountType, discountValues.Rate, totalPrice);
+                #endregion
             }
 
-            if (calculatedTotalPrice != modelTotalPrice)
+            if (totalPrice != modelTotalPrice)
             {
                 return new ErrorDataResult<PaymentTotalPriceModel>(MessageExtensions.NotFound(PaymentConstantValues.PaymentIncorrect));
             }
 
             PaymentTotalPriceModel total = new()
             {
-                TotalPrice = calculatedTotalPrice
+                TotalPrice = totalPrice
             };
 
             return new SuccessDataResult<PaymentTotalPriceModel>(total,MessageExtensions.Correct(PaymentConstantValues.PaymentControl));

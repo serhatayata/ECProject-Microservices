@@ -252,6 +252,7 @@ namespace EC.IdentityServer.Configuration
                         "basket_full",
                         "basket_read",
                         "basket_write",
+                        "payment_full",
                         "orders.signalrhub"
                     },
                     AccessTokenLifetime = 60*60*2, // 2 hours

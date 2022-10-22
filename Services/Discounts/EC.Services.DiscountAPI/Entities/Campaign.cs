@@ -21,11 +21,11 @@ namespace EC.Services.DiscountAPI.Entities
         public List<string> Products { get; set; }
     }
 
-    public enum CampaignTypes
-    {
-        Price = 1,
-        Percentage = 2,
-        OverPrice=3,
-        OverPercentage=4
-    }
+    //public enum CampaignTypes
+    //{
+    //    Price = 1,
+    //    Percentage = 2,
+    //    OverPrice=3,
+    //    OverPercentage=4
+    //}
 }

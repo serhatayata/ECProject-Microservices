@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC.Services.PaymentAPI.Migrations
 {
     [DbContext(typeof(PaymentDbContext))]
-    [Migration("20221017165948_mig_v1")]
+    [Migration("20221022082714_mig_v1")]
     partial class mig_v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,7 +81,7 @@ namespace EC.Services.PaymentAPI.Migrations
                         .HasColumnType("decimal(8,2)");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(32)");
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("ZipCode")
                         .IsRequired()

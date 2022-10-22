@@ -79,7 +79,7 @@ namespace EC.Services.PaymentAPI.Migrations
                         .HasColumnType("decimal(8,2)");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(32)");
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("ZipCode")
                         .IsRequired()

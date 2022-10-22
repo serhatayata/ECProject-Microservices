@@ -8,7 +8,7 @@ namespace EC.Services.PaymentAPI.Dtos.PaymentDtos
         //User
         public string PhoneCountry { get; set; }
         public string PhoneNumber { get; set; }
-        public string? UserId { get; set; }
+        //public string? UserId { get; set; }
         //public string DiscountCode { get; set; }
 
         //Card Payment

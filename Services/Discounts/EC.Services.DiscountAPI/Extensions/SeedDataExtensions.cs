@@ -1,4 +1,5 @@
-﻿using Core.Extensions;
+﻿using Core.Entities;
+using Core.Extensions;
 using EC.Services.DiscountAPI.Data.Concrete;
 using EC.Services.DiscountAPI.Entities;
 using EC.Services.DiscountAPI.Settings;

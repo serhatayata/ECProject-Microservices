@@ -15,9 +15,6 @@ namespace EC.Services.PaymentAPI.Validations.PaymentValidations
 
             RuleFor(x => x.PageSize).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(ConstantValues.PageSize));
             RuleFor(x => x.PageSize).NotNull().WithMessage(MessageExtensions.ErrorNotNull(ConstantValues.PageSize));
-
-            RuleFor(x => x.UserId).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(ConstantValues.UserId));
-            RuleFor(x => x.UserId).NotNull().WithMessage(MessageExtensions.ErrorNotNull(ConstantValues.UserId));
         }
     }
 }

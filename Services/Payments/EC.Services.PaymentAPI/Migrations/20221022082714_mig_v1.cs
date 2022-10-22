@@ -20,7 +20,7 @@ namespace EC.Services.PaymentAPI.Migrations
                     Status = table.Column<short>(type: "smallint", nullable: false, defaultValue: (short)2),
                     PhoneCountry = table.Column<string>(type: "nvarchar(2)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(10)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(32)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(60)", nullable: true),
                     CardName = table.Column<string>(type: "nvarchar(50)", nullable: true),
                     CardNumber = table.Column<string>(type: "nvarchar(4)", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(8,2)", nullable: false),

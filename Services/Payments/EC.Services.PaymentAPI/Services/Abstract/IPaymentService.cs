@@ -15,7 +15,7 @@ namespace EC.Services.PaymentAPI.Services.Abstract
         Task<DataResult<PaymentDto>> GetByIdAsync(int id);
         Task<DataResult<PaymentDto>> GetByPaymentNoAsync(string paymentNo);
         Task<DataResult<PaymentTotalPriceModel>> PaymentBasketControlAsync(PaymentBasketControlDto paymentBasketDto);
-        Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel);
+        Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel,string userId);
         Task<IResult> PayWithoutUserAsync(PaymentWithoutUserAddDto paymentModel);
         Task<IResult> PaymentSuccessAsync(PaymentResultDto paymentModel);
         Task<IResult> PaymentFailedAsync(PaymentResultDto paymentModel);

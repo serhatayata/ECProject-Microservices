@@ -51,7 +51,7 @@ namespace EC.IdentityServer.Data.SeedData
                     UpdatedAt = DateTime.Now,
                     PhoneCountry = "TR",
                     PhoneNumber = "5374882316",
-                    UserName = "5374882316",
+                    UserName = "905374882316",
                     Status = (int)UserStatus.NotValidated,
                     Email = "srht1@email.com",
                     EmailConfirmed = true,
@@ -93,12 +93,12 @@ namespace EC.IdentityServer.Data.SeedData
                     UpdatedAt = DateTime.Now,
                     PhoneCountry = "TR",
                     PhoneNumber = "5555555555",
-                    UserName = "5555555555",
+                    UserName = "905555555555",
                     Status = (int)UserStatus.NotValidated,
                     Email = "mkaya@email.com",
                     EmailConfirmed = true,
                 };
-                var result = await userMgr.CreateAsync(user_2, "Password12");
+                var result = await userMgr.CreateAsync(user_2, "Password12*");
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);

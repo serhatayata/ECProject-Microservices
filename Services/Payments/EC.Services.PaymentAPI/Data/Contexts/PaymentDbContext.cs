@@ -48,7 +48,7 @@ namespace EC.Services.PaymentAPI.Data.Contexts
 
                 entity.Property(x => x.PhoneNumber).HasColumnType("nvarchar(10)");
 
-                entity.Property(x => x.UserId).HasColumnType("nvarchar(32)");
+                entity.Property(x => x.UserId).HasColumnType("nvarchar(60)");
 
                 entity.Property(x => x.CardName).HasColumnType("nvarchar(50)");
 

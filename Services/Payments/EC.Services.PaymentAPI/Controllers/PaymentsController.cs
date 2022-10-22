@@ -1,5 +1,6 @@
 ﻿using Core.Dtos;
 using Core.Utilities.Attributes;
+using Core.Utilities.Business.Abstract;
 using EC.Services.PaymentAPI.Dtos.PaymentDtos;
 using EC.Services.PaymentAPI.Services.Abstract;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +13,13 @@ namespace EC.Services.PaymentAPI.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
-
-        public PaymentsController(IPaymentService paymentService)
+        private readonly ISharedIdentityService _sharedIdentityService;
+        string _userId;
+        public PaymentsController(IPaymentService paymentService, ISharedIdentityService sharedIdentityService)
         {
             _paymentService = paymentService;
+            _sharedIdentityService = sharedIdentityService;
+            _userId = _sharedIdentityService.GetUserId;
         }
 
         #region PayAsync
@@ -24,7 +28,7 @@ namespace EC.Services.PaymentAPI.Controllers
         [AuthorizeAnyPolicy("WritePayment,FullPayment")]
         public async Task<IActionResult> PayAsync(PaymentAddDto model)
         {
-            var result = await _paymentService.PayWithUserAsync(model);
+            var result = await _paymentService.PayWithUserAsync(model,_userId);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
@@ -56,22 +60,22 @@ namespace EC.Services.PaymentAPI.Controllers
         }
         #endregion
         #region DeleteAsync
-        [HttpDelete]
-        [Route("delete")]
-        [AuthorizeAnyPolicy("WritePayment,FullPayment")]
-        public async Task<IActionResult> DeleteAsync(DeleteIntDto model)
-        {
-            var result = await _paymentService.DeleteAsync(model);
-            return StatusCode(result.StatusCode, result);
-        }
+        //[HttpDelete]
+        //[Route("delete")]
+        //[AuthorizeAnyPolicy("WritePayment,FullPayment")]
+        //public async Task<IActionResult> DeleteAsync(DeleteIntDto model)
+        //{
+        //    var result = await _paymentService.DeleteAsync(model);
+        //    return StatusCode(result.StatusCode, result);
+        //}
         #endregion
         #region GetAllByUserIdAsync
         [HttpGet]
         [Route("getall-byuserid")]
         [AuthorizeAnyPolicy("ReadPayment,FullPayment")]
-        public async Task<IActionResult> GetAllByUserIdAsync([FromQuery] string userId)
+        public async Task<IActionResult> GetAllByUserIdAsync()
         {
-            var result = await _paymentService.GetAllByUserIdAsync(userId);
+            var result = await _paymentService.GetAllByUserIdAsync(_userId);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
@@ -79,16 +83,16 @@ namespace EC.Services.PaymentAPI.Controllers
         [HttpGet]
         [Route("getall-byuserid-paging")]
         [AuthorizeAnyPolicy("ReadPayment,FullPayment")]
-        public async Task<IActionResult> GetAllByUserIdPagingAsync([FromQuery] PaymentGetAllByUserIdPagingDto model)
+        public async Task<IActionResult> GetAllByUserIdPagingAsync([FromQuery] PagingDto model)
         {
-            var result = await _paymentService.GetAllByUserIdPagingAsync(model.UserId,model.Page,model.PageSize);
+            var result = await _paymentService.GetAllByUserIdPagingAsync(_userId,model.Page,model.PageSize);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
         #region GetAllPagingAsync
         [HttpGet]
         [Route("getall-paging")]
-        [AuthorizeAnyPolicy("ReadPayment,FullPayment")]
+        [AuthorizeAnyPolicy("FullPayment")]
         public async Task<IActionResult> GetAllPagingAsync([FromQuery] PagingDto model)
         {
             var result = await _paymentService.GetAllPagingAsync(model.Page, model.PageSize);
@@ -98,7 +102,7 @@ namespace EC.Services.PaymentAPI.Controllers
         #region GetByIdAsync
         [HttpGet]
         [Route("get-byid")]
-        [AuthorizeAnyPolicy("ReadPayment,FullPayment")]
+        [AuthorizeAnyPolicy("FullPayment")]
         public async Task<IActionResult> GetByIdAsync([FromQuery] int id)
         {
             var result = await _paymentService.GetByIdAsync(id);

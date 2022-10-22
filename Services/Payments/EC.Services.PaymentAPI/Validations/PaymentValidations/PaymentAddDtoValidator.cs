@@ -11,9 +11,6 @@ namespace EC.Services.PaymentAPI.Validations.PaymentValidations
     {
         public PaymentAddDtoValidator()
         {
-            RuleFor(x => x.UserId).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentUser));
-            RuleFor(x => x.UserId).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentUser));
-
             RuleFor(x => x.PhoneCountry).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(PaymentConstantValues.PaymentPhoneNumber));
             RuleFor(x => x.PhoneCountry).NotNull().WithMessage(MessageExtensions.ErrorNotNull(PaymentConstantValues.PaymentPhoneNumber));
             RuleFor(x => x.PhoneCountry).MaximumLength(2).WithMessage(MessageExtensions.ErrorMaxLength(PaymentConstantValues.PaymentPhoneNumber, 3));
