@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
     <Folder Include="Consumers\" />
     <Folder Include="Dtos\" />
     <Folder Include="Handlers\" />
@@ -20,6 +19,12 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Core\Core.csproj" />
+    <ProjectReference Include="..\EC.Services.Order.Domain\EC.Services.Order.Domain.csproj" />
+    <ProjectReference Include="..\EC.Services.Order.Infrastructure\EC.Services.Order.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

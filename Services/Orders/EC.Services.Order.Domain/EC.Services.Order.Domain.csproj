@@ -10,4 +10,8 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EC.Services.Order.Domain.Core\EC.Services.Order.Domain.Core.csproj" />
+  </ItemGroup>
+
 </Project>
