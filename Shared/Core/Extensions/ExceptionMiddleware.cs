@@ -76,7 +76,7 @@ namespace Core.Extensions
                 LoggingTime = DateTime.Now.ToString()
             };
 
-            await _client.Add(logDetail);
+            await _client.AddAsync(logDetail);
 
             //return httpContext.Response.WriteAsJsonAsync(new ErrorDetails
             //{

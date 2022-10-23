@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EC.Services.DiscountAPI.Controllers
 {
-    [Route("campaign/api/[controller]")]
+    [Route("discount/api/[controller]")]
     [ApiController]
     public class CampaignsController : ControllerBase
     {

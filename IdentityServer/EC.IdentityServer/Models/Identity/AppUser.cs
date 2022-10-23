@@ -7,6 +7,7 @@ namespace EC.IdentityServer.Models.Identity
     {
         public string Name { get; set; }
         public string Surname { get; set; }
+        public string PhoneCountry { get; set; }
         public byte Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

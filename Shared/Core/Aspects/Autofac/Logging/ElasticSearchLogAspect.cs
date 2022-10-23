@@ -36,9 +36,9 @@ namespace Core.Aspects.Autofac.Logging
             {
                 logParameters.Add(new LogParameter
                 {
-                    Name = invocation.GetConcreteMethod().GetParameters()[i].Name,
-                    Value = invocation.Arguments[i],
-                    Type = invocation.Arguments[i]?.GetType().Name
+                    Name = invocation.GetConcreteMethod().GetParameters()[i].Name
+                    //Value = invocation.Arguments[i],
+                    //Type = invocation.Arguments[i]?.GetType().Name
                 });
             }
 
@@ -50,7 +50,7 @@ namespace Core.Aspects.Autofac.Logging
                 LoggingTime = DateTime.Now.ToString()
             };
 
-            _client.Add(logDetail).GetAwaiter().GetResult();
+            _client.AddAsync(logDetail).GetAwaiter().GetResult();
             invocation.Proceed();
         }
     }

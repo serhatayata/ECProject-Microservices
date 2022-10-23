@@ -8,6 +8,7 @@ namespace EC.Services.DiscountAPI.Dtos.Campaign
         public string Name { get; set; }
         public int Rate { get; set; }
         public int CampaignType { get; set; }
+        public bool Status { get; set; }
         public List<string> Products { get; set; }
     }
 }

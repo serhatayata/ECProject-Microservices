@@ -54,13 +54,7 @@ namespace Core.Utilities.Filters
                 if (!authenticateResult.Succeeded)
                 {
                     // Return custom 401 result
-                    context.Result = new JsonResult(new
-                    {
-                        Message = "Unauthorized. Request Access Denied"
-                    })
-                    {
-                        StatusCode = StatusCodes.Status401Unauthorized
-                    };
+                    context.Result = new JsonResult(new ErrorResult("Unauthorized. Request Access Denied"));
 
                     return;
                 }

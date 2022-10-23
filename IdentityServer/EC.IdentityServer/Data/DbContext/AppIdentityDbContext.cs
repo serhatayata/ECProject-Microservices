@@ -47,6 +47,7 @@ namespace EC.IdentityServer.Data.DbContext
                 entity.Property(x => x.Name).HasMaxLength(100);
                 entity.Property(x => x.Surname).HasMaxLength(100);
                 entity.Property(x => x.Surname).HasMaxLength(30);
+                entity.Property(x => x.PhoneCountry).HasMaxLength(2);
                 entity.Property(x => x.Email).HasMaxLength(100);
                 entity.HasIndex(x=>x.Email).IsUnique();
                 entity.Property(x => x.PhoneNumber).HasMaxLength(13);

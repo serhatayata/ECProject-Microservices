@@ -25,6 +25,7 @@ namespace EC.Services.DiscountAPI.Extensions
             #region Base
             services.AddValidatorsFromAssemblyContaining<DeleteStringDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<DeleteIntDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<PagingDtoValidator>();
 
             #endregion
             #region Campaign

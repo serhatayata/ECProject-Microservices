@@ -19,9 +19,9 @@ namespace EC.Services.DiscountAPI.Entities
 
     }
 
-    public enum DiscountTypes
-    {
-        Price=1,
-        Percentage=2
-    }
+    //public enum DiscountTypes
+    //{
+    //    Price=1,
+    //    Percentage=2
+    //}
 }

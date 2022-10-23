@@ -22,11 +22,11 @@ namespace EC.IdentityServer.Data.SeedData
             services.AddIdentity<AppUser, AppRole>(options =>
             {
                 //this place might be changed...
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
+                //options.Password.RequireDigit = false;
+                //options.Password.RequiredLength = 6;
+                //options.Password.RequireNonAlphanumeric = false;
+                //options.Password.RequireUppercase = false;
+                //options.Password.RequireLowercase = false;
             })
             .AddEntityFrameworkStores<AppIdentityDbContext>()
             .AddDefaultTokenProviders();
@@ -49,7 +49,8 @@ namespace EC.IdentityServer.Data.SeedData
                     CreatedAt = DateTime.Now,
                     LastSeen = DateTime.Now,
                     UpdatedAt = DateTime.Now,
-                    PhoneNumber = "905374882316",
+                    PhoneCountry = "TR",
+                    PhoneNumber = "5374882316",
                     UserName = "905374882316",
                     Status = (int)UserStatus.NotValidated,
                     Email = "srht1@email.com",
@@ -90,13 +91,14 @@ namespace EC.IdentityServer.Data.SeedData
                     CreatedAt = DateTime.Now,
                     LastSeen = DateTime.Now,
                     UpdatedAt = DateTime.Now,
-                    PhoneNumber = "905555555555",
+                    PhoneCountry = "TR",
+                    PhoneNumber = "5555555555",
                     UserName = "905555555555",
                     Status = (int)UserStatus.NotValidated,
                     Email = "mkaya@email.com",
                     EmailConfirmed = true,
                 };
-                var result = await userMgr.CreateAsync(user_2, "Password12");
+                var result = await userMgr.CreateAsync(user_2, "Password12*");
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
@@ -161,7 +163,7 @@ namespace EC.IdentityServer.Data.SeedData
             {
                 card1 = new()
                 {
-                    CardNumber= "TR123456789123456789123456",
+                    CardNumber= "5168111122223333",
                     UserId=user_1.Id,
                     Name="Card_test_1",
                     Expiration=DateTime.Now.AddYears(2),
@@ -176,7 +178,7 @@ namespace EC.IdentityServer.Data.SeedData
             {
                 card2 = new()
                 {
-                    CardNumber = "TR234567892345678923456789",
+                    CardNumber = "5168999988887777",
                     UserId = user_2.Id,
                     Name = "Card_test_2",
                     Expiration = DateTime.Now.AddYears(3),

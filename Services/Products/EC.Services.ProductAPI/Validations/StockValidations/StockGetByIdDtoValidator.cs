@@ -13,7 +13,7 @@ namespace EC.Services.ProductAPI.Validations.StockValidations
             RuleFor(x => x.Id).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(ProductEntities.StockId));
             RuleFor(x => x.Id).NotNull().WithMessage(MessageExtensions.ErrorNotNull(ProductEntities.StockId));
             RuleFor(x => x.Id).Length(24).WithMessage(MessageExtensions.ErrorLength(ProductEntities.StockId, 24));
-            RuleFor(x => x.Id).MongoDbOjectId().WithMessage(MessageExtensions.NotInvalid(ProductEntities.StockId));
+            RuleFor(x => x.Id).MongoDbOjectId().WithMessage(MessageExtensions.NotValid(ProductEntities.StockId));
         }
     }
 }

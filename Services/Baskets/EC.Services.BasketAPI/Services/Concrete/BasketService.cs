@@ -21,7 +21,8 @@ namespace EC.Services.BasketAPI.Services.Concrete
         #region SaveOrUpdate
         public async Task<IResult> SaveOrUpdate(BasketSaveOrUpdateDto basketDto,string userId)
         {
-            var status = await _cacheManager.GetDatabase(db:BasketTitles.BasketDb).StringSetAsync("basket_"+userId, JsonSerializer.Serialize(basketDto));
+            bool status;
+            status = await _cacheManager.GetDatabase(db: BasketTitles.BasketDb).StringSetAsync("basket_" + userId, JsonSerializer.Serialize(basketDto));
 
             return status ? new SuccessResult(MessageExtensions.SavedOrUpdated(BasketTitles.Basket)) : new ErrorResult(MessageExtensions.NotSavedOrUpdated(BasketTitles.Basket), StatusCodes.Status500InternalServerError);
         }

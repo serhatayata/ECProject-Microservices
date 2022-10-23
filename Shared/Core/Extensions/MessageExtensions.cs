@@ -37,10 +37,31 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region Completed
+        public static string Completed(string entity)
+        {
+            var value = $"{entity} completed";
+            return value;
+        }
+        #endregion
+        #region NotCompleted
+        public static string NotCompleted(string entity)
+        {
+            var value = $"{entity} not completed";
+            return value;
+        }
+        #endregion
         #region NotCorrect
         public static string NotCorrect(string entity)
         {
-            var value = $"{entity} not correct !";
+            var value = $"{entity} not correct";
+            return value;
+        }
+        #endregion
+        #region Correct
+        public static string Correct(string entity)
+        {
+            var value = $"{entity} correct";
             return value;
         }
         #endregion
@@ -48,7 +69,7 @@ namespace Core.Extensions
         #region Added
         public static string Added(string entity)
         {
-            var value = $"{entity} added.";
+            var value = $"{entity} added";
             return value;
         }
         #endregion
@@ -62,14 +83,14 @@ namespace Core.Extensions
         #region NotAdded
         public static string NotAdded(string entity)
         {
-            var value = $"{entity} not added.";
+            var value = $"{entity} not added";
             return value;
         }
         #endregion
-        #region NotInvalid
-        public static string NotInvalid(string entity)
+        #region NotValid
+        public static string NotValid(string entity)
         {
-            var value = $"{entity} is invalid.";
+            var value = $"{entity} is invalid";
             return value;
         }
         #endregion
@@ -307,6 +328,13 @@ namespace Core.Extensions
         public static string ErrorBiggerThan(string entity, int v)
         {
             var value = $"{entity} must be bigger than {v}";
+            return value;
+        }
+        #endregion
+        #region ErrorEqualOrBiggerThan
+        public static string ErrorEqualOrBiggerThan(string entity, int v)
+        {
+            var value = $"{entity} must be equal or bigger than {v}";
             return value;
         }
         #endregion
