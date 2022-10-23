@@ -59,6 +59,8 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> PayWithUserAsync(PaymentAddDto paymentModel,string userId)
         {
+            var method = MethodBase.GetCurrentMethod();
+
             #region Basket Total Price Control
             var existBasket = await _redisCacheManager.GetDatabase(db: BasketConstantValues.BasketDb).StringGetAsync("basket_" + userId);
             //var basketValues = await _redisCacheManager.GetAsync<BasketDto>($"Basket_{paymentModel.UserId}");
@@ -99,8 +101,20 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             var addedCheck = await _efRepository.AnyAsync(x => x.Id == model.Id);
             if (!addedCheck)
             {
+                #region Logging
+                var logDetailError = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.NotAdded(PaymentConstantValues.Payment));
+
+                await _elasticSearchService.AddAsync(logDetailError);
+                #endregion
+
                 return new ErrorResult(MessageExtensions.NotAdded(PaymentConstantValues.Payment));
             }
+
+            #region Logging
+            var logDetailSuccess = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.Added(PaymentConstantValues.Payment));
+
+            await _elasticSearchService.AddAsync(logDetailSuccess);
+            #endregion
 
             return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
         }
@@ -110,6 +124,8 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> PayWithoutUserAsync(PaymentWithoutUserAddDto paymentModel)
         {
+            var method = MethodBase.GetCurrentMethod();
+
             #region Basket Control
             var basketValues = paymentModel.Basket;
 
@@ -149,8 +165,20 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             var addedCheck = await _efRepository.AnyAsync(x => x.Id == model.Id);
             if (!addedCheck)
             {
+                #region Logging
+                var logDetailError = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.NotAdded(PaymentConstantValues.Payment));
+
+                await _elasticSearchService.AddAsync(logDetailError);
+                #endregion
+
                 return new ErrorResult(MessageExtensions.NotAdded(PaymentConstantValues.Payment));
             }
+
+            #region Logging
+            var logDetailSuccess = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.Added(PaymentConstantValues.Payment));
+
+            await _elasticSearchService.AddAsync(logDetailSuccess);
+            #endregion
 
             return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
         }
