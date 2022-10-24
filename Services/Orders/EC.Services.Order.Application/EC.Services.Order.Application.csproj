@@ -8,10 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Consumers\" />
-    <Folder Include="Dtos\" />
-    <Folder Include="Handlers\" />
-    <Folder Include="Mapping\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
   <ItemGroup>

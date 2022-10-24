@@ -1,17 +1,18 @@
-﻿using MassTransit.Mediator;
+﻿using Core.Utilities.Results;
+using EC.Services.Order.Application.Dtos;
+using EC.Services.Order.Domain.OrderAggregate;
 using MassTransit;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EC.Services.Order.Application.Commands
 {
-    public class CreateOrderCommand : IRequest<Response<CreatedOrderDto>>
+    public class CreateOrderCommand : IRequest<DataResult<CreatedOrderDto>>
     {
+        public string BuyerId { get; set; }
 
+        public Address Address { get; set; }
+
+        public List<OrderItemDto> OrderItems { get; set; }
 
     }
 }

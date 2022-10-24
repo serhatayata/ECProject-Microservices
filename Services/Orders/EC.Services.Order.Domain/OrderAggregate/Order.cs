@@ -1,4 +1,5 @@
-﻿using EC.Services.Order.Domain.Core;
+﻿using Core.Extensions;
+using EC.Services.Order.Domain.Core;
 
 namespace EC.Services.Order.Domain.OrderAggregate
 {
@@ -13,21 +14,24 @@ namespace EC.Services.Order.Domain.OrderAggregate
         {
             _orderItems = new List<OrderItem>();
             CDate = DateTime.Now;
-            BuyerId = buyerId;
+            UserId = buyerId;
             CountryName = address.CountryName;
             CountyName = address.CountyName;
             CityName = address.CityName;
             AddressDetail = address.AddressDetail;
             ZipCode = address.ZipCode;
+
+            OrderNo= RandomExtensions.RandomString(12);
         }
 
-        public string? BuyerId { get; private set; }
+        public string? UserId { get; private set; }
 
         private readonly List<OrderItem> _orderItems;
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
 
         public DateTime CDate { get; set; }
+        public string OrderNo { get; set; }
 
         public string CountryName { get; set; }
         public string CountyName { get; set; }
@@ -35,13 +39,13 @@ namespace EC.Services.Order.Domain.OrderAggregate
         public string AddressDetail { get; set; }
         public string ZipCode { get; set; }
 
-        public void AddOrderItem(string productId, string productName, decimal price)
+        public void AddOrderItem(string productId, decimal price)
         {
             var existProduct = _orderItems.Any(x => x.ProductId == productId);
 
             if (!existProduct)
             {
-                var newOrderItem = new OrderItem(productId, productName, price);
+                var newOrderItem = new OrderItem(productId, price);
 
                 _orderItems.Add(newOrderItem);
             }

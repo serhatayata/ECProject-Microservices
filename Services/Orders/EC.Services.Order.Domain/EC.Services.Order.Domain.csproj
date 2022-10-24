@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Core\Core.csproj" />
     <ProjectReference Include="..\EC.Services.Order.Domain.Core\EC.Services.Order.Domain.Core.csproj" />
   </ItemGroup>
 
