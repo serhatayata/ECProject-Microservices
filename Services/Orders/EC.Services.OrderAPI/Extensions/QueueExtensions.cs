@@ -1,6 +1,8 @@
-﻿using EC.Services.Order.Application.Consumers;
+﻿using Core.Entities;
+using EC.Services.Order.Application.Consumers;
+using EC.Services.Order.Application.Handlers;
 using MassTransit;
-using Nest;
+using MediatR;
 
 namespace EC.Services.OrderAPI.Extensions
 {
@@ -9,20 +11,29 @@ namespace EC.Services.OrderAPI.Extensions
         #region AddMassTransitSettings
         public static void AddMassTransitSettings(this IServiceCollection services, IConfiguration configuration)
         {
+            //var settings = configuration.GetValue<RabbitMqSettings>("RabbitMqSettings");
+
+            //services.AddMediatR(typeof(CreateOrderCommandHandler).Assembly);
+            //services.AddMediatR(typeof(GetOrdersByUserIdQueryHandler).Assembly);
+
+            var settings = configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
+
             services.AddMassTransit(x =>
             {
-                string userName = configuration["RabbitMqSettings:Username"];
-                string password = configuration["RabbitMqSettings:Password"];
+                string userName = settings.Username;
+                string password = settings.Password;
+                string host = settings.Host;
+                ushort port = settings.Port;
 
                 x.AddConsumer<CreateOrderCommandConsumer>();
 
                 // Default Port : 5672
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host(configuration["RabbitMqSettings:RabbitMQUrl"], "/", host =>
+                    cfg.Host(settings.Host, settings.Port, "/", host =>
                     {
-                        host.Username(userName);
-                        host.Password(password);
+                        host.Username(settings.Username);
+                        host.Password(settings.Password);
                     });
 
                     cfg.ReceiveEndpoint("create-order-service", e =>
@@ -30,6 +41,20 @@ namespace EC.Services.OrderAPI.Extensions
                         e.ConfigureConsumer<CreateOrderCommandConsumer>(context);
                     });
                 });
+
+                //x.UsingRabbitMq((context, cfg) =>
+                //{
+                //    cfg.Host(configuration["RabbitMqSettings:RabbitMQUrl"], "/", host =>
+                //    {
+                //        host.Username(userName);
+                //        host.Password(password);
+                //    });
+
+                //    cfg.ReceiveEndpoint("create-order-service", e =>
+                //    {
+                //        e.ConfigureConsumer<CreateOrderCommandConsumer>(context);
+                //    });
+                //});
             });
         }
         #endregion

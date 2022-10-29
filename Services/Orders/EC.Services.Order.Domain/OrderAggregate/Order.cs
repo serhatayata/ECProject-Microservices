@@ -24,11 +24,11 @@ namespace EC.Services.Order.Domain.OrderAggregate
             OrderNo= RandomExtensions.RandomString(12);
         }
 
-        public string? UserId { get; private set; }
 
         private readonly List<OrderItem> _orderItems;
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
+        public string? UserId { get; set; }
 
         public DateTime CDate { get; set; }
         public string OrderNo { get; set; }

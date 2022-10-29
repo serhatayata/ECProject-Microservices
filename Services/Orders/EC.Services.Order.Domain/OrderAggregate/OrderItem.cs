@@ -11,7 +11,9 @@ namespace EC.Services.Order.Domain.OrderAggregate
     {
         public string ProductId { get; private set; }
         //public string ProductName { get; private set; }
-        public Decimal Price { get; private set; }
+        public decimal Price { get; private set; }
+        public Order Order { get; set; }
+        public int OrderId { get; set; }
 
         public OrderItem()
         {
