@@ -8,10 +8,8 @@ namespace EC.Services.Order.Application.Commands
 {
     public class CreateOrderCommand : IRequest<DataResult<CreatedOrderDto>>
     {
-        public string BuyerId { get; set; }
-
+        public string UserId { get; set; }
         public Address Address { get; set; }
-
         public List<OrderItemDto> OrderItems { get; set; }
 
     }

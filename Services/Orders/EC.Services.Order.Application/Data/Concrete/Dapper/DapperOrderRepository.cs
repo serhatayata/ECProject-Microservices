@@ -110,7 +110,7 @@ namespace EC.Services.Order.Application.Data.Concrete.Dapper
                       "ot.Id, ot.OrderId, ot.Price, ot.ProductId " +
                       "FROM Orders o LEFT JOIN OrderItems ot " +
                       "ON o.Id = ot.OrderId " +
-                      "WHERE o.UserId=@UserId" +
+                      "WHERE o.UserId=@UserId " +
                       "ORDER BY o.Id OFFSET @Page * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY";
 
             using (var connection = new SqlConnection(_defaultConnection))

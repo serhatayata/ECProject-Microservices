@@ -12,6 +12,7 @@ namespace EC.Services.Order.Domain.OrderAggregate
         public string ProductId { get; set; }
         //public string ProductName { get; private set; }
         public decimal Price { get; set; }
+        public int Quantity { get; set; }
         public Order Order { get; set; }
         public int OrderId { get; set; }
 
@@ -19,10 +20,12 @@ namespace EC.Services.Order.Domain.OrderAggregate
         {
         }
 
-        public OrderItem(string productId, decimal price)
+        public OrderItem(string productId, decimal price, int quantity,int orderId)
         {
             ProductId = productId;
             Price = price;
+            Quantity = quantity;
+            OrderId = orderId;
         }
 
         public void UpdateOrderItem(decimal price)

@@ -79,21 +79,24 @@ namespace EC.Services.OrderAPI.Extensions
                         Price=500.00M,
                         ProductId="asdaf12314a",
                         Order=allOrders[0],
-                        OrderId=allOrders[0].Id
+                        OrderId=allOrders[0].Id,
+                        Quantity=1
                     },
                     new Order.Domain.OrderAggregate.OrderItem()
                     {
                         Price=300.00M,
                         ProductId="bddaf12314a",
                         Order=allOrders[1],
-                        OrderId=allOrders[1].Id
+                        OrderId=allOrders[1].Id,
+                        Quantity=1
                     },
                     new Order.Domain.OrderAggregate.OrderItem()
                     {
                         Price=200.00M,
                         ProductId="ccfaf12314a",
                         Order=allOrders[2],
-                        OrderId=allOrders[2].Id
+                        OrderId=allOrders[2].Id,
+                        Quantity=1
                     }
                 };
 

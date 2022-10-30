@@ -20,12 +20,12 @@ namespace EC.Services.Order.Application.Handlers
         public async Task<DataResult<CreatedOrderDto>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             Domain.OrderAggregate.Order newOrder = new (
-                  request.BuyerId,request.Address
+                  request.UserId,request.Address
                 );
 
             request.OrderItems.ForEach(x =>
             {
-                newOrder.AddOrderItem(x.ProductId, x.Price);
+                newOrder.AddOrderItem(x.ProductId, x.Price,x.Quantity,x.OrderId);
             });
 
             await _context.Orders.AddAsync(newOrder);
@@ -37,7 +37,7 @@ namespace EC.Services.Order.Application.Handlers
             {
                 return new ErrorDataResult<CreatedOrderDto>(MessageExtensions.NotCreated(OrderConstantValues.Order));
             }
-            return new SuccessDataResult<CreatedOrderDto>(new CreatedOrderDto() { OrderId=orderExists.Id });
+            return new SuccessDataResult<CreatedOrderDto>(new CreatedOrderDto() { OrderNo=orderExists.OrderNo });
         }
     }
 }

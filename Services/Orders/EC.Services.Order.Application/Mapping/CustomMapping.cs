@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EC.Services.Order.Application.Commands;
 using EC.Services.Order.Application.Dtos;
 using EC.Services.Order.Domain.OrderAggregate;
 using System;
@@ -13,8 +14,9 @@ namespace EC.Services.Order.Application.Mapping
     {
         public CustomMapping()
         {
-            CreateMap<Order.Domain.OrderAggregate.Order, OrderDto>().ReverseMap();
-            CreateMap<Order.Domain.OrderAggregate.OrderItem, OrderItemDto>().ReverseMap();
+            CreateMap<Domain.OrderAggregate.Order, OrderDto>().ReverseMap();
+            CreateMap<CreateOrderCommand, OrderCreateDto>().ReverseMap();
+            CreateMap<OrderItem, OrderItemDto>().ReverseMap();
 
 
         }

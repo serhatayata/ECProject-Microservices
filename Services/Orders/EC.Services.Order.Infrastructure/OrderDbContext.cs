@@ -63,7 +63,7 @@ namespace EC.Services.Order.Infrastructure
             {
                 entity.HasKey(x => x.Id);
 
-                entity.Property(x => x.ProductId).HasColumnType("nvarchar(12)");
+                entity.Property(x => x.ProductId).HasColumnType("nvarchar(32)");
                 entity.Property(x => x.Price).HasColumnType("decimal(8,2)");
 
                 entity.HasOne(bc => bc.Order)

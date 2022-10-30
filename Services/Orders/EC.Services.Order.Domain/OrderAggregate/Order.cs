@@ -37,13 +37,13 @@ namespace EC.Services.Order.Domain.OrderAggregate
         public string AddressDetail { get; set; }
         public string ZipCode { get; set; }
 
-        public void AddOrderItem(string productId, decimal price)
+        public void AddOrderItem(string productId, decimal price, int quantity, int orderId)
         {
             var existProduct = OrderItems.Any(x => x.ProductId == productId);
 
             if (!existProduct)
             {
-                var newOrderItem = new OrderItem(productId, price);
+                var newOrderItem = new OrderItem(productId, price,quantity,orderId);
 
                 OrderItems.Add(newOrderItem);
             }

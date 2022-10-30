@@ -1,6 +1,9 @@
-﻿using Core.Utilities.Attributes;
+﻿using AutoMapper;
+using Core.Dtos;
+using Core.Utilities.Attributes;
 using Core.Utilities.Business.Abstract;
 using EC.Services.Order.Application.Commands;
+using EC.Services.Order.Application.Dtos;
 using EC.Services.Order.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +16,12 @@ namespace EC.Services.OrderAPI.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ISharedIdentityService _sharedIdentityService;
+        private readonly IMapper _mapper;
 
-        public OrdersController(IMediator mediator, ISharedIdentityService sharedIdentityService)
+        public OrdersController(IMediator mediator, ISharedIdentityService sharedIdentityService, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
             _sharedIdentityService = sharedIdentityService;
         }
 
@@ -24,9 +29,20 @@ namespace EC.Services.OrderAPI.Controllers
         [HttpGet]
         [Route("get-orders")]
         [AuthorizeAnyPolicy("FullOrder,ReadOrder")]
-        public async Task<IActionResult> GetOrders()
+        public async Task<IActionResult> GetOrdersAsync()
         {
             var response = await _mediator.Send(new GetOrdersByUserIdQuery { UserId = _sharedIdentityService.GetUserId });
+
+            return StatusCode(response.StatusCode, response);
+        }
+        #endregion
+        #region GetOrdersPaging
+        [HttpGet]
+        [Route("get-orders-paging")]
+        [AuthorizeAnyPolicy("FullOrder,ReadOrder")]
+        public async Task<IActionResult> GetOrdersPagingAsync([FromQuery]PagingDto model)
+        {
+            var response = await _mediator.Send(new GetAllOrdersPagingByUserIdQuery { UserId = _sharedIdentityService.GetUserId, Page=model.Page, PageSize=model.PageSize });
 
             return StatusCode(response.StatusCode, response);
         }
@@ -55,10 +71,12 @@ namespace EC.Services.OrderAPI.Controllers
         #endregion
         #region SaveOrder
         [HttpPost]
-        [Route("save-orders")]
+        [Route("save-order")]
         [AuthorizeAnyPolicy("FullOrder,WriteOrder")]
-        public async Task<IActionResult> SaveOrder([FromBody]CreateOrderCommand createOrderCommand)
+        public async Task<IActionResult> SaveOrderAsync([FromBody]OrderCreateDto model)
         {
+            var createOrderCommand = _mapper.Map<CreateOrderCommand>(model);
+            createOrderCommand.UserId = _sharedIdentityService.GetUserId;
             var response = await _mediator.Send(createOrderCommand);
 
             return StatusCode(response.StatusCode, response);

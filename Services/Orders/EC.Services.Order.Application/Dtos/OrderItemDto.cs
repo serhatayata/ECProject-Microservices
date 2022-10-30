@@ -9,10 +9,10 @@ namespace EC.Services.Order.Application.Dtos
 {
     public class OrderItemDto:IDto
     {
-        public string ProductId { get; private set; }
-        public Decimal Price { get; private set; }
+        public string ProductId { get; set; }
+        public Decimal Price { get; set; }
+        public int Quantity { get; set; }
         public int OrderId { get; set; }
-
 
     }
 }
