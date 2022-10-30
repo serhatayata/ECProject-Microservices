@@ -7,12 +7,14 @@ namespace Core.Extensions
     {
         private static readonly Random _random = new Random();
 
+        #region RandomNumber
         // Generates a random number within a range.      
         public static int RandomNumber(int min, int max)
         {
             return _random.Next(min, max);
         }
-
+        #endregion
+        #region RandomString
         // Generates a random string with a given size.    
         public static string RandomString(int size, bool lowerCase = false)
         {
@@ -35,7 +37,8 @@ namespace Core.Extensions
 
             return lowerCase ? builder.ToString().ToLower() : builder.ToString();
         }
-
+        #endregion
+        #region RandomPassword
         // Generates a random password.  
         // 4-LowerCase + 4-Digits + 2-UpperCase  
         public static string RandomPassword()
@@ -52,6 +55,9 @@ namespace Core.Extensions
             passwordBuilder.Append(RandomString(2));
             return passwordBuilder.ToString();
         }
+        #endregion
+
+
     }
 }
 
