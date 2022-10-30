@@ -67,6 +67,39 @@ namespace EC.Services.OrderAPI.Extensions
                 context.Orders.AddRange(orders);
                 context.SaveChanges();
             }
+
+            if (!context.OrderItems.Any())
+            {
+                var allOrders = context.Orders.ToList();
+
+                Order.Domain.OrderAggregate.OrderItem[] orderItems =
+                {
+                    new Order.Domain.OrderAggregate.OrderItem()
+                    {
+                        Price=500.00M,
+                        ProductId="asdaf12314a",
+                        Order=allOrders[0],
+                        OrderId=allOrders[0].Id
+                    },
+                    new Order.Domain.OrderAggregate.OrderItem()
+                    {
+                        Price=300.00M,
+                        ProductId="bddaf12314a",
+                        Order=allOrders[1],
+                        OrderId=allOrders[1].Id
+                    },
+                    new Order.Domain.OrderAggregate.OrderItem()
+                    {
+                        Price=200.00M,
+                        ProductId="ccfaf12314a",
+                        Order=allOrders[2],
+                        OrderId=allOrders[2].Id
+                    }
+                };
+
+                context.OrderItems.AddRange(orderItems);
+                context.SaveChanges();
+            }
         }
 
         #endregion

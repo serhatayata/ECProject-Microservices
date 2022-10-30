@@ -4,6 +4,8 @@ using Castle.DynamicProxy;
 using Core.Utilities.Business.Abstract;
 using Core.Utilities.Business.Concrete;
 using Core.Utilities.Interceptors;
+using EC.Services.Order.Application.Data.Abstract.Dapper;
+using EC.Services.Order.Application.Data.Concrete.Dapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +25,7 @@ namespace EC.Services.Order.Application.DependencyResolvers.Autofac
 
             #endregion
             #region DataAccess - AddTransient
-            //builder.RegisterType<CategoryRepository>().As<ICategoryRepository>().InstancePerDependency();
+            builder.RegisterType<DapperOrderRepository>().As<IDapperOrderRepository>().InstancePerDependency();
 
             #endregion
 

@@ -12,7 +12,7 @@ namespace EC.Services.Order.Domain.OrderAggregate
 
         public Order(string buyerId, Address address)
         {
-            _orderItems = new List<OrderItem>();
+            OrderItems = new List<OrderItem>();
             CDate = DateTime.Now;
             UserId = buyerId;
             CountryName = address.CountryName;
@@ -24,9 +24,7 @@ namespace EC.Services.Order.Domain.OrderAggregate
             OrderNo= RandomExtensions.RandomString(12);
         }
 
-
-        private readonly List<OrderItem> _orderItems;
-        public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
+        public ICollection<OrderItem> OrderItems { get; set; }
 
         public string? UserId { get; set; }
 
@@ -41,13 +39,13 @@ namespace EC.Services.Order.Domain.OrderAggregate
 
         public void AddOrderItem(string productId, decimal price)
         {
-            var existProduct = _orderItems.Any(x => x.ProductId == productId);
+            var existProduct = OrderItems.Any(x => x.ProductId == productId);
 
             if (!existProduct)
             {
                 var newOrderItem = new OrderItem(productId, price);
 
-                _orderItems.Add(newOrderItem);
+                OrderItems.Add(newOrderItem);
             }
         }
     }

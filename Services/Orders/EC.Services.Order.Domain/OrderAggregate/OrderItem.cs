@@ -9,9 +9,9 @@ namespace EC.Services.Order.Domain.OrderAggregate
 {
     public class OrderItem:Entity
     {
-        public string ProductId { get; private set; }
+        public string ProductId { get; set; }
         //public string ProductName { get; private set; }
-        public decimal Price { get; private set; }
+        public decimal Price { get; set; }
         public Order Order { get; set; }
         public int OrderId { get; set; }
 

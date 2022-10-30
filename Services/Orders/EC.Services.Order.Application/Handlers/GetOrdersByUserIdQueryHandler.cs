@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.Internal.Mappers;
 using Core.Utilities.Results;
+using EC.Services.Order.Application.Data.Abstract.Dapper;
 using EC.Services.Order.Application.Dtos;
 using EC.Services.Order.Application.Queries;
 using EC.Services.Order.Infrastructure;
@@ -19,16 +20,19 @@ namespace EC.Services.Order.Application.Handlers
     {
         private readonly OrderDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IDapperOrderRepository _dapperOrderRepository;
 
-        public GetOrdersByUserIdQueryHandler(OrderDbContext context, IMapper mapper)
+        public GetOrdersByUserIdQueryHandler(OrderDbContext context,IDapperOrderRepository dapperOrderRepository, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+            _dapperOrderRepository = dapperOrderRepository;
         }
 
         public async Task<DataResult<List<OrderDto>>> Handle(GetOrdersByUserIdQuery request, CancellationToken cancellationToken)
         {
-            var orders = await _context.Orders.Include(x => x.OrderItems).Where(x => x.UserId == request.UserId).ToListAsync();
+            //var orders = await _context.Orders.Include(x => x.OrderItems).Where(x => x.UserId == request.UserId).ToListAsync();
+            var orders = await _dapperOrderRepository.GetAllByUserIdAsync(request.UserId);
 
             if (!orders.Any())
             {

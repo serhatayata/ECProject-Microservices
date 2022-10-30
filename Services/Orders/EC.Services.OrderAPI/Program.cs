@@ -14,8 +14,7 @@ IWebHostEnvironment Environment = builder.Environment;
 
 #region Services
 
-builder.Services.AddMediatR(typeof(CreateOrderCommandHandler).Assembly);
-builder.Services.AddMediatR(typeof(GetOrdersByUserIdQueryHandler).Assembly);
+
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
@@ -40,6 +39,9 @@ builder.Services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMqS
 #endregion
 #region SEED DATA
 builder.Services.AddSeedData(configuration);
+#endregion
+#region MEDIATR
+builder.Services.AddHandlerExtensions(configuration);
 #endregion
 
 builder.Services.AddSwaggerGen();

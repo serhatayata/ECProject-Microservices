@@ -13,9 +13,6 @@ namespace EC.Services.OrderAPI.Extensions
         {
             //var settings = configuration.GetValue<RabbitMqSettings>("RabbitMqSettings");
 
-            //services.AddMediatR(typeof(CreateOrderCommandHandler).Assembly);
-            //services.AddMediatR(typeof(GetOrdersByUserIdQueryHandler).Assembly);
-
             var settings = configuration.GetSection("RabbitMqSettings").Get<RabbitMqSettings>();
 
             services.AddMassTransit(x =>

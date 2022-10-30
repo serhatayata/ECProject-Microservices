@@ -21,6 +21,6 @@ namespace EC.Services.Order.Application.Dtos
         public string AddressDetail { get; set; }
         public string ZipCode { get; set; }
 
-        private readonly List<OrderItem> _orderItems;
+        public List<OrderItem> OrderItems { get; set; }
     }
 }

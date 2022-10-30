@@ -1,4 +1,5 @@
-﻿using Core.Utilities.Results;
+﻿using Azure;
+using Core.Utilities.Results;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
@@ -54,7 +55,11 @@ namespace Core.Utilities.Filters
                 if (!authenticateResult.Succeeded)
                 {
                     // Return custom 401 result
-                    context.Result = new JsonResult(new ErrorResult("Unauthorized. Request Access Denied"));
+                    context.Result = new JsonResult(
+                        new ErrorResult("Unauthorized. Request Access Denied", StatusCodes.Status401Unauthorized))
+                    {
+                        StatusCode=StatusCodes.Status401Unauthorized
+                    };
 
                     return;
                 }
@@ -66,7 +71,11 @@ namespace Core.Utilities.Filters
 
             }
 
-            context.Result = new ForbidResult(new AuthenticationProperties() { });
+            context.Result = new JsonResult(
+                        new ErrorResult("Forbidden. Request Access Denied", StatusCodes.Status403Forbidden))
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
             return;
         }
     }

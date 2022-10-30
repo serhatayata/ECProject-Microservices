@@ -31,11 +31,33 @@ namespace EC.Services.OrderAPI.Controllers
             return StatusCode(response.StatusCode, response);
         }
         #endregion
+        #region GetById
+        [HttpGet]
+        [Route("get-by-id")]
+        [AuthorizeAnyPolicy("FullOrder")]
+        public async Task<IActionResult> GetByIdAsync([FromQuery]int id)
+        {
+            var response = await _mediator.Send(new GetOrderByIdQuery { Id=id });
+
+            return StatusCode(response.StatusCode, response);
+        }
+        #endregion
+        #region GetByOrderNo
+        [HttpGet]
+        [Route("get-by-order-no")]
+        [AuthorizeAnyPolicy("FullOrder,ReadOrder")]
+        public async Task<IActionResult> GetByOrderNoAsync([FromQuery]string orderNo)
+        {
+            var response = await _mediator.Send(new GetOrderByOrderNoQuery { OrderNo=orderNo ,UserId = _sharedIdentityService.GetUserId });
+
+            return StatusCode(response.StatusCode, response);
+        }
+        #endregion
         #region SaveOrder
         [HttpPost]
         [Route("save-orders")]
         [AuthorizeAnyPolicy("FullOrder,WriteOrder")]
-        public async Task<IActionResult> SaveOrder(CreateOrderCommand createOrderCommand)
+        public async Task<IActionResult> SaveOrder([FromBody]CreateOrderCommand createOrderCommand)
         {
             var response = await _mediator.Send(createOrderCommand);
 

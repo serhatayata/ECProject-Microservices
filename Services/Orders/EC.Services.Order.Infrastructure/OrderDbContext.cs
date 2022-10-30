@@ -44,7 +44,7 @@ namespace EC.Services.Order.Infrastructure
             {
                 entity.HasKey(x => x.Id);
 
-                entity.Property(x => x.UserId).HasColumnType("nvarchar(12)");
+                entity.Property(x => x.UserId).HasColumnType("nvarchar(40)");
                 //Non-clustered index
                 entity.HasIndex(x => x.OrderNo).IsUnique().IsClustered(false);
                 entity.Property(x => x.OrderNo).HasColumnType("nvarchar(12)");
