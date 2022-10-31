@@ -9,6 +9,7 @@ namespace EC.Services.Order.Application.Commands
     public class CreateOrderCommand : IRequest<DataResult<CreatedOrderDto>>
     {
         public string UserId { get; set; }
+        public string PaymentNo { get; set; }
         public Address Address { get; set; }
         public List<OrderItemDto> OrderItems { get; set; }
 

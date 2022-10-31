@@ -10,6 +10,7 @@ namespace EC.Services.Order.Application.Dtos
 {
     public class OrderCreateDto:IDto
     {
+        public string PaymentNo { get; set; }
         public Address Address { get; set; }
         public List<OrderItemDto> OrderItems { get; set; }
     }
