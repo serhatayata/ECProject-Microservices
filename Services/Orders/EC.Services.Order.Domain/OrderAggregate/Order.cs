@@ -10,7 +10,7 @@ namespace EC.Services.Order.Domain.OrderAggregate
 
         }
 
-        public Order(string buyerId, Address address)
+        public Order(string buyerId,string paymentNo, Address address)
         {
             OrderItems = new List<OrderItem>();
             CDate = DateTime.Now;
@@ -20,8 +20,7 @@ namespace EC.Services.Order.Domain.OrderAggregate
             CityName = address.CityName;
             AddressDetail = address.AddressDetail;
             ZipCode = address.ZipCode;
-
-            OrderNo= RandomExtensions.RandomString(12);
+            PaymentNo = paymentNo;
         }
 
         public ICollection<OrderItem> OrderItems { get; set; }
@@ -30,6 +29,7 @@ namespace EC.Services.Order.Domain.OrderAggregate
 
         public DateTime CDate { get; set; }
         public string OrderNo { get; set; }
+        public string PaymentNo { get; set; }
 
         public string CountryName { get; set; }
         public string CountyName { get; set; }

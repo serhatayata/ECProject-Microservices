@@ -28,6 +28,9 @@ using Nest;
 using Core.CrossCuttingConcerns.Caching;
 using System.Text.Json;
 using Core.Entities;
+using Core.DataAccess.Queue;
+using EC.Services.PaymentAPI.Dtos.OrderDtos;
+using EC.Services.PaymentAPI.Events;
 
 namespace EC.Services.PaymentAPI.Services.Concrete
 {
@@ -72,9 +75,19 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             var basketValues = JsonSerializer.Deserialize<BasketDto>(existBasket);
 
+            AddressDto address = new()
+            {
+                AddressDetail = paymentModel.AddressDetail,
+                CityName = paymentModel.CityName,
+                CountryName = paymentModel.CountryName,
+                CountyName = paymentModel.CountyName,
+                ZipCode = paymentModel.ZipCode
+            };
+
             PaymentBasketControlDto paymentControlModel = new()
             {
                 Basket = basketValues,
+                Address = address,
                 TotalPrice = paymentModel.TotalPrice
             };
 
@@ -115,6 +128,9 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             await _elasticSearchService.AddAsync(logDetailSuccess);
             #endregion
+
+            //ADD REDIS
+            await _redisCacheManager.SetAsync($"paymentBasket_{paymentNo}", paymentControlModel);
 
             return new SuccessResult(MessageExtensions.Added(PaymentConstantValues.Payment));
         }
@@ -264,9 +280,14 @@ namespace EC.Services.PaymentAPI.Services.Concrete
                 return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
             }
 
-            #region Add Order
-            //await _publishEndpoint.Publish<OrderAddEvent>(new OrderAddEvent {  });
-            #endregion
+            var paymentValues = await _redisCacheManager.GetAsync<PaymentBasketControlDto>($"paymentBasket_{paymentModel.PaymentNo}");
+
+            var orderEvent = new OrderAddEvent();
+            orderEvent.PaymentNo=paymentModel.PaymentNo;
+            orderEvent.Address = paymentValues.Address;
+            orderEvent.OrderItems = _mapper.Map<List<OrderItemDto>>(paymentValues.Basket.basketItems);
+
+            await _publishEndpoint.Publish<OrderAddEvent>(orderEvent);
 
             #region Logging
             var logDetail = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.Completed(PaymentConstantValues.Payment));

@@ -19,9 +19,25 @@ namespace EC.Services.Order.Application.Handlers
 
         public async Task<DataResult<CreatedOrderDto>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            Domain.OrderAggregate.Order newOrder = new (
-                  request.UserId,request.Address
+            string orderNo = RandomExtensions.RandomString(12);
+
+            var orderExists = await _context.Orders.FirstOrDefaultAsync(x => x.OrderNo == orderNo );
+            while(orderExists != null)
+            {
+                orderNo = RandomExtensions.RandomString(12);
+
+                var orderExistsItem = await _context.Orders.FirstOrDefaultAsync(x => x.OrderNo == orderNo);
+                if (orderExistsItem == null)
+                {
+                    break;
+                }
+            }
+
+            Domain.OrderAggregate.Order newOrder = new(
+                  request.UserId,request.PaymentNo, request.Address
                 );
+
+            newOrder.OrderNo = orderNo;
 
             request.OrderItems.ForEach(x =>
             {
@@ -32,12 +48,12 @@ namespace EC.Services.Order.Application.Handlers
 
             await _context.SaveChangesAsync();
 
-            var orderExists = await _context.Orders.FirstOrDefaultAsync(x => x.Id == newOrder.Id);
-            if (orderExists?.Id == null)
+            var orderCheck = await _context.Orders.FirstOrDefaultAsync(x => x.Id == newOrder.Id);
+            if (orderCheck?.Id == null)
             {
                 return new ErrorDataResult<CreatedOrderDto>(MessageExtensions.NotCreated(OrderConstantValues.Order));
             }
-            return new SuccessDataResult<CreatedOrderDto>(new CreatedOrderDto() { OrderNo=orderExists.OrderNo });
+            return new SuccessDataResult<CreatedOrderDto>(new CreatedOrderDto() { OrderNo= orderCheck.OrderNo });
         }
     }
 }
