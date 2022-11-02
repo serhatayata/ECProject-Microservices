@@ -34,8 +34,10 @@ namespace EC.Services.Order.Application.Handlers
             }
 
             Domain.OrderAggregate.Order newOrder = new(
-                  request.UserId, orderNo,request.PaymentNo, request.Address
+                  request.UserId,request.PaymentNo, request.Address
                 );
+
+            newOrder.OrderNo = orderNo;
 
             request.OrderItems.ForEach(x =>
             {

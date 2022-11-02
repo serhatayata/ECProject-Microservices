@@ -1,44 +1,34 @@
 ﻿using AutoMapper;
-using Core.Extensions;
 using Core.Utilities.Business.Abstract;
-using Core.Utilities.Results;
 using EC.Services.Order.Application.Commands;
 using EC.Services.Order.Application.Dtos;
-using EC.Services.Order.Infrastructure;
 using MassTransit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MediatR;
 
 namespace EC.Services.Order.Application.Consumers
 {
     public class CreateOrderCommandConsumer : IConsumer<OrderCreateDto>
     {
-        private readonly OrderDbContext _orderDbContext;
+        private readonly IMapper _mapper;
         private readonly ISharedIdentityService _sharedIdentityService;
+        private readonly IMediator _mediator;
 
-        public CreateOrderCommandConsumer(OrderDbContext orderDbContext, ISharedIdentityService sharedIdentityService)
+        public CreateOrderCommandConsumer(IMapper mapper,ISharedIdentityService sharedIdentityService,IMediator mediator)
         {
-            _orderDbContext = orderDbContext;
+            _mapper = mapper;
             _sharedIdentityService = sharedIdentityService;
+            _mediator = mediator;
         }
 
         public async Task Consume(ConsumeContext<OrderCreateDto> context)
         {
             var userId = _sharedIdentityService.GetUserId;
 
-            var order = new Domain.OrderAggregate.Order(userId, context.Message.Address);
+            var createOrderCommand = _mapper.Map<CreateOrderCommand>(context.Message);
+            createOrderCommand.UserId = userId;
+            var response = await _mediator.Send(createOrderCommand); 
 
-            context.Message.OrderItems.ForEach(x =>
-            {
-                order.AddOrderItem(x.ProductId, x.Price,x.Quantity,x.OrderId);
-            });
-
-            await _orderDbContext.Orders.AddAsync(order);
-
-            await _orderDbContext.SaveChangesAsync();
+            //Return value will be researched later.
         }
 
     }
