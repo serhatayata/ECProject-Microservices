@@ -31,6 +31,9 @@ using Core.Entities;
 using Core.DataAccess.Queue;
 using EC.Services.PaymentAPI.Dtos.OrderDtos;
 using EC.Services.PaymentAPI.Events;
+using Microsoft.Extensions.Options;
+using EC.Services.PaymentAPI.Settings;
+using MassTransit;
 
 namespace EC.Services.PaymentAPI.Services.Concrete
 {
@@ -43,18 +46,18 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         private readonly IDiscountApiService _discountApiService;
         private readonly IProductApiService _productApiService;
         private readonly IElasticSearchService _elasticSearchService;
-        private readonly Mass.IPublishEndpoint _publishEndpoint;
+        private readonly RabbitMqQueues _rabbitMqQueues;
 
-        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper, Mass.IPublishEndpoint publishEndpoint,IDiscountApiService discountApiService,IProductApiService productApiService, IElasticSearchService elasticSearchService)
+        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper ,IDiscountApiService discountApiService,IProductApiService productApiService, IElasticSearchService elasticSearchService, IOptions<RabbitMqQueues> rabbitmqQueues)
         {
             _efRepository = efRepository;
             _dapperRepository = dapperRepository;
             _mapper = mapper;
-            _publishEndpoint = publishEndpoint;
             _redisCacheManager = redisCacheManager;
             _discountApiService = discountApiService;
             _productApiService = productApiService;
             _elasticSearchService = elasticSearchService;
+            _rabbitMqQueues = rabbitmqQueues.Value;
         }
 
         #region PayAsync
@@ -247,7 +250,7 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             if (totalPrice != modelTotalPrice)
             {
-                return new ErrorDataResult<PaymentTotalPriceModel>(MessageExtensions.NotFound(PaymentConstantValues.PaymentIncorrect));
+                return new ErrorDataResult<PaymentTotalPriceModel>(MessageExtensions.AreNotEqual(PaymentConstantValues.PaymentTotalPrice));
             }
 
             PaymentTotalPriceModel total = new()
@@ -282,12 +285,18 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             var paymentValues = await _redisCacheManager.GetAsync<PaymentBasketControlDto>($"paymentBasket_{paymentModel.PaymentNo}");
 
+            #region Queue order
             var orderEvent = new OrderAddEvent();
-            orderEvent.PaymentNo=paymentModel.PaymentNo;
+            orderEvent.PaymentNo = paymentModel.PaymentNo;
             orderEvent.Address = paymentValues.Address;
             orderEvent.OrderItems = _mapper.Map<List<OrderItemDto>>(paymentValues.Basket.basketItems);
 
-            await _publishEndpoint.Publish<OrderAddEvent>(orderEvent);
+            //var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(_rabbitMqQueues.CreateOrder));
+
+            //await sendEndpoint.Send<OrderAddEvent>(orderEvent);
+
+            //await _publishEndpoint.Publish<OrderAddEvent>(orderEvent);
+            #endregion
 
             #region Logging
             var logDetail = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.Completed(PaymentConstantValues.Payment));

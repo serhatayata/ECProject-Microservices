@@ -19,23 +19,29 @@ namespace EC.Services.OrderAPI.Extensions
             {
                 string userName = settings.Username;
                 string password = settings.Password;
-                string host = settings.Host;
+                string hostUrl = settings.Host;
                 ushort port = settings.Port;
 
-                x.AddConsumer<CreateOrderCommandConsumer>();
+                x.AddConsumer<OrderAddEventConsumer>();
 
                 // Default Port : 5672
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host(settings.Host, settings.Port, "/", host =>
+                    //cfg.Host(settings.Host, settings.Port, "/", host =>
+                    //{
+                    //    host.Username(settings.Username);
+                    //    host.Password(settings.Password);
+                    //});
+
+                    cfg.Host(hostUrl, "/", host =>
                     {
-                        host.Username(settings.Username);
-                        host.Password(settings.Password);
+                        host.Username("guest");
+                        host.Password("guest");
                     });
 
                     cfg.ReceiveEndpoint("create-order-service", e =>
                     {
-                        e.ConfigureConsumer<CreateOrderCommandConsumer>(context);
+                        e.ConfigureConsumer<OrderAddEventConsumer>(context);
                     });
                 });
 
