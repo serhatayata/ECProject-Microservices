@@ -22,7 +22,7 @@ namespace EC.Services.OrderAPI.Extensions
                 string hostUrl = settings.Host;
                 ushort port = settings.Port;
 
-                x.AddConsumer<OrderAddEventConsumer>();
+                x.AddConsumer<CreateOrderMessageCommandConsumer>();
 
                 // Default Port : 5672
                 x.UsingRabbitMq((context, cfg) =>
@@ -41,7 +41,7 @@ namespace EC.Services.OrderAPI.Extensions
 
                     cfg.ReceiveEndpoint("create-order-service", e =>
                     {
-                        e.ConfigureConsumer<OrderAddEventConsumer>(context);
+                        e.ConfigureConsumer<CreateOrderMessageCommandConsumer>(context);
                     });
                 });
 

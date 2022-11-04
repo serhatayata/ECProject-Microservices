@@ -17,6 +17,7 @@ namespace EC.Services.PaymentAPI.Mappings
             CreateMap<PaymentAddDto, PaymentWithoutUserAddDto>().ReverseMap();
 
             CreateMap<OrderItemDto, BasketItemDto>().ReverseMap();
+            CreateMap<Core.Messages.OrderItemDto, BasketItemDto>().ReverseMap();
 
             #endregion
         }

@@ -1,39 +1,34 @@
 ﻿using AutoMapper;
-using Castle.DynamicProxy;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
+using Core.CrossCuttingConcerns.Caching;
 using Core.CrossCuttingConcerns.Caching.Redis;
 using Core.CrossCuttingConcerns.Logging;
 using Core.CrossCuttingConcerns.Logging.ElasticSearch;
 using Core.Dtos;
+using Core.Entities;
 using Core.Extensions;
+using Core.Messages;
 using Core.Utilities.Results;
 using EC.Services.PaymentAPI.ApiServices.Abstract;
 using EC.Services.PaymentAPI.Constants;
 using EC.Services.PaymentAPI.Data.Abstract.Dapper;
 using EC.Services.PaymentAPI.Data.Abstract.EntityFramework;
 using EC.Services.PaymentAPI.Dtos.BasketDtos;
+using EC.Services.PaymentAPI.Dtos.OrderDtos;
 using EC.Services.PaymentAPI.Dtos.PaymentDtos;
 using EC.Services.PaymentAPI.Dtos.ProductDtos;
 using EC.Services.PaymentAPI.Entities;
-using EC.Services.PaymentAPI.Services.Abstract;
-using MassTransit.Transports;
-using Microsoft.Extensions.Caching.Memory;
-using System.Drawing.Printing;
-using IResult = Core.Utilities.Results.IResult;
-using Mass = MassTransit;
-using System.Reflection;
-using Nest;
-using Core.CrossCuttingConcerns.Caching;
-using System.Text.Json;
-using Core.Entities;
-using Core.DataAccess.Queue;
-using EC.Services.PaymentAPI.Dtos.OrderDtos;
 using EC.Services.PaymentAPI.Events;
-using Microsoft.Extensions.Options;
+using EC.Services.PaymentAPI.Services.Abstract;
 using EC.Services.PaymentAPI.Settings;
 using MassTransit;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using System.Reflection;
+using System.Text.Json;
+using IResult = Core.Utilities.Results.IResult;
 
 namespace EC.Services.PaymentAPI.Services.Concrete
 {
@@ -47,8 +42,9 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         private readonly IProductApiService _productApiService;
         private readonly IElasticSearchService _elasticSearchService;
         private readonly RabbitMqQueues _rabbitMqQueues;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper ,IDiscountApiService discountApiService,IProductApiService productApiService, IElasticSearchService elasticSearchService, IOptions<RabbitMqQueues> rabbitmqQueues)
+        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper ,IDiscountApiService discountApiService,IProductApiService productApiService,IPublishEndpoint publishEndpoint, IElasticSearchService elasticSearchService, IOptions<RabbitMqQueues> rabbitmqQueues)
         {
             _efRepository = efRepository;
             _dapperRepository = dapperRepository;
@@ -57,6 +53,7 @@ namespace EC.Services.PaymentAPI.Services.Concrete
             _discountApiService = discountApiService;
             _productApiService = productApiService;
             _elasticSearchService = elasticSearchService;
+            _publishEndpoint = publishEndpoint;
             _rabbitMqQueues = rabbitmqQueues.Value;
         }
 
@@ -78,7 +75,7 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             var basketValues = JsonSerializer.Deserialize<BasketDto>(existBasket);
 
-            AddressDto address = new()
+            Dtos.OrderDtos.AddressDto address = new()
             {
                 AddressDetail = paymentModel.AddressDetail,
                 CityName = paymentModel.CityName,
@@ -89,6 +86,7 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             PaymentBasketControlDto paymentControlModel = new()
             {
+                UserId=userId,
                 Basket = basketValues,
                 Address = address,
                 TotalPrice = paymentModel.TotalPrice
@@ -266,6 +264,15 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         {
             var method = MethodBase.GetCurrentMethod();
 
+            var paymentValues = await _redisCacheManager.GetAsync<PaymentBasketControlDto>($"paymentBasket_{paymentModel.PaymentNo}");
+
+            if (paymentValues == null)
+            {
+                var logDetailError = LogExtensions.GetLogDetails(method, (int)LogDetailRisks.Critical, DateTime.Now.ToString(), MessageExtensions.NotFound(PaymentConstantValues.PaymentRedis));
+
+                return new ErrorResult(MessageExtensions.NotFound(PaymentConstantValues.PaymentRedis));
+            }
+
             var payment = await _dapperRepository.GetByPaymentNoAsync(paymentModel.PaymentNo);
             payment.Status = (int)PaymentStatus.Completed;
 
@@ -283,19 +290,24 @@ namespace EC.Services.PaymentAPI.Services.Concrete
                 return new ErrorResult(MessageExtensions.NotUpdated(PaymentConstantValues.PaymentStatus));
             }
 
-            var paymentValues = await _redisCacheManager.GetAsync<PaymentBasketControlDto>($"paymentBasket_{paymentModel.PaymentNo}");
-
             #region Queue order
-            var orderEvent = new OrderAddEvent();
+            var orderEvent = new CreateOrderMessageCommand();
             orderEvent.PaymentNo = paymentModel.PaymentNo;
-            orderEvent.Address = paymentValues.Address;
-            orderEvent.OrderItems = _mapper.Map<List<OrderItemDto>>(paymentValues.Basket.basketItems);
+            orderEvent.UserId = paymentValues.UserId;
+            var paymentAddress = paymentValues.Address;
 
-            //var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(_rabbitMqQueues.CreateOrder));
+            orderEvent.Address = new Core.Messages.AddressDto()
+            {
+                AddressDetail=paymentAddress.AddressDetail,
+                CityName=paymentAddress.CityName,
+                CountryName=paymentAddress.CountryName,
+                CountyName=paymentAddress.CountyName,
+                ZipCode=paymentAddress.ZipCode
+            };
 
-            //await sendEndpoint.Send<OrderAddEvent>(orderEvent);
+            orderEvent.OrderItems = _mapper.Map<List<Core.Messages.OrderItemDto>>(paymentValues.Basket.basketItems);
 
-            //await _publishEndpoint.Publish<OrderAddEvent>(orderEvent);
+            await _publishEndpoint.Publish<CreateOrderMessageCommand>(orderEvent);
             #endregion
 
             #region Logging
@@ -303,6 +315,14 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             await _elasticSearchService.AddAsync(logDetail);
             #endregion
+
+            //Remove paymentValues
+            _redisCacheManager.Remove($"paymentBasket_{paymentModel.PaymentNo}");
+            //Remove basket
+            if (paymentValues.Basket.UserId != null)
+            {
+                await _redisCacheManager.GetDatabase(db: BasketConstantValues.BasketDb).KeyDeleteAsync("basket_" + paymentValues.Basket.UserId);
+            }
 
             return new SuccessResult(MessageExtensions.Completed(PaymentConstantValues.Payment));
         }
@@ -335,6 +355,14 @@ namespace EC.Services.PaymentAPI.Services.Concrete
 
             await _elasticSearchService.AddAsync(logDetail);
             #endregion
+
+            //Remove paymentValues
+            _redisCacheManager.Remove($"paymentBasket_{paymentModel.PaymentNo}");
+            //Remove basket
+            if (payment.UserId != null)
+            {
+                await _redisCacheManager.GetDatabase(db: BasketConstantValues.BasketDb).KeyDeleteAsync("basket_" + payment.UserId);
+            }
 
             return new SuccessResult(MessageExtensions.Updated(PaymentConstantValues.PaymentStatus));
         }
