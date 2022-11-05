@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Core.Messages;
 using EC.Services.Order.Domain.OrderAggregate;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace EC.Services.Order.Application.Dtos
     public class OrderCreateDto:IDto
     {
         public string PaymentNo { get; set; }
-        public Address Address { get; set; }
-        public List<OrderItemDto> OrderItems { get; set; }
+        public AddressDto Address { get; set; }
+        public List<OrderItemCreateDto> OrderItems { get; set; }
     }
 }

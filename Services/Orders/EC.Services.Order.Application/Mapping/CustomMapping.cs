@@ -13,6 +13,9 @@ namespace EC.Services.Order.Application.Mapping
             CreateMap<Domain.OrderAggregate.Order, OrderDto>().ReverseMap();
             CreateMap<CreateOrderCommand, OrderCreateDto>().ReverseMap();
             CreateMap<OrderItem, Core.Messages.OrderItemDto>().ReverseMap();
+            CreateMap<OrderItemCreateDto, Core.Messages.OrderItemDto>().ReverseMap();
+            CreateMap<OrderItemCreateDto, OrderItem>().ReverseMap();
+            CreateMap<OrderItemCreateDto, Dtos.OrderItemDto>().ReverseMap();
             CreateMap<OrderItem, Dtos.OrderItemDto>().ReverseMap();
             CreateMap<Core.Messages.OrderItemDto, Dtos.OrderItemDto>().ReverseMap();
             CreateMap<Address, Core.Messages.AddressDto>().ReverseMap();
