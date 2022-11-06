@@ -8,6 +8,7 @@ namespace Core.Utilities.Results
     {
         bool Success { get; }
         object Message { get; }
+        string MessageCode { get; }
         int StatusCode { get; }
     }
 }
