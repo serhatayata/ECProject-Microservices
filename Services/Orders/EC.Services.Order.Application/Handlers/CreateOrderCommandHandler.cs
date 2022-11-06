@@ -31,7 +31,7 @@ namespace EC.Services.Order.Application.Handlers
         {
             var method = MethodBase.GetCurrentMethod();
 
-            string orderNo = RandomExtensions.RandomString(12);
+            string orderNo = RandomExtensions.RandomCode(OrderConstantValues.OrderNoDigit);
 
             var orderExists = await _context.Orders.FirstOrDefaultAsync(x => x.OrderNo == orderNo );
             while(orderExists != null)

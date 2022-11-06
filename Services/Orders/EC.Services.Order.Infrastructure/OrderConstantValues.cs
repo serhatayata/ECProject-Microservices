@@ -8,6 +8,7 @@ namespace EC.Services.Order.Infrastructure
 {
     public class OrderConstantValues
     {
+        public static int OrderNoDigit = 12;
         public static string Order = "Order";
         public static string OrderPaymentNo = "Payment no";
         public static string OrderId = "Order Id";
