@@ -6,7 +6,7 @@ namespace Core.Extensions
     public static class RandomExtensions
     {
         private static readonly Random _random = new Random();
-        private readonly static string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        private readonly static string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 
         #region RandomNumber
