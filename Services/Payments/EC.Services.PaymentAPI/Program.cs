@@ -15,6 +15,8 @@ using Core.Entities;
 using EC.Services.PaymentAPI.Entities;
 using Core.Utilities.Business.Abstract;
 using Core.Utilities.Business.Concrete;
+using EC.Services.PaymentAPI.Settings;
+using ClientSettings = Core.Entities.ClientSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -62,6 +64,7 @@ builder.Services.AddSeedData(configuration);
 builder.Services.Configure<ServiceApiSettings>(configuration.GetSection("ServiceApiSettings"));
 builder.Services.Configure<ClientSettings>(configuration.GetSection("ClientSettings"));
 builder.Services.Configure<ApiEndpoint>(configuration.GetSection("ApiEndpoint"));
+builder.Services.Configure<RabbitMqQueues>(configuration.GetSection("RabbitMqQueues"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

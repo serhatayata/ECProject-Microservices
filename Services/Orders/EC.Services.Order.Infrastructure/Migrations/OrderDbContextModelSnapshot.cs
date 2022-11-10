@@ -55,6 +55,10 @@ namespace EC.Services.Order.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(12)");
 
+                    b.Property<string>("PaymentNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(40)");
 

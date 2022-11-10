@@ -6,6 +6,8 @@ namespace Core.Extensions
     public static class RandomExtensions
     {
         private static readonly Random _random = new Random();
+        private readonly static string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
 
         #region RandomNumber
         // Generates a random number within a range.      
@@ -36,6 +38,21 @@ namespace Core.Extensions
             }
 
             return lowerCase ? builder.ToString().ToLower() : builder.ToString();
+        }
+        #endregion
+        #region RandomCode
+        public static string RandomCode(int number)
+        {
+            var stringChars = new char[number];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            var finalString = new String(stringChars);
+            return finalString;
         }
         #endregion
         #region RandomPassword

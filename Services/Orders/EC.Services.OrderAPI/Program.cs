@@ -1,12 +1,17 @@
 using Autofac;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
+using Core.CrossCuttingConcerns.Logging.ElasticSearch;
 using Core.Entities;
+using Core.Entities.ElasticSearch.Abstract;
+using Core.Entities.ElasticSearch.Concrete;
+using Core.Extensions;
 using EC.Services.Order.Application.DependencyResolvers.Autofac;
 using EC.Services.Order.Application.Handlers;
 using EC.Services.Order.Application.Mapping;
 using EC.Services.OrderAPI.Extensions;
 using MediatR;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -33,6 +38,13 @@ builder.Services.AddMassTransitSettings(configuration);
 #endregion
 #region AUTH
 builder.Services.AddAuth(configuration);
+#endregion
+#region ELASTICSEARCH
+builder.Services.AddSingleton<IElasticSearchService, ElasticSearchManager>();
+builder.Services.AddSingleton<IElasticSearchConfigration, ElasticSearchConfigration>();
+builder.Host.UseSerilog();
+ElasticSearchExtensions.AddElasticSearch(builder.Services, configuration);
+ElasticSearchExtensions.AddELKLogSettings(builder.Services);
 #endregion
 #region SETTINGS
 builder.Services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMqSettings"));

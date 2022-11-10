@@ -40,7 +40,7 @@ namespace EC.Services.BasketAPI.Controllers
         [AuthorizeAnyPolicy("FullBasket,WriteBasket")]
         public async Task<IActionResult> SaveOrUpdateBasket(BasketSaveOrUpdateDto basketDto)
         {
-            var result = await _basketService.SaveOrUpdate(basketDto,_userId);
+            var result = await _basketService.SaveOrUpdate(basketDto);
             return StatusCode(result.StatusCode,result);
         }
         #endregion

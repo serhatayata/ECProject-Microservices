@@ -8,7 +8,7 @@ namespace EC.Services.BasketAPI.Services.Abstract
     public interface IBasketService
     {
         Task<DataResult<BasketDto>> GetBasket(string userId);
-        Task<IResult> SaveOrUpdate(BasketSaveOrUpdateDto basketDto, string userId);
+        Task<IResult> SaveOrUpdate(BasketSaveOrUpdateDto basketDto);
         Task<IResult> Delete(string userId);
     }
 }
