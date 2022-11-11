@@ -59,6 +59,30 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
             }
         }
         #endregion
+        #region GetAllByLangIdAsync
+        public async Task<List<LangResource>> GetAllByLangIdAsync(int langId)
+        {
+            var sql = "SELECT lr.Id,lr.Tag,lr.Description,lr.MessageCode,lr.LangId, " +
+                      "l.Id,l.Name,l.Code " +
+                      "FROM LangResources lr LEFT JOIN Langs l " +
+                      "ON lr.LangId = l.Id " +
+                      "WHERE lr.LangId=@LangId";
+
+            var dict = new Dictionary<int, LangResource>();
+
+            using (var connection = new SqlConnection(_defaultConnection))
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<LangResource, Lang, LangResource>(sql,
+                    (lr, l) =>
+                    {
+                        lr.Lang = l;
+                        return lr;
+                    }, new { LangId=langId }, splitOn: "Id");
+                return result.Distinct().ToList();
+            }
+        }
+        #endregion
         #region GetAllPagingAsync
         public async Task<List<LangResource>> GetAllPagingAsync(PagingDto model)
         {

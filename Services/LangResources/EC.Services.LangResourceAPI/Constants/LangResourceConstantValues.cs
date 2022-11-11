@@ -5,6 +5,7 @@
         public static int LangResourceDb = 3;
 
         public static string LangResource = "Language resource";
+        public static string LangResourceMessageCode = "Message code";
 
     }
 }
