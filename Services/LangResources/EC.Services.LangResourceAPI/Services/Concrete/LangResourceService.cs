@@ -73,7 +73,7 @@ namespace EC.Services.LangResourceAPI.Services.Concrete
             {
                 return new SuccessResult(MessageExtensions.Deleted(LangResourceConstantValues.LangResource));
             }
-            return new ErrorResult(MessageExtensions.NotDeleted(LangResourceConstantValues.LangResource));
+            return new ErrorResult(MessageExtensions.NotDeleted(LangResourceConstantValues.LangResource),StatusCodes.Status500InternalServerError);
         }
         #endregion
         #region GetAllAsync
