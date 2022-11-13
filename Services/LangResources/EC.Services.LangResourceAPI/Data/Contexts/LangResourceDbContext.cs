@@ -18,6 +18,7 @@ namespace EC.Services.LangResourceAPI.Data.Contexts
         }
 
         public DbSet<LangResource> LangResources { get; set; }
+        public DbSet<Lang> Langs { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -36,7 +37,7 @@ namespace EC.Services.LangResourceAPI.Data.Contexts
                 entity.HasKey(x => x.Id);
 
                 //Non-clustered index
-                entity.HasIndex(x => x.MessageCode).IsUnique().IsClustered(false);
+                entity.HasIndex(x => x.MessageCode).IsClustered(false);
 
                 entity.Property(x => x.MessageCode).HasColumnType("nvarchar(5)");
 
