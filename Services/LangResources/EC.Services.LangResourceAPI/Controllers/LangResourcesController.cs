@@ -18,6 +18,8 @@ namespace EC.Services.LangResourceAPI.Controllers
         }
 
         #region AddAsync
+        [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> AddAsync(LangResourceAddDto model)
         {
             var result = await _langResourceService.AddAsync(model);
@@ -25,6 +27,8 @@ namespace EC.Services.LangResourceAPI.Controllers
         }
         #endregion
         #region UpdateAsync
+        [HttpPut]
+        [Route("update")]
         public async Task<IActionResult> UpdateAsync(LangResourceUpdateDto model)
         {
             var result = await _langResourceService.UpdateAsync(model);
@@ -32,13 +36,17 @@ namespace EC.Services.LangResourceAPI.Controllers
         }
         #endregion
         #region DeleteAsync
-        public async Task<IActionResult> DeleteAsync(int id)
+        [HttpDelete]
+        [Route("delete")]
+        public async Task<IActionResult> DeleteAsync(DeleteIntDto model)
         {
-            var result = await _langResourceService.DeleteAsync(id);
+            var result = await _langResourceService.DeleteAsync(model.Id);
             return StatusCode(result.StatusCode, result);
         }
         #endregion
         #region GetAllAsync
+        [HttpGet]
+        [Route("getall")]
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await _langResourceService.GetAllAsync();
@@ -46,6 +54,8 @@ namespace EC.Services.LangResourceAPI.Controllers
         }
         #endregion
         #region GetAllByLangIdAsync
+        [HttpGet]
+        [Route("getall-by-langid")]
         public async Task<IActionResult> GetAllByLangIdAsync(int langId)
         {
             var result = await _langResourceService.GetAllByLangIdAsync(langId);
@@ -53,6 +63,8 @@ namespace EC.Services.LangResourceAPI.Controllers
         }
         #endregion
         #region GetAllPagingAsync
+        [HttpGet]
+        [Route("getall-paging")]
         public async Task<IActionResult> GetAllPagingAsync(PagingDto model)
         {
             var result = await _langResourceService.GetAllPagingAsync(model);
@@ -60,6 +72,8 @@ namespace EC.Services.LangResourceAPI.Controllers
         }
         #endregion
         #region GetByMessageCodeAsync
+        [HttpGet]
+        [Route("get-by-messagecode")]
         public async Task<IActionResult> GetByMessageCodeAsync(string messageCode)
         {
             var result = await _langResourceService.GetByMessageCodeAsync(messageCode);
