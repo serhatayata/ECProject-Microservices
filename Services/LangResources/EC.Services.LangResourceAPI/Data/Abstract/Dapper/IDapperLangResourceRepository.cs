@@ -10,6 +10,7 @@ namespace EC.Services.LangResourceAPI.Data.Abstract.Dapper
     {
         Task<List<LangResource>> GetAllPagingAsync(PagingDto model);
         Task<List<LangResource>> GetAllByLangIdPagingAsync(LangResourceGetAllByLangIdPagingDto model);
+        Task<List<LangResource>> GetAllByLangIdAsync(int langId);
 
         Task<LangResource> GetByMessageCodeAsync(string messageCode);
     }
