@@ -3,12 +3,19 @@ using EC.Services.LangResourceAPI.Data.Contexts;
 using EC.Services.LangResourceAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace EC.Services.LangResourceAPI.Extensions
 {
     public static class SeedDataExtensions
     {
+        public static readonly JsonSerializerOptions serializeOptions = new JsonSerializerOptions()
+        {
+            ReferenceHandler = ReferenceHandler.IgnoreCycles
+        };
+
         public static void AddSeedData(this IServiceCollection services, ConfigurationManager configuration)
         {
             var serviceProvider = services.BuildServiceProvider();
@@ -40,7 +47,7 @@ namespace EC.Services.LangResourceAPI.Extensions
                     new()
                     {
                         Name="English",
-                        Code="tr-TR"
+                        Code="en-EN"
                     },
                     new()
                     {
@@ -180,27 +187,27 @@ namespace EC.Services.LangResourceAPI.Extensions
         #region AddLangsToRedis
         public static void AddLangsToRedis(LangResourceDbContext context,IRedisCacheManager redisCacheManager, int redisDbId)
         {
-            if (String.IsNullOrEmpty(redisCacheManager.GetDatabase(db: redisDbId).StringGet("langs")))
+            if (!String.IsNullOrEmpty(redisCacheManager.GetDatabase(db: redisDbId).StringGet("langs")))
             {
                 return;
             }
 
-            var allLangs = context.Langs.ToList();
+            var allLangs = context.Langs.Include(x=>x.LangResources).ToList();
 
-            var status = redisCacheManager.GetDatabase(db: redisDbId).StringSet("langs", JsonSerializer.Serialize(allLangs));
+            var status = redisCacheManager.GetDatabase(db: redisDbId).StringSet("langs", JsonSerializer.Serialize(allLangs, serializeOptions));
         }
         #endregion
         #region AddLangResourcesToRedis
         public static void AddLangResourcesToRedis(LangResourceDbContext context, IRedisCacheManager redisCacheManager, int redisDbId)
         {
-            if (String.IsNullOrEmpty(redisCacheManager.GetDatabase(db: redisDbId).StringGet("langResources")))
+            if (!String.IsNullOrEmpty(redisCacheManager.GetDatabase(db: redisDbId).StringGet("langResources")))
             {
                 return;
             }
 
-            var allLangResources = context.LangResources.ToList();
+            var allLangResources = context.LangResources.Include(x=>x.Lang).ToList();
 
-            var status = redisCacheManager.GetDatabase(db: redisDbId).StringSet("langResources", JsonSerializer.Serialize(allLangResources));
+            var status = redisCacheManager.GetDatabase(db: redisDbId).StringSet("langResources", JsonSerializer.Serialize(allLangResources, serializeOptions));
         }
         #endregion
 

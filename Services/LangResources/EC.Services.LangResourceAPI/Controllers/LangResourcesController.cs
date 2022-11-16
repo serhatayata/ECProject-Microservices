@@ -1,8 +1,17 @@
 ﻿using Core.Dtos;
+using Core.Extensions;
+using Core.Utilities.Results;
+using EC.Services.LangResourceAPI.Constants;
+using EC.Services.LangResourceAPI.Dtos.LangDtos;
 using EC.Services.LangResourceAPI.Dtos.LangResourceDtos;
 using EC.Services.LangResourceAPI.Services.Abstract;
+using EC.Services.LangResourceAPI.Services.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Core.Utilities.IoC;
+using Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace EC.Services.LangResourceAPI.Controllers
 {
@@ -11,12 +20,40 @@ namespace EC.Services.LangResourceAPI.Controllers
     public class LangResourcesController : ControllerBase
     {
         private readonly ILangResourceService _langResourceService;
+        private readonly IRedisCacheManager _redisCacheManager;
+        private readonly IConfiguration _configuration;
 
-        public LangResourcesController(ILangResourceService langResourceService)
+        public LangResourcesController(ILangResourceService langResourceService,IRedisCacheManager redisCacheManager)
         {
             _langResourceService = langResourceService;
+            _redisCacheManager = redisCacheManager;
+            _configuration = ServiceTool.ServiceProvider.GetRequiredService<IConfiguration>();
         }
 
+        #region RefreshAsync
+        [HttpGet]
+        [Route("refresh")]
+        public async Task<IActionResult> RefreshAsync()
+        {
+            var result = await _langResourceService.GetAllAsync();
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result);
+            }
+
+            JsonSerializerOptions serializeOptions = new JsonSerializerOptions()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            };
+            var redisDbId = _configuration.GetValue<int>("LangResourceRedisDbId");
+            var status = _redisCacheManager.GetDatabase(db: redisDbId).StringSet("langResources", JsonSerializer.Serialize(result.Data, serializeOptions));
+            if (!status)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorDataResult<List<LangDto>>(MessageExtensions.NotCreated(LangResourceConstantValues.LangResourceLang), StatusCodes.Status500InternalServerError));
+            }
+            return StatusCode(StatusCodes.Status200OK, new SuccessDataResult<List<LangDto>>());
+        }
+        #endregion
         #region AddAsync
         [HttpPost]
         [Route("add")]
