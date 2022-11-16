@@ -12,6 +12,8 @@ using Core.Utilities.IoC;
 using EC.Services.LangResourceAPI.Extensions;
 using EC.Services.LangResourceAPI.DependencyResolvers.Autofac;
 using EC.Services.LangResourceAPI.Mappings;
+using EC.Services.LangResourceAPI.Services.Abstract;
+using EC.Services.LangResourceAPI.Services.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -29,7 +31,7 @@ builder.Services.AddAutoMapper(typeof(MapProfile).Assembly);
 #region CONTROLLERS
 builder.Services.AddControllerSettings();
 #endregion
-#region REDIS
+#region DI
 builder.Services.AddScoped<IRedisCacheManager, RedisCacheManager>();
 #endregion
 #region ELASTICSEARCH
