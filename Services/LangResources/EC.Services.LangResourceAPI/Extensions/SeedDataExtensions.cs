@@ -41,16 +41,19 @@ namespace EC.Services.LangResourceAPI.Extensions
                 {
                     new()
                     {
+                        DisplayName="TR",
                         Name="Turkish",
                         Code="tr-TR"
                     },
                     new()
                     {
+                        DisplayName="ENG",
                         Name="English",
                         Code="en-EN"
                     },
                     new()
                     {
+                        DisplayName="SPA",
                         Name="Spanish",
                         Code="es-ES"
                     }

@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using EC.Services.LangResourceAPI.Entities;
 
 namespace EC.Services.LangResourceAPI.Dtos.LangResourceDtos
 {
@@ -9,5 +10,6 @@ namespace EC.Services.LangResourceAPI.Dtos.LangResourceDtos
         public string Description { get; set; }
         public string MessageCode { get; set; }
         public int LangId { get; set; }
+        public Lang Lang { get; set; }
     }
 }

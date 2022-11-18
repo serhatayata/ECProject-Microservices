@@ -35,6 +35,11 @@ namespace EC.Services.LangResourceAPI.Services.Concrete
             {
                 return new ErrorDataResult<LangDto>(MessageExtensions.AlreadyExists(LangResourceConstantValues.LangResourceLangCode));
             }
+            var displayNameExists = await _efLangRepository.GetAsync(x => x.DisplayName == model.DisplayName);
+            if (displayNameExists != null)
+            {
+                return new ErrorDataResult<LangDto>(MessageExtensions.AlreadyExists(LangResourceConstantValues.LangResourceLangDisplayName));
+            }
             var langAdded = _mapper.Map<Lang>(model);
             await _efLangRepository.AddAsync(langAdded);
             var langExists = await _efLangRepository.GetAsync(x => x.Id == langAdded.Id);
@@ -53,6 +58,11 @@ namespace EC.Services.LangResourceAPI.Services.Concrete
             if (codeExists != null)
             {
                 return new ErrorDataResult<LangDto>(MessageExtensions.AlreadyExists(LangResourceConstantValues.LangResourceLangCode));
+            }
+            var displayNameExists = await _efLangRepository.GetAsync(x => x.Id != model.Id && x.DisplayName == model.DisplayName);
+            if (displayNameExists != null)
+            {
+                return new ErrorDataResult<LangDto>(MessageExtensions.AlreadyExists(LangResourceConstantValues.LangResourceLangDisplayName));
             }
             var langUpdated = _mapper.Map<Lang>(model);
             await _efLangRepository.UpdateAsync(langUpdated);

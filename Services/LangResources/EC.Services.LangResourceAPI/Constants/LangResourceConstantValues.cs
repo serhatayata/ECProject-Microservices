@@ -12,6 +12,7 @@
 
         public static string LangResourceLangId = "Id";
         public static string LangResourceLangCode = "Code";
+        public static string LangResourceLangDisplayName = "Display name";
         public static string LangResourceLangName = "Name";
         public static string LangResourceLang= "Language";
 
