@@ -63,7 +63,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
                         }
                         if (lr.LangId > 0)
                         {
-                            l.LangResources.Add(lr);
+                            lang.LangResources.Add(lr);
                         }
                         return lang;
                     }, splitOn: "Id");
@@ -78,8 +78,8 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
                       "lr.Id,lr.Tag,lr.Description,lr.MessageCode,lr.LangId " +
                       "FROM Langs l LEFT JOIN LangResources lr " +
                       "ON l.Id = lr.LangId " +
-                      "ORDER BY l.Id OFFSET @Page * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY";
-
+                      "WHERE l.Code IN " +
+                      "(SELECT l.Code FROM Langs l ORDER BY l.Id OFFSET @Page * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY)";
 
             var dict = new Dictionary<int, Lang>();
 
@@ -98,7 +98,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
                         }
                         if (lr.LangId > 0)
                         {
-                            l.LangResources.Add(lr);
+                            lang.LangResources.Add(lr);
                         }
                         return lang;
                     }, new { Page = model.Page - 1, PageSize = model.PageSize }, splitOn: "Id");
@@ -133,7 +133,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
                         }
                         if (lr.LangId > 0)
                         {
-                            l.LangResources.Add(lr);
+                            lang.LangResources.Add(lr);
                         }
                         return lang;
                     }, new { Code = code }, splitOn: "Id");
@@ -168,7 +168,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
                         }
                         if (lr.LangId > 0)
                         {
-                            l.LangResources.Add(lr);
+                            lang.LangResources.Add(lr);
                         }
                         return lang;
                     }, new { Id = id }, splitOn: "Id");
