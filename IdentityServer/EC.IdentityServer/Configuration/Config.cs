@@ -114,7 +114,7 @@ namespace EC.IdentityServer.Configuration
                 }
             },
 	        #endregion
-            #region Product
+            #region PhotoStock
             new ApiResource("resource_photostock")
             {
                 Scopes=
@@ -126,6 +126,21 @@ namespace EC.IdentityServer.Configuration
                 ApiSecrets =
                 {
                     new Secret("photostock_secret".Sha256())
+                }
+            },
+	        #endregion
+            #region LangResource
+            new ApiResource("resource_langresource")
+            {
+                Scopes=
+                {
+                    "langresource_full",
+                    "langresource_read",
+                    "langresource_write"
+                },
+                ApiSecrets =
+                {
+                    new Secret("langresource_secret".Sha256())
                 }
             },
 	        #endregion
@@ -183,6 +198,11 @@ namespace EC.IdentityServer.Configuration
                 new ApiScope("product_full","Full permission for Product API"),
                 new ApiScope("product_read","Read permission for Product API"),
                 new ApiScope("product_write","Write permission for Product API"),
+	            #endregion
+                #region LangResource
+                new ApiScope("langresource_full","Full permission for Product API"),
+                new ApiScope("langresource_read","Read permission for Product API"),
+                new ApiScope("langresource_write","Write permission for Product API"),
 	            #endregion
                 #region PhotoStock
                 new ApiScope("photostock_full","Full permission for PhotoStock API"),
@@ -329,6 +349,16 @@ namespace EC.IdentityServer.Configuration
                     ClientSecrets= {new Secret("product_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
                     AllowedScopes={ "product_full", "product_write", "product_read" },
+                },
+	            #endregion
+                #region LangResource
+                new Client
+                {
+                    ClientName="LangResource Client",
+                    ClientId="langresource_client",
+                    ClientSecrets= {new Secret("langresource_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "langresource_full", "langresource_write", "langresource_read" },
                 },
 	            #endregion
                 #region Product
