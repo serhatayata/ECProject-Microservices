@@ -12,6 +12,10 @@ namespace EC.Services.LangResourceAPI.Validations.LangValidations
             RuleFor(x => x.Id).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(LangResourceConstantValues.LangResourceLangId));
             RuleFor(x => x.Id).NotNull().WithMessage(MessageExtensions.ErrorNotNull(LangResourceConstantValues.LangResourceLangId));
 
+            RuleFor(x => x.DisplayName).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(LangResourceConstantValues.LangResourceLangDisplayName));
+            RuleFor(x => x.DisplayName).NotNull().WithMessage(MessageExtensions.ErrorNotNull(LangResourceConstantValues.LangResourceLangDisplayName));
+            RuleFor(x => x.DisplayName).Length(1, 5).WithMessage(MessageExtensions.ErrorMaxLength(LangResourceConstantValues.LangResourceLangDisplayName, 5));
+
             RuleFor(x => x.Name).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(LangResourceConstantValues.LangResourceLangName));
             RuleFor(x => x.Name).NotNull().WithMessage(MessageExtensions.ErrorNotNull(LangResourceConstantValues.LangResourceLangName));
             RuleFor(x => x.Name).Length(1, 30).WithMessage(MessageExtensions.ErrorMaxLength(LangResourceConstantValues.LangResourceLangName, 5));

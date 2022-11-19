@@ -12,31 +12,31 @@ namespace EC.Services.LangResourceAPI.Extensions
 
             services.AddDbContext<LangResourceDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
 
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-            //{
-            //    options.RequireHttpsMetadata = false;
-            //    options.Authority = tokenOptions.Issuer;
-            //    options.Audience = tokenOptions.Audience;
-            //});
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.Authority = tokenOptions.Issuer;
+                options.Audience = tokenOptions.Audience;
+            });
 
-            //services.AddAuthorization(_ =>
-            //{
-            //    _.AddPolicy("ReadLangResource", policy =>
-            //    {
-            //        policy.RequireAuthenticatedUser();
-            //        policy.RequireClaim("scope", "langresource_read");
-            //    });
-            //    _.AddPolicy("WriteLangResource", policy =>
-            //    {
-            //        policy.RequireAuthenticatedUser();
-            //        policy.RequireClaim("scope", "langresource_write");
-            //    });
-            //    _.AddPolicy("FullLangResource", policy =>
-            //    {
-            //        policy.RequireAuthenticatedUser();
-            //        policy.RequireClaim("scope", "langresource_full");
-            //    });
-            //});
+            services.AddAuthorization(_ =>
+            {
+                _.AddPolicy("ReadLangResource", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "langresource_read");
+                });
+                _.AddPolicy("WriteLangResource", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "langresource_write");
+                });
+                _.AddPolicy("FullLangResource", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "langresource_full");
+                });
+            });
         }
 
     }

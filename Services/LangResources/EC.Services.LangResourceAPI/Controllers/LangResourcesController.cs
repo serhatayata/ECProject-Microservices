@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Core.Utilities.IoC;
 using Core.CrossCuttingConcerns.Caching.Redis;
+using Core.Utilities.Attributes;
 
 namespace EC.Services.LangResourceAPI.Controllers
 {
@@ -29,6 +30,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region RefreshAsync
         [HttpGet]
         [Route("refresh")]
+        [AuthorizeAnyPolicy("FullLangResource,WriteLangResource")]
         public async Task<IActionResult> RefreshAsync()
         {
             var result = await _langResourceService.RefreshAsync();
@@ -38,6 +40,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region AddAsync
         [HttpPost]
         [Route("add")]
+        [AuthorizeAnyPolicy("FullLangResource,WriteLangResource")]
         public async Task<IActionResult> AddAsync([FromBody]LangResourceAddDto model)
         {
             var result = await _langResourceService.AddAsync(model);
@@ -47,6 +50,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region UpdateAsync
         [HttpPut]
         [Route("update")]
+        [AuthorizeAnyPolicy("FullLangResource,WriteLangResource")]
         public async Task<IActionResult> UpdateAsync([FromBody] LangResourceUpdateDto model)
         {
             var result = await _langResourceService.UpdateAsync(model);
@@ -56,6 +60,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region DeleteAsync
         [HttpDelete]
         [Route("delete")]
+        [AuthorizeAnyPolicy("FullLangResource,WriteLangResource")]
         public async Task<IActionResult> DeleteAsync([FromQuery] DeleteIntDto model)
         {
             var result = await _langResourceService.DeleteAsync(model.Id);
@@ -65,6 +70,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region GetAllAsync
         [HttpGet]
         [Route("getall")]
+        [AuthorizeAnyPolicy("FullLangResource,ReadLangResource")]
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await _langResourceService.GetAllAsync();
@@ -74,6 +80,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region GetAllByLangIdAsync
         [HttpGet]
         [Route("getall-by-langid")]
+        [AuthorizeAnyPolicy("FullLangResource,ReadLangResource")]
         public async Task<IActionResult> GetAllByLangIdAsync([FromQuery]int langId)
         {
             var result = await _langResourceService.GetAllByLangIdAsync(langId);
@@ -83,6 +90,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region GetAllPagingAsync
         [HttpGet]
         [Route("getall-paging")]
+        [AuthorizeAnyPolicy("FullLangResource,ReadLangResource")]
         public async Task<IActionResult> GetAllPagingAsync([FromQuery]PagingDto model)
         {
             var result = await _langResourceService.GetAllPagingAsync(model);
@@ -92,6 +100,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region GetByMessageCodeAsync
         [HttpGet]
         [Route("get-by-messagecode")]
+        [AuthorizeAnyPolicy("FullLangResource,ReadLangResource")]
         public async Task<IActionResult> GetByMessageCodeAsync([FromQuery] string messageCode)
         {
             var result = await _langResourceService.GetByMessageCodeAsync(messageCode);
