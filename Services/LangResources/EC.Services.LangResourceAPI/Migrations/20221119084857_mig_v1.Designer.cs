@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC.Services.LangResourceAPI.Migrations
 {
     [DbContext(typeof(LangResourceDbContext))]
-    [Migration("20221116182209_mig_v2")]
-    partial class mig_v2
+    [Migration("20221119084857_mig_v1")]
+    partial class mig_v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,6 +35,10 @@ namespace EC.Services.LangResourceAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(8)");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(5)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(30)");
@@ -45,6 +49,11 @@ namespace EC.Services.LangResourceAPI.Migrations
                         .IsUnique();
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Code"), false);
+
+                    b.HasIndex("DisplayName")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("DisplayName"), false);
 
                     b.ToTable("Langs");
                 });

@@ -55,8 +55,11 @@ namespace EC.Services.LangResourceAPI.Data.Contexts
 
                 //Non-clustered index
                 entity.HasIndex(x => x.Code).IsUnique().IsClustered(false);
+                entity.HasIndex(x => x.DisplayName).IsUnique().IsClustered(false);
 
                 entity.Property(x => x.Code).HasColumnType("nvarchar(8)");
+
+                entity.Property(x => x.DisplayName).HasColumnType("nvarchar(5)");
 
                 entity.Property(x => x.Name).HasColumnType("nvarchar(30)");
 

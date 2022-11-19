@@ -40,7 +40,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
         public async Task<List<LangResource>> GetAllAsync()
         {
             var sql = "SELECT lr.Id,lr.Tag,lr.Description,lr.MessageCode,lr.LangId, " +
-                      "l.Id,l.Name,l.Code " +
+                      "l.Id,l.DisplayName,l.Name,l.Code " +
                       "FROM LangResources lr LEFT JOIN Langs l " +
                       "ON lr.LangId = l.Id";
 
@@ -63,7 +63,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
         public async Task<List<LangResource>> GetAllByLangIdAsync(int langId)
         {
             var sql = "SELECT lr.Id,lr.Tag,lr.Description,lr.MessageCode,lr.LangId, " +
-                      "l.Id,l.Name,l.Code " +
+                      "l.Id,l.DisplayName,l.Name,l.Code " +
                       "FROM LangResources lr LEFT JOIN Langs l " +
                       "ON lr.LangId = l.Id " +
                       "WHERE lr.LangId=@LangId";
@@ -87,7 +87,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
         public async Task<List<LangResource>> GetAllPagingAsync(PagingDto model)
         {
             var sql = "SELECT lr.Id,lr.Tag,lr.Description,lr.MessageCode,lr.LangId, " +
-                      "l.Id,l.Name,l.Code " +
+                      "l.Id,l.DisplayName,l.Name,l.Code " +
                       "FROM LangResources lr LEFT JOIN Langs l " +
                       "ON lr.LangId = l.Id " +
                       "ORDER BY lr.Id OFFSET @Page * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY";
@@ -111,7 +111,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
         public async Task<List<LangResource>> GetAllByLangIdPagingAsync(LangResourceGetAllByLangIdPagingDto model)
         {
             var sql = "SELECT lr.Id,lr.Tag,lr.Description,lr.MessageCode,lr.LangId, " +
-                      "l.Id,l.Name,l.Code " +
+                      "l.Id,l.DisplayName,l.Name,l.Code " +
                       "FROM LangResources lr LEFT JOIN Langs l " +
                       "ON lr.LangId = l.Id " +
                       "ORDER BY lr.Id OFFSET @Page * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY";
@@ -135,7 +135,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
         public async Task<LangResource> GetByIdAsync(int id)
         {
             var sql = "SELECT lr.Id,lr.Tag,lr.Description,lr.MessageCode,lr.LangId, " +
-                      "l.Id,l.Name,l.Code " +
+                      "l.Id,l.DisplayName,l.Name,l.Code " +
                       "FROM LangResources lr LEFT JOIN Langs l " +
                       "ON lr.LangId = l.Id " +
                       "WHERE lr.Id=@Id";
@@ -159,7 +159,7 @@ namespace EC.Services.LangResourceAPI.Data.Concrete.Dapper
         public async Task<LangResource> GetByMessageCodeAsync(string messageCode)
         {
             var sql = "SELECT lr.Id,lr.Tag,lr.Description,lr.MessageCode,lr.LangId, " +
-                      "l.Id,l.Name,l.Code " +
+                      "l.Id,l.DisplayName,l.Name,l.Code " +
                       "FROM LangResources lr LEFT JOIN Langs l " +
                       "ON lr.LangId = l.Id " +
                       "WHERE lr.MessageCode=@MessageCode";

@@ -20,14 +20,10 @@ namespace EC.Services.LangResourceAPI.Controllers
     public class LangResourcesController : ControllerBase
     {
         private readonly ILangResourceService _langResourceService;
-        private readonly IRedisCacheManager _redisCacheManager;
-        private readonly IConfiguration _configuration;
 
-        public LangResourcesController(ILangResourceService langResourceService,IRedisCacheManager redisCacheManager)
+        public LangResourcesController(ILangResourceService langResourceService)
         {
             _langResourceService = langResourceService;
-            _redisCacheManager = redisCacheManager;
-            _configuration = ServiceTool.ServiceProvider.GetRequiredService<IConfiguration>();
         }
 
         #region RefreshAsync
@@ -35,29 +31,14 @@ namespace EC.Services.LangResourceAPI.Controllers
         [Route("refresh")]
         public async Task<IActionResult> RefreshAsync()
         {
-            var result = await _langResourceService.GetAllAsync();
-            if (!result.Success)
-            {
-                return StatusCode(result.StatusCode, result);
-            }
-
-            JsonSerializerOptions serializeOptions = new JsonSerializerOptions()
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles
-            };
-            var redisDbId = _configuration.GetValue<int>("LangResourceRedisDbId");
-            var status = _redisCacheManager.GetDatabase(db: redisDbId).StringSet("langResources", JsonSerializer.Serialize(result.Data, serializeOptions));
-            if (!status)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorDataResult<List<LangDto>>(MessageExtensions.NotCreated(LangResourceConstantValues.LangResourceLang), StatusCodes.Status500InternalServerError));
-            }
-            return StatusCode(StatusCodes.Status200OK, new SuccessDataResult<List<LangDto>>());
+            var result = await _langResourceService.RefreshAsync();
+            return StatusCode(result.StatusCode,result);
         }
         #endregion
         #region AddAsync
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> AddAsync(LangResourceAddDto model)
+        public async Task<IActionResult> AddAsync([FromBody]LangResourceAddDto model)
         {
             var result = await _langResourceService.AddAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -66,7 +47,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region UpdateAsync
         [HttpPut]
         [Route("update")]
-        public async Task<IActionResult> UpdateAsync(LangResourceUpdateDto model)
+        public async Task<IActionResult> UpdateAsync([FromBody] LangResourceUpdateDto model)
         {
             var result = await _langResourceService.UpdateAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -75,7 +56,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region DeleteAsync
         [HttpDelete]
         [Route("delete")]
-        public async Task<IActionResult> DeleteAsync(DeleteIntDto model)
+        public async Task<IActionResult> DeleteAsync([FromQuery] DeleteIntDto model)
         {
             var result = await _langResourceService.DeleteAsync(model.Id);
             return StatusCode(result.StatusCode, result);
@@ -93,7 +74,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region GetAllByLangIdAsync
         [HttpGet]
         [Route("getall-by-langid")]
-        public async Task<IActionResult> GetAllByLangIdAsync(int langId)
+        public async Task<IActionResult> GetAllByLangIdAsync([FromQuery]int langId)
         {
             var result = await _langResourceService.GetAllByLangIdAsync(langId);
             return StatusCode(result.StatusCode, result);
@@ -102,7 +83,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region GetAllPagingAsync
         [HttpGet]
         [Route("getall-paging")]
-        public async Task<IActionResult> GetAllPagingAsync(PagingDto model)
+        public async Task<IActionResult> GetAllPagingAsync([FromQuery]PagingDto model)
         {
             var result = await _langResourceService.GetAllPagingAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -111,7 +92,7 @@ namespace EC.Services.LangResourceAPI.Controllers
         #region GetByMessageCodeAsync
         [HttpGet]
         [Route("get-by-messagecode")]
-        public async Task<IActionResult> GetByMessageCodeAsync(string messageCode)
+        public async Task<IActionResult> GetByMessageCodeAsync([FromQuery] string messageCode)
         {
             var result = await _langResourceService.GetByMessageCodeAsync(messageCode);
             return StatusCode(result.StatusCode, result);

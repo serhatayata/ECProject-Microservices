@@ -19,6 +19,7 @@ namespace EC.Services.LangResourceAPI.Services.Abstract
         Task<DataResult<LangResourceDto>> AddAsync(LangResourceAddDto model);
         Task<DataResult<LangResourceDto>> UpdateAsync(LangResourceUpdateDto model);
         Task<IResult> DeleteAsync(int id);
+        Task<IResult> RefreshAsync();
 
     }
 }

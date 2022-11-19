@@ -33,6 +33,10 @@ namespace EC.Services.LangResourceAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(8)");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(5)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(30)");
@@ -43,6 +47,11 @@ namespace EC.Services.LangResourceAPI.Migrations
                         .IsUnique();
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Code"), false);
+
+                    b.HasIndex("DisplayName")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("DisplayName"), false);
 
                     b.ToTable("Langs");
                 });

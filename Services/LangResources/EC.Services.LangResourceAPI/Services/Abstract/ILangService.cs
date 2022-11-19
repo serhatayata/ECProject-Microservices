@@ -11,10 +11,12 @@ namespace EC.Services.LangResourceAPI.Services.Abstract
         Task<DataResult<List<LangDto>>> GetAllPagingAsync(PagingDto model);
 
         Task<DataResult<LangDto>> GetByCodeAsync(string code);
+        Task<DataResult<LangDto>> GetByDisplayNameAsync(string displayName);
 
         Task<DataResult<LangDto>> AddAsync(LangAddDto model);
         Task<DataResult<LangDto>> UpdateAsync(LangUpdateDto model);
         Task<IResult> DeleteAsync(DeleteIntDto model);
+        Task<IResult> RefreshAsync();
 
 
     }

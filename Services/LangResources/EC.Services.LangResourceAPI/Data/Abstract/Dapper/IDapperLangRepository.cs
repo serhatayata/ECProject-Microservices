@@ -11,5 +11,6 @@ namespace EC.Services.LangResourceAPI.Data.Abstract.Dapper
         Task<List<Lang>> GetAllPagingAsync(PagingDto model);
 
         Task<Lang> GetByCodeAsync(string code);
+        Task<Lang> GetByDisplayNameAsync(string displayName);
     }
 }
