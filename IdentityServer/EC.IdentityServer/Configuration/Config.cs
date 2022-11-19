@@ -144,6 +144,19 @@ namespace EC.IdentityServer.Configuration
                 }
             },
 	        #endregion
+            #region Gateway
+            new ApiResource("resource_gateway")
+            {
+                Scopes=
+                {
+                    "gateway_full"
+                },
+                ApiSecrets =
+                {
+                    new Secret("gateway_secret".Sha256())
+                }
+            },
+	        #endregion
 
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
         };
@@ -210,9 +223,7 @@ namespace EC.IdentityServer.Configuration
                 new ApiScope("photostock_write","Write permission for PhotoStock API"),
 	            #endregion
                 #region Gateway
-                new ApiScope("gateway_full","Full permission for Gateway API"),
-                new ApiScope("gateway_read","Read permission for Gateway API"),
-                new ApiScope("gateway_write","Write permission for Gateway API"),
+                new ApiScope("gateway_full","Full permission for Gateway API")
 	            #endregion
                 #region WebUI
                 new ApiScope("webui_full","Full permission for WebUI"),
@@ -242,6 +253,7 @@ namespace EC.IdentityServer.Configuration
                         IdentityServerConstants.StandardScopes.Profile,
                         "order_full",
                         "basket_full",
+                        "gateway_full"
                     },
                 },
 	            #endregion
@@ -273,7 +285,8 @@ namespace EC.IdentityServer.Configuration
                         "basket_read",
                         "basket_write",
                         "payment_full",
-                        "orders.signalrhub"
+                        "orders.signalrhub",
+                        "gateway_full"
                     },
                     AccessTokenLifetime = 60*60*2, // 2 hours
                     IdentityTokenLifetime= 60*60*2, // 2 hours
@@ -284,11 +297,27 @@ namespace EC.IdentityServer.Configuration
                 #region Base Client
                 new Client
                 {
-                    ClientName="Base Client",
-                    ClientId="base_client",
-                    ClientSecrets= {new Secret("base_secret".Sha256())},
+                    ClientName="Base Client Full",
+                    ClientId="base_full_client",
+                    ClientSecrets= {new Secret("base_full_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "base_full","base_write", "base_read" }
+                    AllowedScopes={ "base_full", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Base Client Read",
+                    ClientId="base_read_client",
+                    ClientSecrets= {new Secret("base_read_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "base_read", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Base Client Write",
+                    ClientId="base_write_client",
+                    ClientSecrets= {new Secret("base_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "base_write", "gateway_full" }
                 },
 	            #endregion
                 #region Basket Client
@@ -298,7 +327,7 @@ namespace EC.IdentityServer.Configuration
                     ClientId="basket_client",
                     ClientSecrets= {new Secret("basket_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "basket_full","basket_write", "basket_read" }
+                    AllowedScopes={ "basket_full","basket_write", "basket_read", "gateway_full" }
                 },
 	            #endregion
                 #region Category Client
