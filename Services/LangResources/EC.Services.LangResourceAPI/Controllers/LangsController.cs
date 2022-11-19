@@ -18,16 +18,10 @@ namespace EC.Services.LangResourceAPI.Controllers
     public class LangsController : ControllerBase
     {
         private readonly ILangService _langService;
-        private readonly ILangResourceService _langResourceService;
-        private readonly IRedisCacheManager _redisCacheManager;
-        private readonly IConfiguration _configuration;
 
-        public LangsController(ILangService langService, ILangResourceService langResourceService, IRedisCacheManager redisCacheManager)
+        public LangsController(ILangService langService)
         {
             _langService = langService;
-            _langResourceService = langResourceService;
-            _redisCacheManager = redisCacheManager;
-            _configuration = ServiceTool.ServiceProvider.GetRequiredService<IConfiguration>();
         }
 
         #region RefreshAsync
@@ -35,23 +29,8 @@ namespace EC.Services.LangResourceAPI.Controllers
         [Route("refresh")]
         public async Task<IActionResult> RefreshAsync()
         {
-            var result = await _langService.GetAllAsync();
-            if (!result.Success)
-            {
-                return StatusCode(result.StatusCode, result);
-            }
-
-            JsonSerializerOptions serializeOptions = new JsonSerializerOptions()
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles
-            };
-            var redisDbId = _configuration.GetValue<int>("LangResourceRedisDbId");
-            var status = _redisCacheManager.GetDatabase(db: redisDbId).StringSet("langs", JsonSerializer.Serialize(result.Data, serializeOptions));
-            if (!status)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorDataResult<List<LangDto>>(MessageExtensions.NotCreated(LangResourceConstantValues.LangResourceLang), StatusCodes.Status500InternalServerError));
-            }
-            return StatusCode(StatusCodes.Status200OK,new SuccessDataResult<List<LangDto>>());
+            var result = await _langService.RefreshAsync();
+            return StatusCode(result.StatusCode, result);
         }
         #endregion
         #region AddAsync
@@ -105,6 +84,15 @@ namespace EC.Services.LangResourceAPI.Controllers
         public async Task<IActionResult> GetByCodeAsync([FromQuery]string code)
         {
             var result = await _langService.GetByCodeAsync(code);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region GetByDisplayName
+        [HttpGet]
+        [Route("get-by-displayname")]
+        public async Task<IActionResult> GetByDisplayNameAsync([FromQuery] string displayName)
+        {
+            var result = await _langService.GetByDisplayNameAsync(displayName);
             return StatusCode(result.StatusCode, result);
         }
         #endregion

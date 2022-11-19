@@ -14,8 +14,9 @@ namespace EC.Services.LangResourceAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    DisplayName = table.Column<string>(type: "nvarchar(5)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(30)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(5)", nullable: false)
+                    Code = table.Column<string>(type: "nvarchar(8)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,6 +60,13 @@ namespace EC.Services.LangResourceAPI.Migrations
                 name: "IX_Langs_Code",
                 table: "Langs",
                 column: "Code",
+                unique: true)
+                .Annotation("SqlServer:Clustered", false);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Langs_DisplayName",
+                table: "Langs",
+                column: "DisplayName",
                 unique: true)
                 .Annotation("SqlServer:Clustered", false);
         }

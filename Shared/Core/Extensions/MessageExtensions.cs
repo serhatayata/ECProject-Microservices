@@ -94,6 +94,20 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region Refreshed
+        public static string Refreshed(string entity)
+        {
+            var value = $"{entity} is refreshed";
+            return value;
+        }
+        #endregion
+        #region NotRefreshed
+        public static string NotRefreshed(string entity)
+        {
+            var value = $"{entity} is not refreshed";
+            return value;
+        }
+        #endregion
         #region NotSavedOrUpdated
         public static string NotSavedOrUpdated(string entity)
         {
