@@ -1,25 +1,45 @@
+
+#region SERVICES
+using EC.Gateway.Middlewares;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+{
+    config.AddJsonFile($"configuration.{hostingContext.HostingEnvironment.EnvironmentName.ToLower()}.json").AddEnvironmentVariables();
+});
 
-// Add services to the container.
+ConfigurationManager configuration = builder.Configuration;
+IWebHostEnvironment Environment = builder.Environment;
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+#region Authentication
+builder.Services.AddAuthentication().AddJwtBearer("GatewayAuthenticationScheme", options =>
+{
+    options.Authority = configuration["IdentityServerURL"];
+    options.Audience = "resource_gateway";
+    options.RequireHttpsMetadata = false;
+});
+#endregion
 
+builder.Services.AddOcelot();
+
+#endregion
+
+
+#region PIPELINES
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var ocelotConfig = new OcelotPipelineConfiguration
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    AuthorizationMiddleware = async (httpContext, next) =>
+    {
+        await OcelotAuthorizationMiddleware.Authorize(httpContext, next);
+    }
+};
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
+app.UseOcelot(ocelotConfig);
 
 app.Run();
+#endregion
+
