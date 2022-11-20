@@ -297,7 +297,7 @@ namespace EC.IdentityServer.Configuration
                 #region Base Client
                 new Client
                 {
-                    ClientName="Base Client Full",
+                    ClientName="Base Full Client",
                     ClientId="base_full_client",
                     ClientSecrets= {new Secret("base_full_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
@@ -305,7 +305,7 @@ namespace EC.IdentityServer.Configuration
                 },
                 new Client
                 {
-                    ClientName="Base Client Read",
+                    ClientName="Base Read Client",
                     ClientId="base_read_client",
                     ClientSecrets= {new Secret("base_read_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
@@ -313,7 +313,7 @@ namespace EC.IdentityServer.Configuration
                 },
                 new Client
                 {
-                    ClientName="Base Client Write",
+                    ClientName="Base Write Client",
                     ClientId="base_write_client",
                     ClientSecrets= {new Secret("base_write_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
@@ -323,81 +323,209 @@ namespace EC.IdentityServer.Configuration
                 #region Basket Client
                 new Client
                 {
-                    ClientName="Basket Client",
-                    ClientId="basket_client",
-                    ClientSecrets= {new Secret("basket_secret".Sha256())},
+                    ClientName="Basket Full Client",
+                    ClientId="basket_full_client",
+                    ClientSecrets= {new Secret("basket_full_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "basket_full","basket_write", "basket_read", "gateway_full" }
+                    AllowedScopes={ "basket_full", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Basket Read Client",
+                    ClientId="basket_read_client",
+                    ClientSecrets= {new Secret("basket_read_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "basket_read", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Basket Write Client",
+                    ClientId="basket_write_client",
+                    ClientSecrets= {new Secret("basket_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "basket_write", "gateway_full" }
                 },
 	            #endregion
                 #region Category Client
                 new Client
                 {
-                    ClientName="Category Client",
-                    ClientId="category_client",
-                    ClientSecrets= {new Secret("category_secret".Sha256())},
+                    ClientName="Category Full Client",
+                    ClientId="category_full_client",
+                    ClientSecrets= {new Secret("category_full_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "category_full", "category_write", "category_read" }
+                    AllowedScopes={ "category_full", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Category Read Client",
+                    ClientId="category_read_client",
+                    ClientSecrets= {new Secret("category_read_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "category_read", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Category Write Client",
+                    ClientId="category_write_client",
+                    ClientSecrets= {new Secret("category_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "category_write", "gateway_full" }
                 },
 	            #endregion
                 #region Discount Client
                 new Client
                 {
-                    ClientName="Discount Client",
-                    ClientId="discount_client",
-                    ClientSecrets= {new Secret("discount_secret".Sha256())},
+                    ClientName="Discount Full Client",
+                    ClientId="discount_full_client",
+                    ClientSecrets= {new Secret("discount_full_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "discount_full", "discount_write", "discount_read" }
+                    AllowedScopes={ "discount_full", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Discount Read Client",
+                    ClientId="discount_read_client",
+                    ClientSecrets= {new Secret("discount_read_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "discount_read", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Discount Write Client",
+                    ClientId="discount_write_client",
+                    ClientSecrets= {new Secret("discount_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "discount_write", "gateway_full" }
                 },
 	            #endregion
                 #region Order Client
                 new Client
                 {
-                    ClientName="Order Client",
-                    ClientId="order_client",
-                    ClientSecrets= {new Secret("order_secret".Sha256())},
+                    ClientName="Order Full Client",
+                    ClientId="order_full_client",
+                    ClientSecrets= {new Secret("order_full_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "order_full", "order_write", "order_read" }
+                    AllowedScopes={ "order_full", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Order Read Client",
+                    ClientId="order_read_client",
+                    ClientSecrets= {new Secret("order_read_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "order_read", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Order Write Client",
+                    ClientId="order_write_client",
+                    ClientSecrets= {new Secret("order_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "order_write", "gateway_full" }
                 },
 	            #endregion
                 #region Payment Client
                 new Client
                 {
-                    ClientName="Payment Client",
-                    ClientId="payment_client",
-                    ClientSecrets= {new Secret("payment_secret".Sha256())},
+                    ClientName="Payment Full Client",
+                    ClientId="payment_full_client",
+                    ClientSecrets= {new Secret("payment_full_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "payment_full", "payment_write", "payment_read" }
+                    AllowedScopes={ "payment_full", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Payment Read Client",
+                    ClientId="payment_read_client",
+                    ClientSecrets= {new Secret("payment_read_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "payment_read", "gateway_full" }
+                },
+                new Client
+                {
+                    ClientName="Payment Write Client",
+                    ClientId="payment_write_client",
+                    ClientSecrets= {new Secret("payment_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "payment_write", "gateway_full" }
                 },
 	            #endregion
                 #region Product
                 new Client
                 {
-                    ClientName="Product Client",
-                    ClientId="product_client",
-                    ClientSecrets= {new Secret("product_secret".Sha256())},
+                    ClientName="Product Full Client",
+                    ClientId="product_full_client",
+                    ClientSecrets= {new Secret("product_full_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "product_full", "product_write", "product_read" },
+                    AllowedScopes={ "product_full", "gateway_full" },
+                },
+                new Client
+                {
+                    ClientName="Product Read Client",
+                    ClientId="product_read_client",
+                    ClientSecrets= {new Secret("product_read_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "product_read", "gateway_full" },
+                },
+                new Client
+                {
+                    ClientName="Product Write Client",
+                    ClientId="product_write_client",
+                    ClientSecrets= {new Secret("product_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "product_write", "gateway_full" },
                 },
 	            #endregion
                 #region LangResource
                 new Client
                 {
-                    ClientName="LangResource Client",
-                    ClientId="langresource_client",
-                    ClientSecrets= {new Secret("langresource_secret".Sha256())},
+                    ClientName="LangResource Full Client",
+                    ClientId="langresource_full_client",
+                    ClientSecrets= {new Secret("langresource_full_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "langresource_full", "langresource_write", "langresource_read" },
+                    AllowedScopes={ "langresource_full", "gateway_full" },
                 },
-	            #endregion
-                #region Product
                 new Client
                 {
-                    ClientName="PhotoStock Client",
-                    ClientId="photostock_client",
-                    ClientSecrets= {new Secret("photostock_secret".Sha256())},
+                    ClientName="LangResource Read Client",
+                    ClientId="langresource_read_client",
+                    ClientSecrets= {new Secret("langresource_read_secret".Sha256())},
                     AllowedGrantTypes= GrantTypes.ClientCredentials,
-                    AllowedScopes={ "photostock_full", "photostock_write", "photostock_read" },
+                    AllowedScopes={ "langresource_read", "gateway_full" },
+                },
+                new Client
+                {
+                    ClientName="LangResource Write Client",
+                    ClientId="langresource_write_client",
+                    ClientSecrets= {new Secret("langresource_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "langresource_write", "gateway_full" },
+                },
+	            #endregion
+                #region PhotoStock
+                new Client
+                {
+                    ClientName="PhotoStock Full Client",
+                    ClientId="photostock_full_client",
+                    ClientSecrets= {new Secret("photostock_full_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "photostock_full", "gateway_full" },
+                },
+                new Client
+                {
+                    ClientName="PhotoStock Read Client",
+                    ClientId="photostock_read_client",
+                    ClientSecrets= {new Secret("photostock_read_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "photostock_read", "gateway_full" },
+                },
+                new Client
+                {
+                    ClientName="PhotoStock Write Client",
+                    ClientId="photostock_write_client",
+                    ClientSecrets= {new Secret("photostock_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "photostock_write", "gateway_full" },
                 },
 	            #endregion
 
