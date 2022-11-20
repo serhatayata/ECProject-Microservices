@@ -223,7 +223,7 @@ namespace EC.IdentityServer.Configuration
                 new ApiScope("photostock_write","Write permission for PhotoStock API"),
 	            #endregion
                 #region Gateway
-                new ApiScope("gateway_full","Full permission for Gateway API")
+                new ApiScope("gateway_full","Full permission for Gateway API"),
 	            #endregion
                 #region WebUI
                 new ApiScope("webui_full","Full permission for WebUI"),

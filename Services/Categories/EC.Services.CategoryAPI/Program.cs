@@ -62,6 +62,7 @@ builder.Services.AddAuth(configuration);
 #region SeedData
 builder.Services.AddSeedData(configuration);
 #endregion
+
 #endregion
 
 #region Pipelines

@@ -1,5 +1,6 @@
 
 #region SERVICES
+using EC.Gateway.Middlewares;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -29,7 +30,15 @@ builder.Services.AddOcelot();
 #region PIPELINES
 var app = builder.Build();
 
-await app.UseOcelot();
+var ocelotConfig = new OcelotPipelineConfiguration
+{
+    AuthorizationMiddleware = async (httpContext, next) =>
+    {
+        await OcelotAuthorizationMiddleware.Authorize(httpContext, next);
+    }
+};
+
+app.UseOcelot(ocelotConfig);
 
 app.Run();
 #endregion
