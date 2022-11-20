@@ -14,6 +14,9 @@ IWebHostEnvironment Environment = builder.Environment;
 
 #region Services
 
+#region CORS
+builder.Services.AddCorsSettings(Configuration, Environment);
+#endregion
 #region HTTP
 builder.Services.AddHttpContextAccessor();
 #endregion
@@ -53,6 +56,9 @@ builder.Services.AddDependencyResolvers(new ICoreModule[] {
 #region Pipelines
 var app = builder.Build();
 
+#region CORS
+app.UseCors("basket_cors");
+#endregion
 #region SWAGGER
 if (app.Environment.IsDevelopment())
 {

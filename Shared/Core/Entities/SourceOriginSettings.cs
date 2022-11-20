@@ -21,5 +21,7 @@ namespace Core.Entities
         public string Payments { get; set; }
         public string PhotoStocks { get; set; }
         public string Products { get; set; }
+        public string Gateway { get; set; }
+        public string LangResource { get; set; }
     }
 }
