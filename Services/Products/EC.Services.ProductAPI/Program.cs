@@ -20,6 +20,9 @@ IWebHostEnvironment Environment = builder.Environment;
 
 #region Services
 
+#region CORS
+builder.Services.AddCorsSettings(Configuration, Environment);
+#endregion
 #region SETTINGS
 builder.Services.AddSettings(Configuration);
 #endregion
@@ -74,6 +77,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+#region CORS
+app.UseCors("product_cors");
+#endregion
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();

@@ -24,6 +24,9 @@ IWebHostEnvironment Environment = builder.Environment;
 
 #region SERVICES
 
+#region CORS
+builder.Services.AddCorsSettings(configuration, Environment);
+#endregion
 #region MASSTRANSIT
 builder.Services.AddMassTransitSettings(configuration);
 #endregion
@@ -81,6 +84,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+#region CORS
+app.UseCors("payment_cors");
+#endregion
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();

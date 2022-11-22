@@ -1,6 +1,6 @@
 ﻿using Core.Entities;
 
-namespace EC.Services.LangResourceAPI.Extensions
+namespace EC.Services.PhotoStockAPI.Extensions
 {
     public static class CorsExtensions
     {
@@ -18,10 +18,14 @@ namespace EC.Services.LangResourceAPI.Extensions
 
             services.AddCors(options =>
             {
-                options.AddPolicy(name:"langresource_cors", builder =>
+                options.AddPolicy(name: "photostock_cors", builder =>
                 {
                     builder.WithOrigins(
-
+                     sourceOrigin.Orders,
+                     sourceOrigin.Baskets,
+                     sourceOrigin.Products,
+                     sourceOrigin.Categories,
+                     sourceOrigin.Gateway
                     )
                     .AllowAnyMethod()
                     .AllowAnyHeader();

@@ -19,6 +19,10 @@ Microsoft.Extensions.Configuration.ConfigurationManager configuration = builder.
 IWebHostEnvironment Environment = builder.Environment;
 
 #region Services
+
+#region CORS
+builder.Services.AddCorsSettings(configuration, Environment);
+#endregion
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
@@ -92,6 +96,10 @@ if (app.Environment.IsDevelopment())
 HttpContextHelper.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
 app.UseHttpsRedirection();
 #endregion
+#region CORS
+app.UseCors("photostock_cors");
+#endregion
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
