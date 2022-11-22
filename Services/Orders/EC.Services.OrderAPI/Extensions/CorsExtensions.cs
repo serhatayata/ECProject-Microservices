@@ -1,6 +1,6 @@
 ﻿using Core.Entities;
 
-namespace EC.Services.LangResourceAPI.Extensions
+namespace EC.Services.OrderAPI.Extensions
 {
     public static class CorsExtensions
     {
@@ -18,10 +18,12 @@ namespace EC.Services.LangResourceAPI.Extensions
 
             services.AddCors(options =>
             {
-                options.AddPolicy(name:"langresource_cors", builder =>
+                options.AddPolicy(name: "order_cors", builder =>
                 {
                     builder.WithOrigins(
-
+                     sourceOrigin.Discounts,
+                     sourceOrigin.Payments,
+                     sourceOrigin.Gateway
                     )
                     .AllowAnyMethod()
                     .AllowAnyHeader();

@@ -22,6 +22,9 @@ IWebHostEnvironment Environment = builder.Environment;
 
 #region Services
 
+#region CORS
+builder.Services.AddCorsSettings(configuration, Environment);
+#endregion
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
@@ -74,6 +77,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+#region CORS
+app.UseCors("category_cors");
+#endregion
 #region StaticFiles
 app.UseStaticFiles();
 #endregion

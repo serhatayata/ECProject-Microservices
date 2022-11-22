@@ -12,6 +12,9 @@ IWebHostEnvironment Environment = builder.Environment;
 
 #region SERVICES
 
+#region CORS
+builder.Services.AddCorsSettings(configuration, Environment);
+#endregion
 #region SETTINGS
 builder.Services.AddSettings(configuration);
 #endregion
@@ -55,6 +58,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+#region CORS
+app.UseCors("discount_cors");
+#endregion
 #region StaticFiles
 app.UseStaticFiles();
 #endregion

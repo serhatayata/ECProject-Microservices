@@ -22,7 +22,6 @@ IWebHostEnvironment environment = builder.Environment;
 
 #region CORS
 builder.Services.AddCorsSettings(configuration, environment);
-
 #endregion
 #region SETTINGS
 builder.Services.Configure<SourceOriginSettings>(configuration.GetSection("SourceOriginSettings"));
