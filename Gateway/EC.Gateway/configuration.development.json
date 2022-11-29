@@ -3,7 +3,7 @@
     //Basket API
     {
       "DownstreamPathTemplate": "/basket/api/baskets/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -22,7 +22,7 @@
     //Category API
     {
       "DownstreamPathTemplate": "/category/api/categories/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -41,7 +41,7 @@
     //Discount API
     {
       "DownstreamPathTemplate": "/discount/api/discounts/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -58,7 +58,7 @@
     },
     {
       "DownstreamPathTemplate": "/discount/api/campaigns/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -77,7 +77,7 @@
     //LangResource API
     {
       "DownstreamPathTemplate": "/langresource/api/langresources/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -94,7 +94,7 @@
     },
     {
       "DownstreamPathTemplate": "/langresource/api/langs/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -113,7 +113,7 @@
     //Order API
     {
       "DownstreamPathTemplate": "/order/api/orders/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -132,7 +132,7 @@
     //Payment API
     {
       "DownstreamPathTemplate": "/payment/api/payments/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -151,7 +151,7 @@
     //PhotoStock API
     {
       "DownstreamPathTemplate": "/photostock/api/photostocks/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -170,7 +170,7 @@
     //Product API
     {
       "DownstreamPathTemplate": "/product/api/products/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
