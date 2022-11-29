@@ -16,12 +16,14 @@ IWebHostEnvironment Environment = builder.Environment;
 #region Authentication
 builder.Services.AddAuthentication().AddJwtBearer("GatewayAuthenticationScheme", options =>
 {
-    options.Authority = configuration["IdentityServerURL"];
+    options.Authority = configuration.GetValue<string>("IdentityServerParams:Url");
     options.Audience = "resource_gateway";
     options.RequireHttpsMetadata = false;
 });
 #endregion
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 builder.Services.AddOcelot();
 
 #endregion
@@ -38,6 +40,7 @@ var ocelotConfig = new OcelotPipelineConfiguration
     }
 };
 
+app.UseSession();
 app.UseOcelot(ocelotConfig);
 
 app.Run();

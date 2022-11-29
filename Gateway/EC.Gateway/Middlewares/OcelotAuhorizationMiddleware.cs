@@ -20,16 +20,29 @@ namespace EC.Gateway.Middlewares
 
         private static bool ValidateScope(HttpContext httpContext)
         {
+            string scopeName = "scope";
+
             var downstreamRoute = httpContext.Items.DownstreamRoute();
-            var listOfScopes = downstreamRoute.AuthenticationOptions.AllowedScopes;
-            if (listOfScopes == null || listOfScopes.Count == 0) return true;
+            var listOfRequiredScopes = downstreamRoute.AuthenticationOptions.AllowedScopes;
+            if (listOfRequiredScopes == null || listOfRequiredScopes.Count == 0) return true;
             var userClaimsPrincipals = httpContext.User.Claims.ToArray<Claim>();
             List<string> listOfClaimTypes = new List<string>();
+            List<string> listOfScopes = new List<string>();
             foreach (var userClaim in userClaimsPrincipals)
+            {
                 listOfClaimTypes.Add(userClaim.Type);
-            foreach (string scope in listOfScopes)
-                if (!listOfClaimTypes.Contains(scope)) return false;
-            return true;
+                if (userClaim.Type == scopeName) listOfScopes.Add(userClaim.Value);
+            }
+
+            if (!listOfClaimTypes.Contains(scopeName)) return false;
+
+            foreach (var scope in listOfScopes)
+            {
+                if (listOfRequiredScopes.Contains(scope))
+                    return true;
+            }
+
+            return false;
         }
         private static bool ValidateRole(HttpContext ctx)
         {
@@ -40,6 +53,10 @@ namespace EC.Gateway.Middlewares
 
             //This will get the required authorization claims of the route
             Dictionary<string, string> requiredAuthorizationClaims = downStreamRoute.RouteClaimsRequirement;
+            if (requiredAuthorizationClaims.Count() < 1)
+            {
+                return true;
+            }
 
             //Getting the required claims for the route
             foreach (KeyValuePair<string, string> requiredAuthorizationClaim in requiredAuthorizationClaims)
