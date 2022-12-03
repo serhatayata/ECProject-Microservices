@@ -40,11 +40,11 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         private readonly IRedisCacheManager _redisCacheManager;
         private readonly IDiscountApiService _discountApiService;
         private readonly IProductApiService _productApiService;
-        private readonly IElasticSearchService _elasticSearchService;
+        private readonly IElasticSearchLogService _elasticSearchService;
         private readonly RabbitMqQueues _rabbitMqQueues;
         private readonly IPublishEndpoint _publishEndpoint;
 
-        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper ,IDiscountApiService discountApiService,IProductApiService productApiService,IPublishEndpoint publishEndpoint, IElasticSearchService elasticSearchService, IOptions<RabbitMqQueues> rabbitmqQueues)
+        public PaymentManager(IEfPaymentRepository efRepository, IDapperPaymentRepository dapperRepository,IRedisCacheManager redisCacheManager, IMapper mapper ,IDiscountApiService discountApiService,IProductApiService productApiService,IPublishEndpoint publishEndpoint, IElasticSearchLogService elasticSearchService, IOptions<RabbitMqQueues> rabbitmqQueues)
         {
             _efRepository = efRepository;
             _dapperRepository = dapperRepository;

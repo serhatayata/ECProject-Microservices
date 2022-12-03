@@ -16,11 +16,11 @@ namespace Core.Utilities.Interceptors
                 type.GetCustomAttributes<MethodInterceptionBaseAttribute>(true).ToList();
 
             //Dışlanacak Methodlar. Bu method isimleri çakışmaya sebep olabiliyor.
-            string[] methodsToExclude = { "Validate", "Info", "Debug", "Warning", "Warn", "Error", "Fatal", "Localize", "GetStringResource", "GetResourceValue" };
+            string[] methodsToExclude = { "Validate", "Info", "Debug", "Warning", "Warn", "Error", "Fatal", "Localize" };
 
             if (!methodsToExclude.Contains(method.Name))
             {
-                try//Api tarafında çağırılan bazı methodlar hataya sebep olduğu için try-catch bloğu içine aldım.
+                try
                 {
                     var methodAttributes =
                         type.GetMethod(method.Name).GetCustomAttributes<MethodInterceptionBaseAttribute>(true);
@@ -32,6 +32,8 @@ namespace Core.Utilities.Interceptors
                     // ignored 
                 }
             }
+
+            //classAttributes.Add(new ExceptionLogAspect((byte)EnumRisk.Medium));
 
             return classAttributes.OrderBy(x => x.Priority).ToArray();
         }

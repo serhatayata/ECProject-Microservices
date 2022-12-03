@@ -1,4 +1,7 @@
-﻿using Core.Dtos;
+﻿using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Logging;
+using Core.Aspects.Autofac.Transaction;
+using Core.Dtos;
 using Core.Utilities.Attributes;
 using EC.Services.ProductAPI.Dtos.ProductDtos;
 using EC.Services.ProductAPI.Repositories.Abstract;
@@ -72,7 +75,7 @@ namespace EC.Services.ProductAPI.Controllers
         #region GetAllPagingAsync
         [HttpGet]
         [Route("getall-paging")]
-        [AuthorizeAnyPolicy("ReadProduct,FullProduct")]
+        //[AuthorizeAnyPolicy("ReadProduct,FullProduct")]
         public async Task<IActionResult> GetAllPagingAsync([FromQuery]PagingDto model)
         {
             var result = await _productRepository.GetAllPagingAsync(model.Page,model.PageSize);

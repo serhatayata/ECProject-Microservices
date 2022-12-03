@@ -24,7 +24,7 @@ namespace EC.Services.DiscountAPI.DependencyResolvers.Autofac
             builder.RegisterType<DiscountRepository>().As<IDiscountRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CampaignRepository>().As<ICampaignRepository>().InstancePerLifetimeScope();
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerLifetimeScope();
-            builder.RegisterType<ElasticSearchManager>().As<IElasticSearchService>().InstancePerLifetimeScope();
+            builder.RegisterType<ElasticSearchLogManager>().As<IElasticSearchLogService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductDeletedEventConsumer>().InstancePerLifetimeScope();
 
             #endregion

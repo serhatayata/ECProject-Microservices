@@ -17,28 +17,22 @@ namespace Core.Aspects.Autofac.Logging
     public class ElasticSearchLogAspect : MethodInterception
     {
         private static byte _risk;
-        private readonly IElasticSearchService _client;
+        private readonly IElasticSearchLogService _client;
 
         public ElasticSearchLogAspect(byte risk)
         {
             _risk = risk;
-            _client = ServiceTool.ServiceProvider.GetService<IElasticSearchService>();
+            _client = ServiceTool.ServiceProvider.GetService<IElasticSearchLogService>();
         }
 
         public override void Intercept(IInvocation invocation)
         {
-            //var methodName = string.Format($"{invocation.Method.ReflectedType.FullName}.{invocation.Method.Name}");
-            //var arguments = invocation.Arguments.ToList();
-            //var key = KeyGenerator.GetCacheKey(invocation.Method, invocation.Arguments, "FoodThen");
-
             var logParameters = new List<LogParameter>();
             for (var i = 0; i < invocation.Arguments.Length; i++)
             {
                 logParameters.Add(new LogParameter
                 {
                     Name = invocation.GetConcreteMethod().GetParameters()[i].Name
-                    //Value = invocation.Arguments[i],
-                    //Type = invocation.Arguments[i]?.GetType().Name
                 });
             }
 
@@ -50,7 +44,10 @@ namespace Core.Aspects.Autofac.Logging
                 LoggingTime = DateTime.Now.ToString()
             };
 
-            _client.AddAsync(logDetail).GetAwaiter().GetResult();
+            Task.Run(() =>
+            {
+                _client.AddAsync(logDetail);
+            });
             invocation.Proceed();
         }
     }

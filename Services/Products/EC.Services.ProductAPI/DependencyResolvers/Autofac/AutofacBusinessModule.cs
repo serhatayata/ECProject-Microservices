@@ -24,7 +24,7 @@ namespace EC.Services.ProductAPI.DependencyResolvers.Autofac
             builder.RegisterType<ProductVariantRepository>().As<IProductVariantRepository>().InstancePerLifetimeScope();
             builder.RegisterType<VariantRepository>().As<IVariantRepository>().InstancePerLifetimeScope();
             builder.RegisterType<StockRepository>().As<IStockRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<ElasticSearchManager>().As<IElasticSearchService>().InstancePerLifetimeScope();
+            builder.RegisterType<ElasticSearchLogManager>().As<IElasticSearchLogService>().InstancePerLifetimeScope();
 
             #endregion
             #region DbContext
@@ -38,9 +38,6 @@ namespace EC.Services.ProductAPI.DependencyResolvers.Autofac
                   {
                       Selector = new AspectInterceptorSelector()
                   }).SingleInstance();
-
-            //AddTransient
-            //builder.RegisterType<EfCategoryDal>().As<ICategoryDal>().InstancePerDependency();
         }
     }
 }

@@ -26,7 +26,7 @@ namespace EC.Services.PaymentAPI.DependencyResolvers.Autofac
             //builder.RegisterType<CategoryManager>().As<ICategoryService>().InstancePerLifetimeScope();
             builder.RegisterType<PaymentManager>().As<IPaymentService>().InstancePerLifetimeScope();
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerLifetimeScope();
-            builder.RegisterType<ElasticSearchManager>().As<IElasticSearchService>().InstancePerLifetimeScope();
+            builder.RegisterType<ElasticSearchLogManager>().As<IElasticSearchLogService>().InstancePerLifetimeScope();
             builder.RegisterType<SharedIdentityService>().As<ISharedIdentityService>().InstancePerLifetimeScope();
             builder.RegisterType<TokenDiscountInterceptorHandler>().InstancePerLifetimeScope();
             builder.RegisterType<TokenProductInterceptorHandler>().InstancePerLifetimeScope();
