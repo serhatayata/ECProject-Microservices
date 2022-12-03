@@ -3,33 +3,37 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using Core.CrossCuttingConcerns.Logging;
+using Core.CrossCuttingConcerns.Logging.ElasticSearch;
 using Core.CrossCuttingConcerns.Logging.Log4Net;
+using Core.Entities;
 using Core.Utilities.Interceptors;
+using Core.Utilities.IoC;
 using Core.Utilities.Messages;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Aspects.Autofac.Exception
 {
     public class ExceptionLogAspect : MethodInterception
     {
-        private readonly LoggerServiceBase _loggerServiceBase;
         private static byte _risk;
+        private readonly IElasticSearchLogService _client;
 
-        public ExceptionLogAspect(Type loggerService, byte risk)
+        public ExceptionLogAspect(byte risk)
         {
-            if (loggerService.BaseType != typeof(LoggerServiceBase))
-            {
-                throw new System.Exception(AspectMessages.WrongLoggerType);
-            }
-
-            _loggerServiceBase = (LoggerServiceBase)Activator.CreateInstance(loggerService);
             _risk = risk;
+            _client = ServiceTool.ServiceProvider.GetService<IElasticSearchLogService>();
         }
 
         protected override void OnException(IInvocation invocation, System.Exception e)
         {
             var logDetailWithException = GetLogDetail(invocation);
             logDetailWithException.ExceptionMessage = e.Message;
-            _loggerServiceBase.Error(logDetailWithException);
+
+            Task.Run(() =>
+            {
+                _client.AddAsync(logDetailWithException);
+            });
+            invocation.Proceed();
         }
         private static LogDetailWithException GetLogDetail(IInvocation invocation)
         {

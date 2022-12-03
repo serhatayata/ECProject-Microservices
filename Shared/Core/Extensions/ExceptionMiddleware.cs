@@ -16,10 +16,10 @@ namespace Core.Extensions
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private IElasticSearchService _client;
+        private IElasticSearchLogService _client;
         private readonly IConfiguration _configuration;
 
-        public ExceptionMiddleware(RequestDelegate next, IConfiguration configuration, IElasticSearchService client)
+        public ExceptionMiddleware(RequestDelegate next, IConfiguration configuration, IElasticSearchLogService client)
         {
             _next = next;
             _client = client;
@@ -69,7 +69,7 @@ namespace Core.Extensions
 
             var logDetail = new LogDetail
             {
-                MethodName = "Exception",
+                MethodName = e.TargetSite.DeclaringType.FullName,
                 Explanation=message.ToString(),
                 LogParameters = null,
                 Risk = 1,
@@ -77,13 +77,6 @@ namespace Core.Extensions
             };
 
             await _client.AddAsync(logDetail);
-
-            //return httpContext.Response.WriteAsJsonAsync(new ErrorDetails
-            //{
-            //    StatusCode = httpContext.Response.StatusCode,
-            //    Message = message,
-            //    Success = false
-            //});
         }
     }
 }

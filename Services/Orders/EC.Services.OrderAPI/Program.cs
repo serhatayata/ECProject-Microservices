@@ -42,7 +42,7 @@ builder.Services.AddMassTransitSettings(configuration);
 builder.Services.AddAuth(configuration);
 #endregion
 #region ELASTICSEARCH
-builder.Services.AddSingleton<IElasticSearchService, ElasticSearchManager>();
+builder.Services.AddSingleton<IElasticSearchLogService, ElasticSearchLogManager>();
 builder.Services.AddSingleton<IElasticSearchConfigration, ElasticSearchConfigration>();
 builder.Host.UseSerilog();
 ElasticSearchExtensions.AddElasticSearch(builder.Services, configuration);

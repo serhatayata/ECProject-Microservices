@@ -24,7 +24,7 @@ namespace EC.Services.CategoryAPI.DependencyResolvers.Autofac
             #region Services - AddScoped
             builder.RegisterType<CategoryManager>().As<ICategoryService>().InstancePerLifetimeScope();
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerLifetimeScope();
-            builder.RegisterType<ElasticSearchManager>().As<IElasticSearchService>().InstancePerLifetimeScope();
+            builder.RegisterType<ElasticSearchLogManager>().As<IElasticSearchLogService>().InstancePerLifetimeScope();
             builder.RegisterType<SharedIdentityService>().As<ISharedIdentityService>().InstancePerLifetimeScope();
             #endregion
             #region DataAccess - AddTransient

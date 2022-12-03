@@ -42,8 +42,8 @@ builder.Services.AddControllerSettings();
 #region REDIS
 builder.Services.AddScoped<IRedisCacheManager, RedisCacheManager>();
 #endregion
-#region ElasticSearch
-builder.Services.AddSingleton<IElasticSearchService, ElasticSearchManager>();
+#region ELASTIC SEARCH
+builder.Services.AddSingleton<IElasticSearchLogService, ElasticSearchLogManager>();
 builder.Services.AddSingleton<IElasticSearchConfigration, ElasticSearchConfigration>();
 builder.Host.UseSerilog();
 ElasticSearchExtensions.AddElasticSearch(builder.Services, Configuration);
@@ -77,6 +77,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+#region EXCEPTION
+app.ConfigureCustomExceptionMiddleware();
+#endregion
 #region CORS
 app.UseCors("product_cors");
 #endregion

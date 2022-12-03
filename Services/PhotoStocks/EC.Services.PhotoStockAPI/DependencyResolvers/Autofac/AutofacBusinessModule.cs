@@ -23,7 +23,7 @@ namespace EC.Services.PhotoStockAPI.DependencyResolvers.Autofac
             #region Services - AddScoped
             builder.RegisterType<PhotoManager>().As<IPhotoService>().InstancePerLifetimeScope();
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerLifetimeScope();
-            builder.RegisterType<ElasticSearchManager>().As<IElasticSearchService>().InstancePerLifetimeScope();
+            builder.RegisterType<ElasticSearchLogManager>().As<IElasticSearchLogService>().InstancePerLifetimeScope();
             #endregion
             #region DataAccess - AddTransient
             builder.RegisterType<DapperPhotoRepository>().As<IDapperPhotoRepository>().InstancePerDependency();

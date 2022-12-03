@@ -135,7 +135,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetAllAsync
-        [RedisCacheAspect<DataResult<List<ProductDto>>>(duration: 60)]
+        [RedisCacheAspect<DataResult<List<ProductDto>>>(duration: 60,Priority =2)]
         public async Task<DataResult<List<ProductDto>>> GetAllAsync()
         {
             var query = await _context.Products.FindAsync(p => p.Status);
@@ -152,6 +152,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         [RedisCacheAspect<DataResult<List<ProductDto>>>(duration: 60)]
         public async Task<DataResult<List<ProductDto>>> GetAllPagingAsync(int page=1,int pageSize=8)
         {
+            throw new Exception("test deneme error");
             var result = _context.ProductsAsQueryable.Where(x => x.Status).OrderByDescending(x => x.Id).Skip((page - 1) * pageSize).Take(pageSize);
             if (result != null)
             {

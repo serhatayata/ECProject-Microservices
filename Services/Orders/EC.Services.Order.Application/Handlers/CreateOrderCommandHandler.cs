@@ -17,9 +17,9 @@ namespace EC.Services.Order.Application.Handlers
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, DataResult<CreatedOrderDto>>
     {
         private readonly OrderDbContext _context;
-        private readonly IElasticSearchService _elasticSearchService;
+        private readonly IElasticSearchLogService _elasticSearchService;
 
-        public CreateOrderCommandHandler(OrderDbContext context, IElasticSearchService elasticSearchService)
+        public CreateOrderCommandHandler(OrderDbContext context, IElasticSearchLogService elasticSearchService)
         {
             _context = context;
             _elasticSearchService = elasticSearchService;

@@ -40,7 +40,7 @@ builder.Services.AddControllerSettings();
 builder.Services.AddScoped<IRedisCacheManager, RedisCacheManager>();
 #endregion
 #region ELASTICSEARCH
-builder.Services.AddSingleton<IElasticSearchService, ElasticSearchManager>();
+builder.Services.AddSingleton<IElasticSearchLogService, ElasticSearchLogManager>();
 builder.Services.AddSingleton<IElasticSearchConfigration, ElasticSearchConfigration>();
 builder.Host.UseSerilog();
 ElasticSearchExtensions.AddElasticSearch(builder.Services, configuration);

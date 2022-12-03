@@ -67,7 +67,7 @@ builder.Services.AddAuth(configuration);
 builder.Services.AddSeedData(configuration);
 #endregion
 #region ElasticSearch
-builder.Services.AddSingleton<IElasticSearchService, ElasticSearchManager>();
+builder.Services.AddSingleton<IElasticSearchLogService, ElasticSearchLogManager>();
 builder.Services.AddSingleton<IElasticSearchConfigration, ElasticSearchConfigration>();
 builder.Host.UseSerilog();
 ElasticSearchExtensions.AddElasticSearch(builder.Services,configuration);
