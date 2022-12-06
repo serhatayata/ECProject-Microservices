@@ -15,8 +15,8 @@ namespace Core.CrossCuttingConcerns.Logging.ElasticSearch
     public class ElasticSearchLogManager:IElasticSearchLogService
     {
         public IElasticClient client { get; set; }
-        private readonly IElasticSearchConfigration _elasticSearchConfigration;
-        public ElasticSearchLogManager(IElasticSearchConfigration elasticSearchConfigration)
+        private readonly IElasticSearchConfiguration _elasticSearchConfigration;
+        public ElasticSearchLogManager(IElasticSearchConfiguration elasticSearchConfigration)
         {
             _elasticSearchConfigration = elasticSearchConfigration;
             client = GetClient();

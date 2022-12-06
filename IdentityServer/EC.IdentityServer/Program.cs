@@ -80,7 +80,7 @@ await ConfigurationDbContextSeed.AddIdentityConfigurationSettingsAsync(Configura
 //builder.Services.AddLogging();
 #endregion
 
-builder.Services.AddControllers();
+builder.Services.AddControllerSettings();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #endregion
