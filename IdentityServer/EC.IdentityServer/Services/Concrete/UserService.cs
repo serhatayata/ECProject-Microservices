@@ -4,7 +4,6 @@ using Core.Extensions;
 using Core.Utilities.Results;
 using EC.IdentityServer.Constants;
 using EC.IdentityServer.Dtos;
-using EC.IdentityServer.Models.Email;
 using EC.IdentityServer.Models.Identity;
 using EC.IdentityServer.Services.Abstract;
 using Microsoft.AspNetCore.Identity;
@@ -67,15 +66,15 @@ namespace EC.IdentityServer.Services.Concrete
             Random rnd = new();
             int randomNumber = rnd.Next(100000, 999999);
 
-            var message = new SmtpMessage(
-                new List<string>() { user.Email },
-                "Account Activation",
-                randomNumber.ToString()
-                );
+            //var message = new SmtpMessage(
+            //    new List<string>() { user.Email },
+            //    "Account Activation",
+            //    randomNumber.ToString()
+            //    );
 
             await _redisCacheManager.SetAsync($"activation_{userId}", randomNumber.ToString(),StaticValues.sendActivationCodeExpirationTime);
 
-            _emailSender.SendSmtpEmail(message);
+            //_emailSender.SendSmtpEmail(message);
 
             return new SuccessResult();
         }

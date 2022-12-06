@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Core.Entities.ElasticSearch.Concrete
 {
-    public class ElasticSearchConfigration : IElasticSearchConfigration
+    public class ElasticSearchConfigration : IElasticSearchConfiguration
     {
         public IConfiguration Configuration { get; }
         public ElasticSearchConfigration(IConfiguration configuration)

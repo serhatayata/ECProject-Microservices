@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Entities.ElasticSearch.Abstract
 {
-    public interface IElasticSearchConfigration
+    public interface IElasticSearchConfiguration
     {
         string ConnectionString { get; }
         string AuthUserName { get; }

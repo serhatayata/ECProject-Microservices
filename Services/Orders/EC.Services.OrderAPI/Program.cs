@@ -43,7 +43,7 @@ builder.Services.AddAuth(configuration);
 #endregion
 #region ELASTICSEARCH
 builder.Services.AddSingleton<IElasticSearchLogService, ElasticSearchLogManager>();
-builder.Services.AddSingleton<IElasticSearchConfigration, ElasticSearchConfigration>();
+builder.Services.AddSingleton<IElasticSearchConfiguration, ElasticSearchConfigration>();
 builder.Host.UseSerilog();
 ElasticSearchExtensions.AddElasticSearch(builder.Services, configuration);
 ElasticSearchExtensions.AddELKLogSettings(builder.Services);
