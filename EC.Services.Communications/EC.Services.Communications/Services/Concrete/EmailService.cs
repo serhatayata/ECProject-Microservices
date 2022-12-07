@@ -22,6 +22,7 @@ namespace EC.Services.Communications.Services.Concrete
             _elasticSearchLogService = elasticSearchLogService;
         }
 
+        #region SendSmtpEmail
         public async ValueTask<bool> SendSmtpEmail(EmailData emailData)
         {
             var method = MethodBase.GetCurrentMethod();
@@ -54,5 +55,52 @@ namespace EC.Services.Communications.Services.Concrete
                 return false;
             }
         }
+        #endregion
+        #region SendSmtpEmailWithAttachment
+        public async ValueTask<bool> SendSmtpEmailWithAttachment(EmailDataWithAttachment emailData)
+        {
+            try
+            {
+                MimeMessage emailMessage = new MimeMessage();
+                MailboxAddress emailFrom = new MailboxAddress(_emailSettings.Name, _emailSettings.EmailId);
+                emailMessage.From.Add(emailFrom);
+                MailboxAddress emailTo = new MailboxAddress(emailData.EmailToName, emailData.EmailToId);
+                emailMessage.To.Add(emailTo);
+                emailMessage.Subject = emailData.EmailSubject;
+                BodyBuilder emailBodyBuilder = new BodyBuilder();
+                if (emailData.EmailAttachments != null)
+                {
+                    byte[] attachmentFileByteArray;
+                    foreach (IFormFile attachmentFile in emailData.EmailAttachments)
+                    {
+                        if (attachmentFile.Length > 0)
+                        {
+                            using (MemoryStream memoryStream = new MemoryStream())
+                            {
+                                attachmentFile.CopyTo(memoryStream);
+                                attachmentFileByteArray = memoryStream.ToArray();
+                            }
+                            emailBodyBuilder.Attachments.Add(attachmentFile.FileName, attachmentFileByteArray, ContentType.Parse(attachmentFile.ContentType));
+                        }
+                    }
+                }
+                emailBodyBuilder.TextBody = emailData.EmailBody;
+                emailMessage.Body = emailBodyBuilder.ToMessageBody();
+                SmtpClient emailClient = new SmtpClient();
+                emailClient.Connect(_emailSettings.Host, _emailSettings.Port, _emailSettings.UseSSL);
+                emailClient.Authenticate(_emailSettings.EmailId, _emailSettings.Password);
+                emailClient.Send(emailMessage);
+                emailClient.Disconnect(true);
+                emailClient.Dispose();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                //Log Exception Details
+                return false;
+            }
+        }
+        #endregion
+
     }
 }

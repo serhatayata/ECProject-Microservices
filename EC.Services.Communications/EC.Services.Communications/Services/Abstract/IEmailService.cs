@@ -4,6 +4,7 @@ namespace EC.Services.Communications.Services.Abstract
 {
     public interface IEmailService
     {
-        ValueTask<bool> SendSmtpEmail(EmailData message);
+        ValueTask<bool> SendSmtpEmail(EmailData emailData);
+        ValueTask<bool> SendSmtpEmailWithAttachment(EmailDataWithAttachment emailData);
     }
 }

@@ -8,6 +8,7 @@ Payment -> 6006, IIS ApplicationUrl -> 13006
 Product -> 6007, IIS ApplicationUrl -> 13007
 PhotoStock -> 6008, IIS ApplicationUrl -> 13008
 LangResources -> 6009, IIS ApplicationUrl -> 13009
+Communications -> 6010, IIS ApplicationUrl -> 13010
 
 MVC Client -> 6101
 SPA Client -> 6102
