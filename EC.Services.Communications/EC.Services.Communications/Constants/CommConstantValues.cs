@@ -3,5 +3,11 @@
     public static class CommConstantValues
     {
         public static string Email = "Email";
+        public static string EmailTo = "Email to";
+        public static string EmailToName = "Name";
+        public static string EmailFrom = "Email from";
+        public static string EmailSubject = "Subject";
+        public static string EmailBody= "Body";
+        public static string EmailAttachment = "Attachment";
     }
 }

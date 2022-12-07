@@ -17,9 +17,16 @@ namespace EC.Services.Communications.Controllers
 
         [HttpPost]
         [Route("send-smtp-email")]
-        public async Task<bool> SendSmtpEmail(EmailData emailData)
+        public async Task<bool> SendSmtpEmail([FromBody]EmailData emailData)
         {
             return await _emailService.SendSmtpEmail(emailData);
+        }
+
+        [HttpPost]
+        [Route("send-smtp-email-with-attachment")]
+        public async Task<bool> SendSmtpEmailWithAttachment([FromForm]EmailDataWithAttachment emailData)
+        {
+            return await _emailService.SendSmtpEmailWithAttachment(emailData);
         }
     }
 }
