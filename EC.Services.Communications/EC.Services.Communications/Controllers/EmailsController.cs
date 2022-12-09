@@ -1,4 +1,5 @@
-﻿using EC.Services.Communications.Models;
+﻿using Core.Entities;
+using EC.Services.Communications.Models;
 using EC.Services.Communications.Services.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -31,7 +31,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
 
         #region CreateAsync
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IProductVariantRepository", Priority = (int)CacheItemPriority.High)]
+        [CacheRemoveAspect("IProductVariantRepository")]
         public async Task<IResult> CreateAsync(ProductVariantDto entity)
         {
             #region Product and Variant check
@@ -68,7 +68,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         #endregion
         #region UpdateAsync
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IProductVariantRepository", Priority = (int)CacheItemPriority.High)]
+        [CacheRemoveAspect("IProductVariantRepository")]
         public async Task<IResult> UpdateAsync(ProductVariantDto entity)
         {
             var prodVarExistsGet = await _context.ProductVariants.FindAsync(x => x.ProductId == entity.ProductId && x.VariantId == entity.VariantId);
@@ -89,7 +89,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         #endregion
         #region DeleteAsync
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IProductVariantRepository", Priority = (int)CacheItemPriority.High)]
+        [CacheRemoveAspect("IProductVariantRepository")]
         public async Task<IResult> DeleteAsync(string productId)
         {
             var filter = Builders<ProductVariant>.Filter.Eq(m => m.ProductId, productId);
@@ -103,7 +103,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         #endregion
         #region DeleteByProductAndVariantId
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IProductVariantRepository", Priority = (int)CacheItemPriority.High)]
+        [CacheRemoveAspect("IProductVariantRepository")]
         public async Task<IResult> DeleteByProductAndVariantId(string productId, string variantId)
         {
             var filter = Builders<ProductVariant>.Filter.Eq(m => m.ProductId, productId) & Builders<ProductVariant>.Filter.Eq(x=>x.VariantId,variantId);
@@ -142,7 +142,7 @@ namespace EC.Services.ProductAPI.Repositories.Concrete
         }
         #endregion
         #region GetAllAsync
-        [RedisCacheAspect<DataResult<List<ProductVariantDto>>>(duration: 60)]
+        [CacheAspect(duration: 60)]
         public async Task<DataResult<List<ProductVariantDto>>> GetAllAsync()
         {
             var query = await _context.ProductVariants.FindAsync(p => true);

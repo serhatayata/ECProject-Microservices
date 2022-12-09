@@ -42,19 +42,20 @@ namespace EC.IdentityServer.Controllers
         #endregion
         #region SendActivationCodeAsync
         [HttpPost]
-        [Route("send-activation-code")]
+        [Route("verify-activation-code-register")]
         [Authorize(LocalApi.PolicyName)]
-        public async Task<IActionResult> SendActivationCodeAsync()
+        public async Task<IActionResult> VerifyActivationCodeRegisterAsync()
         {
-            string token = Request.Headers[HeaderNames.Authorization];
-            var userId = TokenExtensions.GetTokenTypeValue(token,"sub");
+            //string token = Request.Headers[HeaderNames.Authorization];
+            //var userId = TokenExtensions.GetTokenTypeValue(token,"sub");
 
-            if (userId == null)
-            {
-                return StatusCode(StatusCodes.Status400BadRequest,new ErrorResult(MessageExtensions.NotFound(PropertyNames.User)));
-            }
-            var result = await _userService.ActivateAccountSendSms(userId);
-            return StatusCode(result.StatusCode, result);
+            //if (userId == null)
+            //{
+            //    return StatusCode(StatusCodes.Status400BadRequest,new ErrorResult(MessageExtensions.NotFound(PropertyNames.User)));
+            //}
+            //var result = await _userService.ActivateAccountSendSms(userId);
+            //return StatusCode(result.StatusCode, result);
+            return Ok();
         }
         #endregion
 

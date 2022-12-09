@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Core.Entities;
 using EC.IdentityServer.Data.DbContext;
 using EC.IdentityServer.Data.SeedData;
 using EC.IdentityServer.DependencyResolvers.Autofac;
@@ -79,6 +80,8 @@ await ConfigurationDbContextSeed.AddIdentityConfigurationSettingsAsync(Configura
 #region LOGGING
 //builder.Services.AddLogging();
 #endregion
+
+builder.Services.Configure<SourceOriginSettings>(Configuration.GetSection(nameof(SourceOriginSettings)));
 
 builder.Services.AddControllerSettings();
 builder.Services.AddEndpointsApiExplorer();

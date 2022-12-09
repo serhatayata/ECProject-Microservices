@@ -370,7 +370,7 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         #region AddAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IPaymentService", Priority = (int)CacheItemPriority.High)]
+        [CacheRemoveAspect("IPaymentService")]
         public async Task<IResult> AddAsync(PaymentAddDto payment)
         {
             var model = _mapper.Map<Payment>(payment);
@@ -386,7 +386,7 @@ namespace EC.Services.PaymentAPI.Services.Concrete
         #region DeleteAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("IPaymentService", Priority = (int)CacheItemPriority.High)]
+        [CacheRemoveAspect("IPaymentService")]
         public async Task<IResult> DeleteAsync(DeleteIntDto model)
         {
             var paymentExists = await _efRepository.GetAsync(x => x.Id == model.Id);

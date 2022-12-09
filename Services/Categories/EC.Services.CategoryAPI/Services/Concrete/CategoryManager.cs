@@ -33,7 +33,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         #region AddAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("ICategoryService", Priority = (int)CacheItemPriority.High)]
+        [CacheRemoveAspect("ICategoryService")]
         public async Task<IResult> AddAsync(CategoryAddDto categoryModel)
         {
             var newCategory = _mapper.Map<Category>(categoryModel);
@@ -90,7 +90,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         #region UpdateAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("ICategoryService", Priority = (int)CacheItemPriority.High)]
+        [CacheRemoveAspect("ICategoryService")]
         public async Task<IResult> UpdateAsync(CategoryUpdateDto model)
         {
             var categoryExists = await _categoryRepository.GetByIdAsync(model.Id);
@@ -125,7 +125,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         #region DeleteAsync
         [ElasticSearchLogAspect(risk: 1, Priority = 1)]
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
-        [RedisCacheRemoveAspect("ICategoryService", Priority = (int)CacheItemPriority.High)]
+        [CacheRemoveAspect("ICategoryService")]
         public async Task<IResult> DeleteAsync(CategoryDeleteDto model)
         {
             var categoryExists = await _categoryRepository.GetByIdAsync(model.Id);
@@ -153,7 +153,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         }
         #endregion
         #region GetAllAsync
-        [RedisCacheAspect<DataResult<List<CategoryDto>>>(duration: 60)]
+        [CacheAspect(duration: 60)]
         public async Task<DataResult<List<CategoryDto>>> GetAllAsync()
         {
             var categories = await _categoryRepository.GetAllAsync();
@@ -170,7 +170,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         }
         #endregion
         #region GetAllPagingAsync
-        [RedisCacheAspect<DataResult<List<CategoryDto>>>(duration: 60)]
+        [CacheAspect(duration: 60)]
         public async Task<DataResult<List<CategoryDto>>> GetAllPagingAsync(int page = 1, int pageSize = 8)
         {
             var categories = await _categoryRepository.GetAllPagingAsync(page,pageSize);
@@ -187,7 +187,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         }
         #endregion
         #region GetAllSubCategoriesByIdAsync
-        [RedisCacheAspect<DataResult<List<CategoryDto>>>(duration: 60)]
+        [CacheAspect(duration: 60)]
         public async Task<DataResult<List<CategoryDto>>> GetAllSubCategoriesByIdAsync(int id)
         {
             var categories = await _categoryRepository.GetAllSubCategoriesByIdAsync(id);
@@ -204,7 +204,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         }
         #endregion
         #region GetAllSubCategoriesByIdPagingAsync
-        [RedisCacheAspect<DataResult<List<CategoryDto>>>(duration: 60)]
+        [CacheAspect(duration: 60)]
         public async Task<DataResult<List<CategoryDto>>> GetAllSubCategoriesByIdPagingAsync(int id, int page = 1, int pageSize = 8)
         {
             var categories = await _categoryRepository.GetAllSubCategoriesByIdPagingAsync(id,page, pageSize);
@@ -245,7 +245,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         }
         #endregion
         #region GetByNameAsync
-        [RedisCacheAspect<DataResult<List<CategoryDto>>>(duration: 60)]
+        [CacheAspect(duration: 60)]
         public async Task<DataResult<List<CategoryDto>>> GetByNameAsync(string name)
         {
             var categories = await _categoryRepository.GetByNameAsync(name);
@@ -262,7 +262,7 @@ namespace EC.Services.CategoryAPI.Services.Concrete
         }
         #endregion
         #region GetByNamePagingAsync
-        [RedisCacheAspect<DataResult<List<CategoryDto>>>(duration: 60)]
+        [CacheAspect(duration: 60)]
         public async Task<DataResult<List<CategoryDto>>> GetByNamePagingAsync(string name, int page = 1, int pageSize = 8)
         {
             var categories = await _categoryRepository.GetByNamePagingAsync(name,page, pageSize);

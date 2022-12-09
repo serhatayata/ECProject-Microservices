@@ -1,4 +1,5 @@
 ﻿using EC.Services.Communications.Models;
+using Core.Entities;
 
 namespace EC.Services.Communications.Services.Abstract
 {
