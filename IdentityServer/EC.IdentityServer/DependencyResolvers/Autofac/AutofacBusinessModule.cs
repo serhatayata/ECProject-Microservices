@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Core.CrossCuttingConcerns.Caching.Redis;
+using Core.CrossCuttingConcerns.Communication.MessageQueue.Abstract;
+using Core.CrossCuttingConcerns.Communication.MessageQueue.Concrete;
 using EC.IdentityServer.ApiServices.Abstract;
 using EC.IdentityServer.ApiServices.Concrete;
 using EC.IdentityServer.Services.Abstract;
@@ -16,6 +18,7 @@ namespace EC.IdentityServer.DependencyResolvers.Autofac
             builder.RegisterType<AuthManager>().As<IAuthService>().InstancePerLifetimeScope();
             builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerDependency();
+            builder.RegisterType<RabbitMQService>().As<IRabbitMQService>().InstancePerDependency();
 
 
         }

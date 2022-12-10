@@ -11,6 +11,7 @@ using EC.IdentityServer.Mappings;
 using EC.IdentityServer.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
@@ -21,6 +22,9 @@ var identityConnString = Configuration.GetConnectionString("IdentityConnection")
 
 #region Services
 
+#region CORS
+builder.Services.AddCorsSettings(Configuration,Environment);
+#endregion
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
@@ -80,8 +84,18 @@ await ConfigurationDbContextSeed.AddIdentityConfigurationSettingsAsync(Configura
 #region LOGGING
 //builder.Services.AddLogging();
 #endregion
+#region SOURCE ORIGIN
+SourceOrigin sourceOrigin = new();
+if (Environment.IsDevelopment())
+    sourceOrigin = Configuration.GetSection("SourceOriginSettings").Get<SourceOriginSettings>().Development;
+else
+    sourceOrigin = Configuration.GetSection("SourceOriginSettings").Get<SourceOriginSettings>().Product;
 
-builder.Services.Configure<SourceOriginSettings>(Configuration.GetSection(nameof(SourceOriginSettings)));
+builder.Services.AddSingleton<SourceOrigin>(s => sourceOrigin);
+#endregion
+#region SETTINGS
+builder.Services.AddSettings(Configuration);
+#endregion
 
 builder.Services.AddControllerSettings();
 builder.Services.AddEndpointsApiExplorer();
@@ -96,6 +110,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("identity_cors");
 
 app.UseStaticFiles();
 app.UseHttpsRedirection();

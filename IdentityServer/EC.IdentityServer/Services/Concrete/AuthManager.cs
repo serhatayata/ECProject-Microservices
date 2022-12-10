@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Core.Aspects.Autofac.Transaction;
+using Core.CrossCuttingConcerns.Caching.Redis;
+using Core.Entities;
 using Core.Extensions;
 using Core.Utilities.Messages;
 using Core.Utilities.Results;
@@ -21,14 +23,18 @@ namespace EC.IdentityServer.Services.Concrete
         private readonly RoleManager<AppRole> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ICommunicationApiService _commApiService;
+        private readonly IRedisCacheManager _redisCacheManager;
+        private readonly SourceOrigin _sourceOrigin;
         private readonly IMapper _mapper;
 
-        public AuthManager(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager, ICommunicationApiService commApiService, IMapper mapper)
+        public AuthManager(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager, ICommunicationApiService commApiService, IRedisCacheManager redisCacheManager, SourceOrigin sourceOrigin, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _commApiService = commApiService;
+            _redisCacheManager = redisCacheManager;
+            _sourceOrigin = sourceOrigin;
             _mapper = mapper;
         }
 
@@ -47,20 +53,29 @@ namespace EC.IdentityServer.Services.Concrete
             {
                 return new ErrorResult(MessageExtensions.AlreadyExists(PropertyNames.Email));
             }
-            
-            //Send communication api service activation code, before that send it to redis cache.......
 
+            var userAdded = _mapper.Map<AppUser>(model);
+            userAdded.UserName = model.PhoneNumber;
+            userAdded.Status = (byte)UserStatus.NotValidated;
+            var result = await _userManager.CreateAsync(userAdded, model.Password);
+            if (result.Succeeded)
+            {
+                string userRole = "User.Normal";
+                var roleResult = await _userManager.AddToRoleAsync(userAdded, userRole);
 
-            //var userAdded = _mapper.Map<AppUser>(model);
-            //userAdded.UserName = model.PhoneNumber;
-            //var result = await _userManager.CreateAsync(userAdded, model.Password);
-            //if (result.Succeeded)
-            //{
-            //    string userRole = "User.Normal";
-            //    var roleResult = await _userManager.AddToRoleAsync(userAdded, userRole);
-            //    return new SuccessResult(MessageExtensions.Added(PropertyNames.User));
-            //}
-            //return new ErrorResult(MessageExtensions.NotAdded(PropertyNames.User));
+                string activationCode = RandomExtensions.RandomCode(6);
+                await _redisCacheManager.SetAsync($"auth-register-activation-code-{userAdded.Id}", activationCode);
+                EmailData emailData = new()
+                {
+                    EmailToId = userAdded.Email,
+                    EmailToName = $"ECProject - {userAdded.UserName} - {userAdded.Name} {userAdded.Surname}",
+                    EmailSubject = $"User Activation - {userAdded.UserName}",
+                    EmailBody = $"User Activation Code : {activationCode}"
+                };
+                await _commApiService.SendSmtpEmailAsync(emailData);
+                return new SuccessResult(MessageExtensions.Added(PropertyNames.User));
+            }
+            return new ErrorResult(MessageExtensions.NotAdded(PropertyNames.User));
         }
         #endregion
         //#region ActivateAccount
