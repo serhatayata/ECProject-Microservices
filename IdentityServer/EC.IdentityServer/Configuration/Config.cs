@@ -129,6 +129,21 @@ namespace EC.IdentityServer.Configuration
                 }
             },
 	        #endregion
+            #region Communication
+            new ApiResource("resource_communication")
+            {
+                Scopes=
+                {
+                    "communication_full",
+                    "communication_read",
+                    "communication_write"
+                },
+                ApiSecrets =
+                {
+                    new Secret("communication_secret".Sha256())
+                }
+            },
+	        #endregion
             #region LangResource
             new ApiResource("resource_langresource")
             {
@@ -221,6 +236,11 @@ namespace EC.IdentityServer.Configuration
                 new ApiScope("photostock_full","Full permission for PhotoStock API"),
                 new ApiScope("photostock_read","Read permission for PhotoStock API"),
                 new ApiScope("photostock_write","Write permission for PhotoStock API"),
+	            #endregion
+                #region Communication
+                new ApiScope("communication_full","Full permission for Communication API"),
+                new ApiScope("communication_read","Read permission for Communication API"),
+                new ApiScope("communication_write","Write permission for Communication API"),
 	            #endregion
                 #region Gateway
                 new ApiScope("gateway_full","Full permission for Gateway API"),
@@ -528,7 +548,32 @@ namespace EC.IdentityServer.Configuration
                     AllowedScopes={ "photostock_write", "gateway_full" },
                 },
 	            #endregion
-
+                #region Communication
+                new Client
+                {
+                    ClientName="Communication Full Client",
+                    ClientId="communication_full_client",
+                    ClientSecrets= {new Secret("communication_full_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "communication_full", "gateway_full" },
+                },
+                new Client
+                {
+                    ClientName="Communication Read Client",
+                    ClientId="communication_read_client",
+                    ClientSecrets= {new Secret("communication_read_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "communication_read", "gateway_full" },
+                },
+                new Client
+                {
+                    ClientName="Communication Write Client",
+                    ClientId="communication_write_client",
+                    ClientSecrets= {new Secret("communication_write_secret".Sha256())},
+                    AllowedGrantTypes= GrantTypes.ClientCredentials,
+                    AllowedScopes={ "communication_write", "gateway_full" },
+                },
+	            #endregion
             };
         }
 

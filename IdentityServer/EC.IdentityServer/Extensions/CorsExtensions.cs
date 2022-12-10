@@ -1,6 +1,6 @@
 ﻿using Core.Entities;
 
-namespace EC.Services.ProductAPI.Extensions
+namespace EC.IdentityServer.Extensions
 {
     public static class CorsExtensions
     {
@@ -14,7 +14,7 @@ namespace EC.Services.ProductAPI.Extensions
 
             services.AddCors(options =>
             {
-                options.AddPolicy(name: "product_cors", builder =>
+                options.AddPolicy(name: "identity_cors", builder =>
                 {
                     builder.WithOrigins(
                      sourceOrigin.Discounts,

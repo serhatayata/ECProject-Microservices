@@ -1,6 +1,6 @@
 ﻿using Core.Entities;
 
-namespace EC.Services.ProductAPI.Extensions
+namespace EC.Services.Communications.Extensions
 {
     public static class CorsExtensions
     {
@@ -8,13 +8,17 @@ namespace EC.Services.ProductAPI.Extensions
         {
             SourceOrigin sourceOrigin = new();
             if (env.IsDevelopment())
+            {
                 sourceOrigin = configuration.GetSection("SourceOriginSettings").Get<SourceOriginSettings>().Development;
+            }
             else
+            {
                 sourceOrigin = configuration.GetSection("SourceOriginSettings").Get<SourceOriginSettings>().Product;
+            }
 
             services.AddCors(options =>
             {
-                options.AddPolicy(name: "product_cors", builder =>
+                options.AddPolicy(name: "communication_cors", builder =>
                 {
                     builder.WithOrigins(
                      sourceOrigin.Discounts,
@@ -22,7 +26,9 @@ namespace EC.Services.ProductAPI.Extensions
                      sourceOrigin.Payments,
                      sourceOrigin.Baskets,
                      sourceOrigin.Categories,
-                     sourceOrigin.Gateway
+                     sourceOrigin.Gateway,
+                     sourceOrigin.Products,
+                     sourceOrigin.PhotoStocks
                     )
                     .AllowAnyMethod()
                     .AllowAnyHeader();

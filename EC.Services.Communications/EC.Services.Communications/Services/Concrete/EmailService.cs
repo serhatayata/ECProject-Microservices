@@ -8,6 +8,7 @@ using EC.Services.Communications.Services.Abstract;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Core.Entities;
 using System.Reflection;
 
 namespace EC.Services.Communications.Services.Concrete
