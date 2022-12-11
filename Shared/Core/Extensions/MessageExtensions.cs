@@ -58,6 +58,13 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region Sent
+        public static string Sent(string entity)
+        {
+            var value = $"{entity} successfully sent";
+            return value;
+        }
+        #endregion
         #region NotCorrect
         public static string NotCorrect(string entity)
         {

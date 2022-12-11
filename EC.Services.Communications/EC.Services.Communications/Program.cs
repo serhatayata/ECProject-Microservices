@@ -1,12 +1,20 @@
 using Autofac;
+using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
+using Core.CrossCuttingConcerns.Communication.MessageQueue.Abstract;
 using Core.CrossCuttingConcerns.Logging.ElasticSearch;
+using Core.Entities;
 using Core.Entities.ElasticSearch.Abstract;
 using Core.Entities.ElasticSearch.Concrete;
 using Core.Extensions;
+using EC.Services.Communications.Consumers;
 using EC.Services.Communications.DependencyResolvers.Autofac;
 using EC.Services.Communications.Extensions;
 using EC.Services.Communications.Models.Settings;
+using EC.Services.Communications.Services.Abstract;
+using EC.Services.Communications.Services.Concrete;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +46,9 @@ ElasticSearchExtensions.AddELKLogSettings(builder.Services);
 #endregion
 #region DI
 builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+builder.Services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMqSettings"));
+builder.Services.AddSingleton<IEmailSmtpConsumerService, EmailSmtpConsumerService>();
+builder.Services.AddHostedService<SmtpEmailConsumer>();
 #endregion
 #region AUTH
 builder.Services.AddAuth(configuration);

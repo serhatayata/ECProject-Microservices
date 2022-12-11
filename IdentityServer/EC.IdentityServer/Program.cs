@@ -25,6 +25,9 @@ var identityConnString = Configuration.GetConnectionString("IdentityConnection")
 #region CORS
 builder.Services.AddCorsSettings(Configuration,Environment);
 #endregion
+#region SETTINGS
+builder.Services.AddSettings(Configuration);
+#endregion
 #region AUTOFAC
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
@@ -92,9 +95,6 @@ else
     sourceOrigin = Configuration.GetSection("SourceOriginSettings").Get<SourceOriginSettings>().Product;
 
 builder.Services.AddSingleton<SourceOrigin>(s => sourceOrigin);
-#endregion
-#region SETTINGS
-builder.Services.AddSettings(Configuration);
 #endregion
 
 builder.Services.AddControllerSettings();

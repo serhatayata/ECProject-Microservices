@@ -1,4 +1,5 @@
-﻿using Core.Extensions;
+﻿using Core.Entities;
+using Core.Extensions;
 using EC.Services.Communications.Constants;
 using EC.Services.Communications.Models;
 using FluentValidation;
