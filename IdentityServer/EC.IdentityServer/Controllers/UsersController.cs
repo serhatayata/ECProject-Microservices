@@ -33,7 +33,7 @@ namespace EC.IdentityServer.Controllers
         #region Register
         [HttpPost]
         [Route("register")]
-        [Authorize(LocalApi.PolicyName)] //This is used because a client we don't know will not be able to use this method...
+        //[Authorize(LocalApi.PolicyName)] //This is used because a client we don't know will not be able to use this method...
         public async Task<IActionResult> Register(RegisterDto model)
         {
             var result = await _authService.RegisterAsync(model);

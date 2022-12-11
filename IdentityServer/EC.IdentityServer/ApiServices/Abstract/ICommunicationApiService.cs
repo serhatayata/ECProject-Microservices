@@ -1,5 +1,5 @@
 ﻿using Core.Entities;
-using EC.IdentityServer.Dtos;
+using IResult = Core.Utilities.Results.IResult;
 
 namespace EC.IdentityServer.ApiServices.Abstract
 {

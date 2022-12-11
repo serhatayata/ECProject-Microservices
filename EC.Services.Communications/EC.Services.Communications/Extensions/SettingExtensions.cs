@@ -1,4 +1,5 @@
-﻿using EC.Services.Communications.Models.Settings;
+﻿using Core.Entities;
+using EC.Services.Communications.Models.Settings;
 
 namespace EC.Services.Communications.Extensions
 {
@@ -7,6 +8,7 @@ namespace EC.Services.Communications.Extensions
         public static void AddSettings(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+            services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMqSettings"));
 
         }
     }

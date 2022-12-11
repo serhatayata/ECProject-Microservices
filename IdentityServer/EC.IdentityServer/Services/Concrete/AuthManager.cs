@@ -42,20 +42,22 @@ namespace EC.IdentityServer.Services.Concrete
         [TransactionScopeAspect(Priority = (int)CacheItemPriority.High)]
         public async Task<IResult> RegisterAsync(RegisterDto model)
         {
-            var userPhoneNumberExists = await _userManager.FindByNameAsync(model.PhoneNumber);
+            var validatedPhoneNumber = PhoneNumberExtensions.ValidatePhoneNumber(model.PhoneNumber, model.CountryCode);
+            if (!validatedPhoneNumber.Success)
+                return new ErrorResult(MessageExtensions.NotCorrect(PropertyNames.PhoneNumber));
+
+            var formattedPhoneNumber = validatedPhoneNumber.Data.FormattedNumber.Substring(1);
+
+            var userPhoneNumberExists = await _userManager.FindByNameAsync(formattedPhoneNumber);
             if (userPhoneNumberExists != null)
-            {
                 return new ErrorResult(MessageExtensions.AlreadyExists(PropertyNames.PhoneNumber));
-            }
 
             var userEmailExists = await _userManager.FindByEmailAsync(model.PhoneNumber);
             if (userEmailExists != null)
-            {
                 return new ErrorResult(MessageExtensions.AlreadyExists(PropertyNames.Email));
-            }
 
             var userAdded = _mapper.Map<AppUser>(model);
-            userAdded.UserName = model.PhoneNumber;
+            userAdded.UserName = formattedPhoneNumber;
             userAdded.Status = (byte)UserStatus.NotValidated;
             var result = await _userManager.CreateAsync(userAdded, model.Password);
             if (result.Succeeded)
@@ -73,9 +75,9 @@ namespace EC.IdentityServer.Services.Concrete
                     EmailBody = $"User Activation Code : {activationCode}"
                 };
                 await _commApiService.SendSmtpEmailAsync(emailData);
-                return new SuccessResult(MessageExtensions.Added(PropertyNames.User));
+                return new SuccessResult(MessageExtensions.Sent(PropertyNames.User));
             }
-            return new ErrorResult(MessageExtensions.NotAdded(PropertyNames.User));
+            return new ErrorResult(MessageExtensions.NotCompleted(PropertyNames.Register));
         }
         #endregion
         //#region ActivateAccount

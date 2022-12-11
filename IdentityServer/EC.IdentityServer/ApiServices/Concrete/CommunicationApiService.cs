@@ -1,7 +1,9 @@
 ﻿using Core.CrossCuttingConcerns.Communication.MessageQueue.Abstract;
 using Core.Entities;
+using Core.Utilities.Results;
 using EC.IdentityServer.ApiServices.Abstract;
 using Microsoft.Extensions.Options;
+using IResult = Core.Utilities.Results.IResult;
 
 namespace EC.IdentityServer.ApiServices.Concrete
 {
@@ -19,8 +21,8 @@ namespace EC.IdentityServer.ApiServices.Concrete
         #region SendSmtpEmailAsync
         public async Task<IResult> SendSmtpEmailAsync(EmailData model)
         {
-            //Send with rabbitmq
-            throw new NotImplementedException();
+            _rabbitMqService.SendEmailActivationSmtpEmail(model);
+            return new SuccessResult();
         }
         #endregion
 

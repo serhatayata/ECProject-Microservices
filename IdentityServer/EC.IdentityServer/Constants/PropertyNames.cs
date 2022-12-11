@@ -11,5 +11,6 @@
         public static string Code = "Code";
         public static string Password = "Password";
         public static string CountryCode = "Country code";
+        public static string Register = "Register";
     }
 }
