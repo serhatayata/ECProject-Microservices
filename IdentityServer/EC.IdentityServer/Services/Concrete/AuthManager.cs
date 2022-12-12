@@ -93,7 +93,7 @@ namespace EC.IdentityServer.Services.Concrete
                 _rabbitMQPublisher.EmailSmtpSendPublish(emailData);
 
                 UserDto user = new() { Id = userAdded.Id };
-                return new SuccessDataResult<UserDto>(user, MessageExtensions.Sent(PropertyNames.User));
+                return new SuccessDataResult<UserDto>(user, MessageExtensions.Sent(PropertyNames.RegisterActivationCode));
             }
             return new ErrorDataResult<UserDto>(MessageExtensions.NotCompleted(PropertyNames.Register));
         }
