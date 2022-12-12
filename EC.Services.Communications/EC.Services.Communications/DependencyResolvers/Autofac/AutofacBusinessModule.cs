@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using Core.CrossCuttingConcerns.Communication.RabbitMQClientServices;
 using Core.CrossCuttingConcerns.Logging.ElasticSearch;
 using Core.Utilities.Interceptors;
 using EC.Services.Communications.Services.Abstract;
@@ -22,6 +23,7 @@ namespace EC.Services.Communications.DependencyResolvers.Autofac
             #endregion
             #region Singleton
             builder.RegisterType<EmailService>().As<IEmailService>().SingleInstance();
+            builder.RegisterType<EmailSmtpClientService>().SingleInstance();
             builder.RegisterType<ElasticSearchLogManager>().As<IElasticSearchLogService>().SingleInstance();
             #endregion
 

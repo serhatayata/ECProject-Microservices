@@ -22,9 +22,13 @@ namespace EC.Services.Communications.Validations.EmailValidations
             RuleFor(x => x.EmailSubject).NotNull().WithMessage(MessageExtensions.ErrorNotNull(CommConstantValues.EmailSubject));
             RuleFor(x => x.EmailSubject).Length(2, 200).WithMessage(MessageExtensions.ErrorBetween(CommConstantValues.EmailSubject, 2, 200));
 
-            RuleFor(x => x.EmailBody).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(CommConstantValues.EmailBody));
-            RuleFor(x => x.EmailBody).NotNull().WithMessage(MessageExtensions.ErrorNotNull(CommConstantValues.EmailBody));
-            RuleFor(x => x.EmailBody).Length(2, 5000).WithMessage(MessageExtensions.ErrorBetween(CommConstantValues.EmailBody, 4, 5000));
+            RuleFor(x => x.EmailTextBody).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(CommConstantValues.EmailTextBody));
+            RuleFor(x => x.EmailTextBody).NotNull().WithMessage(MessageExtensions.ErrorNotNull(CommConstantValues.EmailTextBody));
+            RuleFor(x => x.EmailTextBody).Length(2, 5000).WithMessage(MessageExtensions.ErrorBetween(CommConstantValues.EmailTextBody, 4, 5000));
+
+            RuleFor(x => x.EmailHtmlBody).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(CommConstantValues.EmailHtmlBody));
+            RuleFor(x => x.EmailHtmlBody).NotNull().WithMessage(MessageExtensions.ErrorNotNull(CommConstantValues.EmailHtmlBody));
+            RuleFor(x => x.EmailHtmlBody).Length(2, 5000).WithMessage(MessageExtensions.ErrorBetween(CommConstantValues.EmailHtmlBody, 4, 5000));
 
             RuleFor(x => x.EmailAttachments).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(CommConstantValues.EmailAttachment));
             RuleFor(x => x.EmailAttachments).NotNull().WithMessage(MessageExtensions.ErrorNotNull(CommConstantValues.EmailAttachment));

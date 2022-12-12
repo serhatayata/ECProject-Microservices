@@ -37,7 +37,8 @@ namespace EC.Services.Communications.Services.Concrete
                 emailMessage.To.Add(emailTo);
                 emailMessage.Subject = emailData.EmailSubject;
                 BodyBuilder emailBodyBuilder = new BodyBuilder();
-                emailBodyBuilder.TextBody = emailData.EmailBody;
+                emailBodyBuilder.TextBody = emailData.EmailTextBody;
+                emailBodyBuilder.HtmlBody = emailData.EmailHtmlBody;
                 emailMessage.Body = emailBodyBuilder.ToMessageBody();
                 SmtpClient emailClient = new SmtpClient();
                 emailClient.Connect(_emailSettings.Host, _emailSettings.Port, _emailSettings.UseSSL);
@@ -85,7 +86,7 @@ namespace EC.Services.Communications.Services.Concrete
                         }
                     }
                 }
-                emailBodyBuilder.TextBody = emailData.EmailBody;
+                emailBodyBuilder.TextBody = emailData.EmailTextBody;
                 emailMessage.Body = emailBodyBuilder.ToMessageBody();
                 SmtpClient emailClient = new SmtpClient();
                 emailClient.Connect(_emailSettings.Host, _emailSettings.Port, _emailSettings.UseSSL);

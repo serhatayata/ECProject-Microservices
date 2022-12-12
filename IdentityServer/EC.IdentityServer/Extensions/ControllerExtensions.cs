@@ -21,6 +21,7 @@ namespace EC.IdentityServer.Extensions
             });
 
             services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<RegisterActivationDtoValidator>();
 
             services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters(); // for client side

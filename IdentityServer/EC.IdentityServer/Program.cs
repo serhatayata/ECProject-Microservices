@@ -2,7 +2,11 @@ using Autofac;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Core.CrossCuttingConcerns.Logging.ElasticSearch;
 using Core.Entities;
+using Core.Entities.ElasticSearch.Abstract;
+using Core.Entities.ElasticSearch.Concrete;
+using Core.Extensions;
 using EC.IdentityServer.Data.DbContext;
 using EC.IdentityServer.Data.SeedData;
 using EC.IdentityServer.DependencyResolvers.Autofac;
@@ -12,6 +16,8 @@ using EC.IdentityServer.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Client;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager Configuration = builder.Configuration;
@@ -79,6 +85,20 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 #endregion
 #region IOPTIONS
 builder.Services.AddOptionsPattern(Configuration);
+#endregion
+#region ELK
+builder.Services.AddSingleton<IElasticSearchLogService, ElasticSearchLogManager>();
+builder.Services.AddSingleton<IElasticSearchConfiguration, ElasticSearchConfigration>();
+builder.Host.UseSerilog();
+ElasticSearchExtensions.AddElasticSearch(builder.Services, Configuration);
+ElasticSearchExtensions.AddELKLogSettings(builder.Services);
+#endregion
+#region DI
+builder.Services.AddSingleton(sp => new ConnectionFactory()
+{
+    Port = 5672,
+    DispatchConsumersAsync = true
+});
 #endregion
 #region SEED_DATA
 await AppIdentityDbContextSeed.AddUserSettingsAsync(identityConnString);
