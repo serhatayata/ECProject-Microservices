@@ -11,6 +11,7 @@ namespace Core.Entities
         public string EmailToId { get; set; }
         public string EmailToName { get; set; }
         public string EmailSubject { get; set; }
-        public string EmailBody { get; set; }
+        public string EmailTextBody { get; set; }
+        public string EmailHtmlBody { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace EC.IdentityServer.Controllers
         [HttpPost]
         [Route("register")]
         //[Authorize(LocalApi.PolicyName)] //This is used because a client we don't know will not be able to use this method...
-        public async Task<IActionResult> Register(RegisterDto model)
+        public async Task<IActionResult> RegisterAsync(RegisterDto model)
         {
             var result = await _authService.RegisterAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -43,22 +43,12 @@ namespace EC.IdentityServer.Controllers
         #region SendActivationCodeAsync
         [HttpPost]
         [Route("verify-activation-code-register")]
-        [Authorize(LocalApi.PolicyName)]
-        public async Task<IActionResult> VerifyActivationCodeRegisterAsync()
+        //[Authorize(LocalApi.PolicyName)]
+        public async Task<IActionResult> RegisterActivationAsync(RegisterActivationDto model)
         {
-            //string token = Request.Headers[HeaderNames.Authorization];
-            //var userId = TokenExtensions.GetTokenTypeValue(token,"sub");
-
-            //if (userId == null)
-            //{
-            //    return StatusCode(StatusCodes.Status400BadRequest,new ErrorResult(MessageExtensions.NotFound(PropertyNames.User)));
-            //}
-            //var result = await _userService.ActivateAccountSendSms(userId);
-            //return StatusCode(result.StatusCode, result);
-            return Ok();
+            var result = await _authService.RegisterActivationAsync(model);
+            return StatusCode(result.StatusCode, result);
         }
         #endregion
-
-
     }
 }
