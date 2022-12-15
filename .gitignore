@@ -365,6 +365,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 FlowCharts
+*.jpg
 
 
 

@@ -5,6 +5,7 @@ using Core.Entities;
 using Core.Entities.ElasticSearch.Abstract;
 using Core.Entities.ElasticSearch.Concrete;
 using Core.Extensions;
+using EC.Services.Communications.BackgroundServices;
 using EC.Services.Communications.DependencyResolvers.Autofac;
 using EC.Services.Communications.Extensions;
 using EC.Services.Communications.Models.Settings;
@@ -41,6 +42,8 @@ ElasticSearchExtensions.AddELKLogSettings(builder.Services);
 #region DI
 builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 builder.Services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMqSettings"));
+builder.Services.AddHostedService<EmailSmtpBackgroundService>();
+
 builder.Services.AddSingleton(sp => new ConnectionFactory()
 {
     Port = 5672,
