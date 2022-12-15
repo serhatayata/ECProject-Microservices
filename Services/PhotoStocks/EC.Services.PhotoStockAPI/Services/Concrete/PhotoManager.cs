@@ -10,6 +10,7 @@ using EC.Services.PhotoStockAPI.Data.Abstract.EntityFramework;
 using EC.Services.PhotoStockAPI.Dtos;
 using EC.Services.PhotoStockAPI.Entities;
 using EC.Services.PhotoStockAPI.Extensions;
+using EC.Services.PhotoStockAPI.Publishers;
 using EC.Services.PhotoStockAPI.Services.Abstract;
 using EC.Services.PhotoStockAPI.Settings;
 using Microsoft.Extensions.Caching.Memory;
@@ -27,11 +28,13 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
         private readonly IDapperPhotoRepository _dapperPhotoRepository;
         private readonly IEfPhotoRepository _efPhotoRepository;
         private readonly IMapper _mapper;
+        private RabbitMQPublisher _rabbitMQPublisher;
         private readonly ResizeSetting _resizeSettings;
 
-        public PhotoManager(IDapperPhotoRepository dapperPhotoRepository, IEfPhotoRepository efPhotoRepository, IMapper mapper, IOptions<ResizeSetting> resizeSettings)
+        public PhotoManager(IDapperPhotoRepository dapperPhotoRepository, IEfPhotoRepository efPhotoRepository, RabbitMQPublisher rabbitMQPublisher, IMapper mapper, IOptions<ResizeSetting> resizeSettings)
         {
             _dapperPhotoRepository = dapperPhotoRepository;
+            _rabbitMQPublisher = rabbitMQPublisher;
             _efPhotoRepository = efPhotoRepository;
             _mapper = mapper;
             _resizeSettings = resizeSettings.Value;
@@ -71,6 +74,8 @@ namespace EC.Services.PhotoStockAPI.Services.Concrete
                     System.IO.File.Delete(path);
                     return new ErrorDataResult<string>(MessageExtensions.NotAdded(PhotoTitles.Photo));
                 }
+                if (model.WithWatermark)
+                    _rabbitMQPublisher.PhotoWatermarkPublish(new Events.PhotoWatermarkEvent() { ImageName = uniqueFileName });
 
                 return new SuccessDataResult<string>(uniqueFileName);
             }
