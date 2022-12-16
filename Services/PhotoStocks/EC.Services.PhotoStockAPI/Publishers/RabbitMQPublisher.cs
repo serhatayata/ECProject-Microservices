@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace EC.Services.PhotoStockAPI.Publishers
 {
-    public class RabbitMQPublisher
+    internal class RabbitMQPublisher
     {
         private readonly PhotoWatermarkClientService _photoWatermarkClientService;
 

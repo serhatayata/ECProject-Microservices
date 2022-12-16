@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace EC.Services.PhotoStockAPI.BackgroundServices
 {
-    public class PhotoWatermarkProcessBackgroundService : BackgroundService
+    internal class PhotoWatermarkProcessBackgroundService : BackgroundService
     {
         private readonly PhotoWatermarkClientService _photoWatermarkClientService;
         private readonly IElasticSearchLogService _elasticSearchLogService;

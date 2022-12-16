@@ -12,7 +12,7 @@ using Core.CrossCuttingConcerns.Communication.RabbitMQClientServices;
 
 namespace EC.Services.Communications.BackgroundServices
 {
-    public class EmailSmtpBackgroundService:BackgroundService
+    internal class EmailSmtpBackgroundService:BackgroundService
     {
         private readonly EmailSmtpClientService _clientService;
         private readonly IEmailService _emailService;
