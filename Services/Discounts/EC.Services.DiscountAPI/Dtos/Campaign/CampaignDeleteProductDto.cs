@@ -4,7 +4,7 @@ namespace EC.Services.DiscountAPI.Dtos.Campaign
 {
     public class CampaignDeleteProductDto:IDto
     {
-        public string CampaignId { get; set; }
-        public string ProductId { get; set; }
+        public int CampaignId { get; set; }
+        public int ProductId { get; set; }
     }
 }
