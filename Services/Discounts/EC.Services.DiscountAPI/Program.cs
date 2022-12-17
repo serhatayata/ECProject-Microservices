@@ -4,7 +4,6 @@ using EC.Services.DiscountAPI.Extensions;
 using EC.Services.DiscountAPI.Mappings;
 using EC.Services.DiscountAPI.DependencyResolvers.Autofac;
 using Microsoft.Extensions.Options;
-using EC.Services.DiscountAPI.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -29,10 +28,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterMod
 builder.Services.AddRabbitMqConsumer(configuration);
 #endregion
 #region SEEDDATA
-var sp = builder.Services.BuildServiceProvider();
-var discountDatabaseSettings = sp.GetRequiredService<IOptions<DiscountDatabaseSettings>>();
-SeedDataExtensions.Configure(discountDatabaseSettings.Value);
-SeedDataExtensions.AddSeedData();
+
 #endregion
 #region CONTROLLERS
 builder.Services.AddControllerSettings();

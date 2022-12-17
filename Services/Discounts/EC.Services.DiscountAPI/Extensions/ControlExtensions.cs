@@ -30,13 +30,14 @@ namespace EC.Services.DiscountAPI.Extensions
             #endregion
             #region Campaign
             services.AddValidatorsFromAssemblyContaining<CampaignAddDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<CampaignProductIdValidator>();
             services.AddValidatorsFromAssemblyContaining<CampaignAddProductDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CampaignUpdateDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<CampaignDeleteProductDtoValidator>();
             #endregion
             #region Discount
             services.AddValidatorsFromAssemblyContaining<DiscountAddDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<DiscountUpdateDtoValidator>();
-            services.AddValidatorsFromAssemblyContaining<DiscountGetByIdDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<DiscountGetByCodeDtoValidator>();
 
             #endregion

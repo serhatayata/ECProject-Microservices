@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace EC.Services.DiscountAPI.Validations.CampaignValidations
 {
-    public class CampaignProductIdValidator : AbstractValidator<string>
+    public class CampaignProductIdValidator : AbstractValidator<int>
     {
         public CampaignProductIdValidator()
         {

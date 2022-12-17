@@ -13,7 +13,7 @@ using System.Reflection;
 
 namespace EC.Services.Communications.Services.Concrete
 {
-    public class EmailService : IEmailService
+    internal class EmailService : IEmailService
     {
         private EmailSettings _emailSettings;
         private IElasticSearchLogService _elasticSearchLogService;
