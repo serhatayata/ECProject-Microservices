@@ -42,6 +42,8 @@ namespace EC.Services.DiscountAPI.Data.Contexts
                 entity.HasIndex(d => d.Code).IsUnique().IsClustered(false);
 
                 entity.Property(d => d.DiscountType).HasConversion<int>();
+                entity.Property(d => d.Status).HasConversion<byte>();
+                entity.Property(d => d.Status).HasDefaultValue((byte)DiscountStatus.Active);
 
                 entity.Property(d => d.CDate).HasDefaultValueSql("getdate()");
                 entity.Property(d => d.UDate).HasDefaultValueSql("getdate()");
@@ -60,6 +62,8 @@ namespace EC.Services.DiscountAPI.Data.Contexts
                 entity.Property(c => c.Sponsor).HasColumnType("nvarchar(100)");
 
                 entity.Property(c => c.CampaignType).HasConversion<int>();
+                entity.Property(c => c.Status).HasConversion<byte>();
+                entity.Property(d => d.Status).HasDefaultValue((byte)DiscountStatus.Active);
 
                 entity.Property(c => c).HasColumnType("nvarchar(200)");
 

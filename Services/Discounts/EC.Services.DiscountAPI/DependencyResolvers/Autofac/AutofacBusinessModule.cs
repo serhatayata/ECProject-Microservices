@@ -40,7 +40,7 @@ namespace EC.Services.DiscountAPI.DependencyResolvers.Autofac
             builder.RegisterType<CampaignRepository>().As<ICampaignRepository>().InstancePerDependency();
             #endregion
             #region DbContext
-
+            builder.RegisterType<DiscountDbDapperContext>().SingleInstance();
             #endregion
 
             //AddTransient
