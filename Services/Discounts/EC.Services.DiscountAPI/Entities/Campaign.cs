@@ -38,7 +38,7 @@ namespace EC.Services.DiscountAPI.Entities
         /// <summary>
         /// Whether the campaign is active or not
         /// </summary>
-        public bool Status { get; set; }
+        public CampaignStatus Status { get; set; }
         /// <summary>
         /// Created date of the campaign
         /// </summary>
@@ -55,5 +55,11 @@ namespace EC.Services.DiscountAPI.Entities
         /// Users of the campaign
         /// </summary>
         public ICollection<CampaignUser> CampaignUsers { get; set; }
+    }
+
+    public enum CampaignStatus
+    {
+        Active = 0,
+        Deleted = 1
     }
 }

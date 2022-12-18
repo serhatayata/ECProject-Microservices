@@ -37,7 +37,7 @@ namespace EC.Services.DiscountAPI.Entities
         /// <summary>
         /// Status of  the count, whether it is active or not
         /// </summary>
-        public bool Status { get; set; }
+        public DiscountStatus Status { get; set; }
         /// <summary>
         /// Created date of the discount
         /// </summary>
@@ -50,5 +50,11 @@ namespace EC.Services.DiscountAPI.Entities
         /// Expiration date
         /// </summary>
         public DateTime ExpirationDate { get; set; }
+    }
+
+    public enum DiscountStatus
+    {
+        Active = 0,
+        Deleted = 1
     }
 }
