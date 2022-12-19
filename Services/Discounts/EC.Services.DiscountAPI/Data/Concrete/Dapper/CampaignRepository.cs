@@ -1,4 +1,6 @@
-﻿using EC.Services.DiscountAPI.Data.Abstract.Dapper;
+﻿using Core.Entities;
+using Dapper;
+using EC.Services.DiscountAPI.Data.Abstract.Dapper;
 using EC.Services.DiscountAPI.Data.Contexts;
 using EC.Services.DiscountAPI.Entities;
 using Microsoft.Data.SqlClient;
@@ -19,55 +21,113 @@ namespace EC.Services.DiscountAPI.Data.Concrete.Dapper
         #region AnyAsync
         public async Task<bool> AnyAsync()
         {
-            throw new NotImplementedException();
+            var sql = "SELECT TOP 1 * FROM Campaigns WHERE Status=@Status";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<Campaign>(sql, new { Status = (byte)CampaignStatus.Active });
+                if (result.Count() > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
         }
         #endregion
         #region GetByIdAsync
-        public Task<Campaign> GetByIdAsync(int id)
+        public async Task<Campaign> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var sql = "SELECT * FROM Campaigns WHERE Id=@Id AND Status=@Status";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QuerySingleOrDefaultAsync<Campaign>(sql, new { Id = id, Status = (byte)CampaignStatus.Active });
+                return result;
+            }
         }
         #endregion
         #region GetAllAsync
         public async Task<List<Campaign>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var sql = "SELECT * FROM Campaigns WHERE Status=@Status";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<Campaign>(sql, new { Status = (byte)CampaignStatus.Active });
+                return result.ToList();
+            }
         }
         #endregion
         #region GetAllPagingAsync
         public async Task<List<Campaign>> GetAllPagingAsync(int page = 1, int pageSize = 8)
         {
-            throw new NotImplementedException();
+            var sql = "SELECT * FROM Campaigns WHERE Status=@Status ORDER BY Id OFFSET @Page * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<Campaign>(sql, new { Page = page - 1, PageSize = pageSize, Status = (byte)CampaignStatus.Active });
+                return result.ToList();
+            }
         }
         #endregion
-        #region MyRegion
+        #region GetAllBetweenDatesByCreatedTimeAsync
         public async Task<List<Campaign>> GetAllBetweenDatesByCreatedTimeAsync(DateTime bTime, DateTime eTime)
         {
-            throw new NotImplementedException();
+            var sql = "SELECT * FROM Campaigns WHERE Status=@Status AND CDate BETWEEN @BeginningTime and @EndingTime";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<Campaign>(sql, new { BeginningTime = bTime, EndingTime = eTime, Status = (byte)CampaignStatus.Active });
+                return result.ToList();
+            }
         }
         #endregion
         #region GetAllBetweenDatesByExpirationTimeAsync
         public async Task<List<Campaign>> GetAllBetweenDatesByExpirationTimeAsync(DateTime bTime, DateTime eTime)
         {
-            throw new NotImplementedException();
+            var sql = "SELECT * FROM Campaigns WHERE Status=@Status AND ExpirationDate BETWEEN @BeginningTime and @EndingTime";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<Campaign>(sql, new { BeginningTime = bTime, EndingTime = eTime, Status = (byte)CampaignStatus.Active });
+                return result.ToList();
+            }
         }
         #endregion
         #region GetAllByCampaignTypeAsync
         public async Task<List<Campaign>> GetAllByCampaignTypeAsync(int campaignType)
         {
-            throw new NotImplementedException();
+            var sql = "SELECT * FROM Campaigns WHERE CampaignType=@CampaignType AND Status=@Status";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<Campaign>(sql, new { CampaignType = campaignType, Status = (byte)CampaignStatus.Active });
+                return result.ToList();
+            }
         }
         #endregion
         #region GetAllByProductIdAsync
         public async Task<List<Campaign>> GetAllByProductIdAsync(int productId)
         {
-            throw new NotImplementedException();
+            var sql = "SELECT * FROM Campaigns WHERE ProductId=@ProductId AND Status=@Status";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<Campaign>(sql, new { ProductId = productId, Status = (byte)CampaignStatus.Active });
+                return result.ToList();
+            }
         }
         #endregion
         #region GetAllBySponsorAsync
         public async Task<List<Campaign>> GetAllBySponsorAsync(string sponsor)
         {
-            throw new NotImplementedException();
+            var sql = "SELECT * FROM Campaigns WHERE Sponsor=@Sponsor AND Status=@Status";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QueryAsync<Campaign>(sql, new { Sponsor = sponsor, Status = (byte)CampaignStatus.Active });
+                return result.ToList();
+            }
         }
         #endregion
     }

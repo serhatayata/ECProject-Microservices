@@ -1,4 +1,5 @@
 ﻿using EC.Services.DiscountAPI.Data.Concrete;
+using EC.Services.DiscountAPI.Data.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,8 @@ namespace EC.Services.DiscountAPI.Extensions
         public static void AddAuth(this IServiceCollection services, IConfiguration configuration)
         {
             var tokenOptions = configuration.GetSection("TokenOptions").Get<Core.Utilities.Security.Jwt.TokenOptions>();
+
+            services.AddDbContext<DiscountDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
