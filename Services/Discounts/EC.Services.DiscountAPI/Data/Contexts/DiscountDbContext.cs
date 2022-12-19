@@ -19,6 +19,7 @@ namespace EC.Services.DiscountAPI.Data.Contexts
 
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<Campaign> Campaigns { get; set; }
+        public DbSet<CampaignUser> CampaignUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,17 +39,17 @@ namespace EC.Services.DiscountAPI.Data.Contexts
                 entity.Property(d => d.Name).HasColumnType("nvarchar(120)");
                 entity.Property(d => d.Description).HasColumnType("nvarchar(500)");
 
+                entity.Property(d => d.Sponsor).HasColumnType("nvarchar(100)");
+
                 entity.Property(d => d.Code).HasColumnType("nvarchar(50)");
                 entity.HasIndex(d => d.Code).IsUnique().IsClustered(false);
 
                 entity.Property(d => d.DiscountType).HasConversion<int>();
-                entity.Property(d => d.Status).HasConversion<byte>();
-                entity.Property(d => d.Status).HasDefaultValue((byte)DiscountStatus.Active);
+                entity.Property(d => d.Status).HasConversion<int>();
+                entity.Property(d => d.Status).HasDefaultValue(DiscountStatus.Active);
 
                 entity.Property(d => d.CDate).HasDefaultValueSql("getdate()");
                 entity.Property(d => d.UDate).HasDefaultValueSql("getdate()");
-
-                entity.Property(d => d.Sponsor).HasDefaultValueSql("nvarchar(100)");
             });
             #endregion
             #region Campaign
@@ -62,10 +63,8 @@ namespace EC.Services.DiscountAPI.Data.Contexts
                 entity.Property(c => c.Sponsor).HasColumnType("nvarchar(100)");
 
                 entity.Property(c => c.CampaignType).HasConversion<int>();
-                entity.Property(c => c.Status).HasConversion<byte>();
-                entity.Property(d => d.Status).HasDefaultValue((byte)DiscountStatus.Active);
-
-                entity.Property(c => c).HasColumnType("nvarchar(200)");
+                entity.Property(c => c.Status).HasConversion<int>();
+                entity.Property(c => c.Status).HasDefaultValue(CampaignStatus.Active);
 
                 entity.Property(c => c.CDate).HasDefaultValueSql("getdate()");
                 entity.Property(c => c.UDate).HasDefaultValueSql("getdate()");
@@ -75,6 +74,8 @@ namespace EC.Services.DiscountAPI.Data.Contexts
             modelBuilder.Entity<CampaignUser>(entity =>
             {
                 entity.HasKey(cu => new { cu.CampaignId, cu.UserId });
+
+                entity.Property(c => c.Code).HasColumnType("nvarchar(12)");
 
                 entity.HasOne(bc => bc.Campaign)
                     .WithMany(b => b.CampaignUsers)

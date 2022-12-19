@@ -13,5 +13,13 @@ namespace EC.Services.DiscountAPI.Entities
         /// User Id who is able to use this campaign
         /// </summary>
         public string UserId { get; set; }
+        /// <summary>
+        /// This campaign is used by user or not
+        /// </summary>
+        public bool IsUsed { get; set; }
+        /// <summary>
+        /// Campaign code
+        /// </summary>
+        public string Code { get; set; }
     }
 }

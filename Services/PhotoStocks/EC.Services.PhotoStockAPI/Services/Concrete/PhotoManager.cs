@@ -15,10 +15,6 @@ using EC.Services.PhotoStockAPI.Services.Abstract;
 using EC.Services.PhotoStockAPI.Settings;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using System.Drawing;
-using static System.Net.Mime.MediaTypeNames;
 using IResult = Core.Utilities.Results.IResult;
 
 namespace EC.Services.PhotoStockAPI.Services.Concrete
