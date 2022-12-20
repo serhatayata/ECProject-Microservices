@@ -1,4 +1,4 @@
-﻿using Core.DataAccess.Dapper;
+﻿using Core.DataAccess;
 using EC.Services.PaymentAPI.Entities;
 
 namespace EC.Services.PaymentAPI.Data.Abstract.Dapper

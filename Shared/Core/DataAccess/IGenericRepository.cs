@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.DataAccess.Dapper
+namespace Core.DataAccess
 {
     public interface IGenericRepository<T> where T : class
     {
