@@ -12,5 +12,6 @@ namespace EC.Services.DiscountAPI.Services.Abstract
         Task<IResult> DeleteAllProductsByCampaignIdAsync(DeleteIntDto model);
         Task<DataResult<List<CampaignDto>>> GetProductCampaignsAsync(int productId);
 
+
     }
 }

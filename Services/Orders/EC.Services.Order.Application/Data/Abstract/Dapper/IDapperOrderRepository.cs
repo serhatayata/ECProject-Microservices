@@ -1,4 +1,4 @@
-﻿using Core.DataAccess.Dapper;
+﻿using Core.DataAccess;
 
 namespace EC.Services.Order.Application.Data.Abstract.Dapper
 {

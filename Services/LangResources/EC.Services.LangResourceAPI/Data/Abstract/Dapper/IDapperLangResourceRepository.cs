@@ -1,4 +1,4 @@
-﻿using Core.DataAccess.Dapper;
+﻿using Core.DataAccess;
 using Core.Dtos;
 using Core.Utilities.Results;
 using EC.Services.LangResourceAPI.Dtos.LangResourceDtos;

@@ -1,5 +1,4 @@
 ﻿using Core.DataAccess;
-using Core.DataAccess.Dapper;
 using EC.Services.PhotoStockAPI.Entities;
 
 namespace EC.Services.PhotoStockAPI.Data.Abstract.Dapper
