@@ -5,12 +5,12 @@ using IResult = Core.Utilities.Results.IResult;
 
 namespace EC.Services.DiscountAPI.Services.Abstract
 {
-    public interface IBaseRepository<T, C, U, D>
+    public interface IBaseService<T, C, U, D>
     {
         Task<DataResult<T>> GetAsync(string id);
         Task<DataResult<List<T>>> GetAllAsync();
-        Task<IResult> CreateAsync(C entity);
-        Task<IResult> UpdateAsync(U entity);
+        Task<DataResult<T>> CreateAsync(C entity);
+        Task<DataResult<T>> UpdateAsync(U entity);
         Task<IResult> DeleteAsync(D entity);
     }
 }

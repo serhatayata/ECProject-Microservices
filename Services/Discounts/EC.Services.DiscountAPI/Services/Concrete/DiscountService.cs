@@ -7,7 +7,7 @@ namespace EC.Services.DiscountAPI.Services.Concrete
 {
     public class DiscountService : IDiscountService
     {
-        public Task<Core.Utilities.Results.IResult> CreateAsync(DiscountAddDto entity)
+        public Task<DataResult<DiscountDto>> CreateAsync(DiscountAddDto entity)
         {
             throw new NotImplementedException();
         }
@@ -32,7 +32,7 @@ namespace EC.Services.DiscountAPI.Services.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<Core.Utilities.Results.IResult> UpdateAsync(DiscountUpdateDto entity)
+        public Task<DataResult<DiscountDto>> UpdateAsync(DiscountUpdateDto entity)
         {
             throw new NotImplementedException();
         }

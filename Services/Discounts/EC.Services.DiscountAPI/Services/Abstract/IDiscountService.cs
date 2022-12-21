@@ -5,7 +5,7 @@ using IResult = Core.Utilities.Results.IResult;
 
 namespace EC.Services.DiscountAPI.Services.Abstract
 {
-    public interface IDiscountService : IBaseRepository<DiscountDto, DiscountAddDto, DiscountUpdateDto, DeleteIntDto>
+    public interface IDiscountService : IBaseService<DiscountDto, DiscountAddDto, DiscountUpdateDto, DeleteIntDto>
     {
         Task<DataResult<DiscountDto>> GetDiscountByCodeAsync(DiscountGetByCodeDto model);
     }
