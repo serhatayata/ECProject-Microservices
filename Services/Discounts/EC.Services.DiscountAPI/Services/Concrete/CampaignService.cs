@@ -12,7 +12,7 @@ namespace EC.Services.DiscountAPI.Services.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<Core.Utilities.Results.IResult> CreateAsync(CampaignAddDto entity)
+        public Task<DataResult<CampaignDto>> CreateAsync(CampaignAddDto entity)
         {
             throw new NotImplementedException();
         }
@@ -47,7 +47,7 @@ namespace EC.Services.DiscountAPI.Services.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<Core.Utilities.Results.IResult> UpdateAsync(CampaignUpdateDto entity)
+        public Task<DataResult<CampaignDto>> UpdateAsync(CampaignUpdateDto entity)
         {
             throw new NotImplementedException();
         }
