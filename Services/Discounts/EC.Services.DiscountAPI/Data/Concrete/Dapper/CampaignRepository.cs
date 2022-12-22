@@ -109,7 +109,7 @@ namespace EC.Services.DiscountAPI.Data.Concrete.Dapper
         #region GetAllByProductIdAsync
         public async Task<List<Campaign>> GetAllByProductIdAsync(int productId)
         {
-            var sql = "SELECT * FROM Campaigns WHERE ProductId=@ProductId AND Status=@Status";
+            var sql = "SELECT c.* FROM Campaigns c INNER JOIN CampaignProducts cp ON c.Id = cp.CampaignId WHERE cp.ProductId=@ProductId AND Status=@Status";
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();

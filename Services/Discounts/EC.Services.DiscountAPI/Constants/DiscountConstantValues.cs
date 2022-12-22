@@ -21,5 +21,8 @@
         public static string CampaignType = "Campaign type";
         public static string Product = "Product";
 
+        public static string CampaignProduct = "Campaign product";
+
+
     }
 }

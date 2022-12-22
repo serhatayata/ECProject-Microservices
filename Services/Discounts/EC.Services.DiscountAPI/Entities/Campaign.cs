@@ -16,10 +16,6 @@ namespace EC.Services.DiscountAPI.Entities
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// Product id of the campaign
-        /// </summary>
-        public int ProductId { get; set; }
-        /// <summary>
         /// CampaignType gives us the type of campaign
         /// </summary>
         public CampaignTypes CampaignType { get; set; }
@@ -55,6 +51,7 @@ namespace EC.Services.DiscountAPI.Entities
         /// Users of the campaign
         /// </summary>
         public ICollection<CampaignUser> CampaignUsers { get; set; }
+        public ICollection<CampaignProduct> CampaignProducts { get; set; }
     }
 
     public enum CampaignStatus
