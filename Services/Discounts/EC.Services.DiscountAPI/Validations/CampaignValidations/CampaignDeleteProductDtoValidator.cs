@@ -1,6 +1,6 @@
 ﻿using Core.Extensions;
 using EC.Services.DiscountAPI.Constants;
-using EC.Services.DiscountAPI.Dtos.Campaign;
+using EC.Services.DiscountAPI.Dtos.CampaignProduct;
 using FluentValidation;
 
 namespace EC.Services.DiscountAPI.Validations.CampaignValidations

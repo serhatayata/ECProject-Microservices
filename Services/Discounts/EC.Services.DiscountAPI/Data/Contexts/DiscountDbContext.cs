@@ -20,6 +20,7 @@ namespace EC.Services.DiscountAPI.Data.Contexts
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<CampaignUser> CampaignUsers { get; set; }
+        public DbSet<CampaignProduct> CampaignProducts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -79,6 +80,17 @@ namespace EC.Services.DiscountAPI.Data.Contexts
 
                 entity.HasOne(bc => bc.Campaign)
                     .WithMany(b => b.CampaignUsers)
+                    .HasForeignKey(bc => bc.CampaignId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+            #endregion
+            #region CampaignProduct
+            modelBuilder.Entity<CampaignProduct>(entity =>
+            {
+                entity.HasKey(cu => new { cu.CampaignId, cu.ProductId });
+
+                entity.HasOne(bc => bc.Campaign)
+                    .WithMany(b => b.CampaignProducts)
                     .HasForeignKey(bc => bc.CampaignId)
                     .OnDelete(DeleteBehavior.Cascade);
             });

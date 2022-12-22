@@ -1,8 +1,8 @@
 ﻿using Core.Entities;
 
-namespace EC.Services.DiscountAPI.Dtos.Campaign
+namespace EC.Services.DiscountAPI.Dtos.CampaignProduct
 {
-    public class CampaignDeleteProductDto:IDto
+    public class CampaignAddProductDto : IDto
     {
         public int CampaignId { get; set; }
         public int ProductId { get; set; }

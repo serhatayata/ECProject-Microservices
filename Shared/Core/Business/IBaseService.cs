@@ -7,7 +7,6 @@ namespace EC.Services.DiscountAPI.Services.Abstract
 {
     public interface IBaseService<T, C, U, D>
     {
-        Task<DataResult<T>> GetAsync(string id);
         Task<DataResult<List<T>>> GetAllAsync();
         Task<DataResult<T>> CreateAsync(C entity);
         Task<DataResult<T>> UpdateAsync(U entity);
