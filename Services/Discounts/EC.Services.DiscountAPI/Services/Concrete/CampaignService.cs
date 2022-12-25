@@ -16,15 +16,17 @@ namespace EC.Services.DiscountAPI.Services.Concrete
     public class CampaignService : ICampaignService
     {
         private readonly ICampaignRepository _campaignRepository;
+        private readonly ICampaignProductRepository _campaignProductRepository;
         private readonly ICampaignProductDal _campaignProductDal;
         private readonly ICampaignDal _campaignDal;
         private readonly IMapper _mapper;
 
-        public CampaignService(ICampaignRepository campaignRepository, ICampaignDal campaignDal, ICampaignProductDal campaignProductDal, IMapper mapper)
+        public CampaignService(ICampaignRepository campaignRepository, ICampaignProductRepository campaignProductRepository, ICampaignDal campaignDal, ICampaignProductDal campaignProductDal, IMapper mapper)
         {
             _campaignRepository = campaignRepository;
             _campaignDal = campaignDal;
             _campaignProductDal = campaignProductDal;
+            _campaignProductRepository = campaignProductRepository;
             _mapper = mapper;
         }
 
@@ -101,19 +103,37 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         #region DeleteAsync
         public async Task<IResult> DeleteAsync(DeleteIntDto entity)
         {
-            throw new NotImplementedException();
+            var campaign = await _campaignDal.GetAsync(c => c.Id == entity.Id && c.Status == CampaignStatus.Active);
+            if (campaign == null)
+                return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
+            campaign.Status = CampaignStatus.Deleted;
+            await _campaignDal.UpdateAsync(campaign);
+            var campaignDeleted = await _campaignDal.GetAsync(c => c.Id == campaign.Id);
+            if (campaignDeleted.Status == CampaignStatus.Deleted)
+                return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Campaign));
+            return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Campaign));
         }
         #endregion
         #region DeleteProductAsync
         public async Task<IResult> DeleteProductAsync(CampaignDeleteProductDto model)
         {
-            throw new NotImplementedException();
+            var campaignProduct = await _campaignProductDal.GetAsync(cp => cp.CampaignId == model.CampaignId && cp.ProductId == model.ProductId);
+            if (campaignProduct == null)
+                return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
+            await _campaignProductDal.DeleteAsync(campaignProduct);
+            var campaignProductDeleted = await _campaignProductDal.GetAsync(cp => cp.CampaignId == model.CampaignId && cp.ProductId == model.ProductId);
+            if (campaignProductDeleted == null)
+                return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Campaign));
+            return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Campaign));
         }
         #endregion
         #region DeleteAllProductsByCampaignIdAsync
         public async Task<IResult> DeleteAllProductsByCampaignIdAsync(DeleteIntDto model)
         {
-            throw new NotImplementedException();
+            var campaignProductsDeleted = await _campaignProductRepository.DeleteAllProductsByCampaignIdAsync(model);
+            if(campaignProductsDeleted.Success)
+                return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Campaign));
+            return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Campaign));
         }
         #endregion
     }
