@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EC.Services.DiscountAPI.Dtos.Campaign;
 using EC.Services.DiscountAPI.Dtos.CampaignProduct;
+using EC.Services.DiscountAPI.Dtos.CampaignUser;
 using EC.Services.DiscountAPI.Dtos.Discount;
 using EC.Services.DiscountAPI.Entities;
 using EC.Services.DiscountAPI.Validations.CampaignValidations;
@@ -30,6 +31,11 @@ namespace EC.Services.DiscountAPI.Mappings
             #region CampaignProduct
             CreateMap<CampaignProduct, CampaignAddProductDto>().ReverseMap();
             CreateMap<CampaignProduct, CampaignProductDto>().ReverseMap();
+            #endregion
+            #region CampaignProduct
+            CreateMap<CampaignUser, CampaignUserAddDto>().ReverseMap();
+            CreateMap<CampaignUser, CampaignUserDto>().ReverseMap();
+            CreateMap<CampaignUser, CampaignUserDeleteDto>().ReverseMap();
             #endregion
         }
     }

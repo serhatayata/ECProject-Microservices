@@ -22,6 +22,7 @@
         public static string Product = "Product";
 
         public static string CampaignProduct = "Campaign product";
+        public static string CampaignUser = "Campaign";
 
 
     }
