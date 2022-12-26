@@ -31,6 +31,11 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
 
         #region GetAsync
+        /// <summary>
+        /// Gets data from DB by id
+        /// </summary>
+        /// <param name="id">id parameter of the campaign</param>
+        /// <returns></returns>
         public async Task<DataResult<CampaignDto>> GetAsync(int id)
         {
             var campaign = await _campaignRepository.GetByIdAsync(id);
@@ -40,6 +45,10 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region GetAllAsync
+        /// <summary>
+        /// Gets all campaign data from DB
+        /// </summary>
+        /// <returns></returns>
         public async Task<DataResult<List<CampaignDto>>> GetAllAsync()
         {
             var campaigns = await _campaignRepository.GetAllAsync();
@@ -51,7 +60,46 @@ namespace EC.Services.DiscountAPI.Services.Concrete
                 return new SuccessDataResult<List<CampaignDto>>(_mapper.Map<List<CampaignDto>>(campaigns));
         }
         #endregion
+        #region GetWithStatusAsync
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">Campaign Id</param>
+        /// <param name="status">Campaign status</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<DataResult<CampaignDto>> GetWithStatusByIdAsync(int id, CampaignStatus status)
+        {
+            var campaign = await _campaignRepository.GetWithStatusByIdAsync(id,status);
+            if (campaign == null)
+                return new ErrorDataResult<CampaignDto>(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
+            return new SuccessDataResult<CampaignDto>(campaign);
+        }
+        #endregion
+        #region GetAllWithStatusAsync
+        /// <summary>
+        /// Get all with status
+        /// </summary>
+        /// <param name="status">Campaign status</param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<DataResult<List<CampaignDto>>> GetAllWithStatusAsync(CampaignStatus status)
+        {
+            var campaigns = await _campaignRepository.GetAllWithStatusAsync(status);
+            if (campaigns == null)
+                return new ErrorDataResult<List<CampaignDto>>(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
+            else if (campaigns.Count() == 0)
+                return new SuccessDataResult<List<CampaignDto>>(new List<CampaignDto>(), MessageExtensions.NotFound(DiscountConstantValues.Campaign));
+            else
+                return new SuccessDataResult<List<CampaignDto>>(_mapper.Map<List<CampaignDto>>(campaigns));
+        }
+        #endregion
         #region GetProductCampaignsAsync
+        /// <summary>
+        /// Get campaigns from DB by product id
+        /// </summary>
+        /// <param name="productId">Product Id</param>
+        /// <returns></returns>
         public async Task<DataResult<List<CampaignDto>>> GetProductCampaignsAsync(int productId)
         {
             var campaigns = await _campaignRepository.GetAllByProductIdAsync(productId);
@@ -64,6 +112,11 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region CreateAsync
+        /// <summary>
+        /// Creates a campaign
+        /// </summary>
+        /// <param name="entity">Campaign add dto</param>
+        /// <returns></returns>
         public async Task<DataResult<CampaignDto>> CreateAsync(CampaignAddDto entity)
         {
             var campaignAdded = _mapper.Map<Campaign>(entity);
@@ -75,6 +128,11 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region AddProductAsync
+        /// <summary>
+        /// Add product to an existing campaign
+        /// </summary>
+        /// <param name="model">Product dto for campaign</param>
+        /// <returns></returns>
         public async Task<DataResult<CampaignProductDto>> AddProductAsync(CampaignAddProductDto model)
         {
             var campaignProduct = _mapper.Map<CampaignProduct>(model);
@@ -89,9 +147,14 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region UpdateAsync
+        /// <summary>
+        /// Updates a campaign
+        /// </summary>
+        /// <param name="entity">Campaign update dto</param>
+        /// <returns></returns>
         public async Task<DataResult<CampaignDto>> UpdateAsync(CampaignUpdateDto entity)
         {
-            var campaignExists = await _campaignDal.GetAsync(c => c.Id == entity.Id);
+            var campaignExists = await _campaignRepository.GetByIdAsync(entity.Id);
             if(campaignExists == null)
                 return new ErrorDataResult<CampaignDto>(MessageExtensions.NotExists(DiscountConstantValues.Campaign));
             var campaignUpdated = _mapper.Map<CampaignUpdateDto, Campaign>(entity, campaignExists);
@@ -101,9 +164,14 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region DeleteAsync
+        /// <summary>
+        /// Deletes campaign by id
+        /// </summary>
+        /// <param name="entity">Delete dto</param>
+        /// <returns></returns>
         public async Task<IResult> DeleteAsync(DeleteIntDto entity)
         {
-            var campaign = await _campaignDal.GetAsync(c => c.Id == entity.Id && c.Status == CampaignStatus.Active);
+            var campaign = await _campaignRepository.GetByIdAsync(entity.Id);
             if (campaign == null)
                 return new ErrorResult(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
             campaign.Status = CampaignStatus.Deleted;
@@ -115,6 +183,11 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region DeleteProductAsync
+        /// <summary>
+        /// Delete product from campaign
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<IResult> DeleteProductAsync(CampaignDeleteProductDto model)
         {
             var campaignProduct = await _campaignProductDal.GetAsync(cp => cp.CampaignId == model.CampaignId && cp.ProductId == model.ProductId);
@@ -128,12 +201,38 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region DeleteAllProductsByCampaignIdAsync
+        /// <summary>
+        /// Delete all products from a campaign
+        /// </summary>
+        /// <param name="model">Delete dto</param>
+        /// <returns></returns>
         public async Task<IResult> DeleteAllProductsByCampaignIdAsync(DeleteIntDto model)
         {
             var campaignProductsDeleted = await _campaignProductRepository.DeleteAllProductsByCampaignIdAsync(model);
             if(campaignProductsDeleted.Success)
                 return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Campaign));
             return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Campaign));
+        }
+        #endregion
+        #region ActivateCampaignAsync
+        /// <summary>
+        /// Activate a campaign
+        /// </summary>
+        /// <param name="model">Int model</param>
+        /// <returns></returns>
+        public async Task<IResult> ActivateCampaignAsync(DeleteIntDto model)
+        {
+            var campaignExists = await _campaignDal.GetAsync(c => c.Id == model.Id);
+            if(campaignExists == null)
+                return new ErrorResult(MessageExtensions.NotExists(DiscountConstantValues.Campaign));
+            if (campaignExists.Status == CampaignStatus.Deleted)
+                return new ErrorResult(MessageExtensions.AlreadyDeleted(DiscountConstantValues.Campaign));
+            campaignExists.Status = CampaignStatus.Deleted;
+            await _campaignDal.UpdateAsync(campaignExists);
+            var campaignDeleted = await _campaignRepository.GetWithStatusByIdAsync(model.Id,CampaignStatus.Deleted);
+            if(campaignDeleted == null)
+                return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Campaign));
+            return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Campaign));
         }
         #endregion
     }
