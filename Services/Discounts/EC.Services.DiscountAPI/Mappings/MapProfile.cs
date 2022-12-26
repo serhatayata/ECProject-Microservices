@@ -14,11 +14,12 @@ namespace EC.Services.DiscountAPI.Mappings
         {
             #region Discount
             CreateMap<Discount, DiscountAddDto>().ReverseMap();
+            CreateMap<DiscountDto, DiscountAddDto>().ReverseMap();
             CreateMap<Discount, DiscountUpdateDto>().ReverseMap()
                 .ForMember(x => x.Status, opt => opt.Ignore())
-                .ForMember(x => x.CDate, opt => opt.Ignore())
-                .ForMember(x => x.Code, opt => opt.Ignore());
+                .ForMember(x => x.CDate, opt => opt.Ignore());
             CreateMap<Discount, DiscountDto>().ReverseMap();
+            CreateMap<DiscountDto, DiscountUpdateDto>().ReverseMap();
             #endregion
             #region Campaign
             CreateMap<Campaign, CampaignAddDto>().ReverseMap();
@@ -27,6 +28,7 @@ namespace EC.Services.DiscountAPI.Mappings
                 .ForMember(x => x.CDate, opt => opt.Ignore())
                 .ForMember(x => x.UDate, opt => opt.Ignore());
             CreateMap<Campaign, CampaignDto>().ReverseMap();
+            CreateMap<CampaignDto, CampaignUpdateDto>().ReverseMap();
             #endregion
             #region CampaignProduct
             CreateMap<CampaignProduct, CampaignAddProductDto>().ReverseMap();

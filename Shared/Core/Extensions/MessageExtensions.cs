@@ -157,6 +157,13 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region AlreadyDeleted
+        public static string AlreadyDeleted(string entity)
+        {
+            var value = $"{entity} already deleted";
+            return value;
+        }
+        #endregion
         #region NotExists
         public static string NotExists(string entity)
         {
