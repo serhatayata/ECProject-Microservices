@@ -14,6 +14,7 @@
         public static string Campaign = "Campaign";
         public static string CampaignRate = "Campaign rate";
         public static string CampaignId = "Campaign Id";
+        public static string CampaignStatus = "Campaign status";
         public static string CampaignProductId = "Product Id";
         public static string CampaignName = "Name";
         public static string CampaignDescription= "Description";
