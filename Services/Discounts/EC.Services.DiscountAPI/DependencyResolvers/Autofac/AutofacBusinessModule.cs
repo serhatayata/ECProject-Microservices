@@ -26,6 +26,7 @@ namespace EC.Services.DiscountAPI.DependencyResolvers.Autofac
         {
             #region Services - AddScoped
             builder.RegisterType<CampaignService>().As<ICampaignService>().InstancePerLifetimeScope();
+            builder.RegisterType<CampaignUserService>().As<ICampaignUserService>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerLifetimeScope();
 
             builder.RegisterType<RedisCacheManager>().As<IRedisCacheManager>().InstancePerLifetimeScope();
@@ -38,6 +39,10 @@ namespace EC.Services.DiscountAPI.DependencyResolvers.Autofac
             builder.RegisterType<DiscountRepository>().As<IDiscountRepository>().InstancePerDependency();
             builder.RegisterType<EfCampaignDal>().As<ICampaignDal>().InstancePerDependency();
             builder.RegisterType<CampaignRepository>().As<ICampaignRepository>().InstancePerDependency();
+            builder.RegisterType<EfCampaignUserDal>().As<ICampaignUserDal>().InstancePerDependency();
+            builder.RegisterType<CampaignUserRepository>().As<ICampaignUserRepository>().InstancePerDependency();
+            builder.RegisterType<EfCampaignProductDal>().As<ICampaignProductDal>().InstancePerDependency();
+            builder.RegisterType<CampaignProductRepository>().As<ICampaignProductRepository>().InstancePerDependency();
             #endregion
             #region DbContext
             builder.RegisterType<DiscountDbDapperContext>().SingleInstance();
