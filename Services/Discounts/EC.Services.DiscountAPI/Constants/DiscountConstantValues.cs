@@ -10,8 +10,10 @@
         public static string DiscountRate = "Rate";
         public static string DiscountCode = "Code";
         public static string DiscountType = "Discount type";
+        public static string DiscountExpirationDate = "Expiration date";
 
         public static string Campaign = "Campaign";
+        public static string CampaignCode = "Campaign code";
         public static string CampaignRate = "Campaign rate";
         public static string CampaignId = "Campaign Id";
         public static string CampaignStatus = "Campaign status";

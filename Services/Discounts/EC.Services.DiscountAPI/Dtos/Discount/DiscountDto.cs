@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using EC.Services.DiscountAPI.Entities;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace EC.Services.DiscountAPI.Dtos.Discount
@@ -12,7 +13,7 @@ namespace EC.Services.DiscountAPI.Dtos.Discount
         public string Sponsor { get; set; }
         public int Rate { get; set; }
         public string Code { get; set; }
-        public bool Status { get; set; }
+        public DiscountStatus Status { get; set; }
         public DateTime CDate { get; set; }
         public DateTime UDate { get; set; }
         public DateTime ExpirationDate { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using EC.Services.DiscountAPI.Entities;
 
 namespace EC.Services.DiscountAPI.Dtos.Discount
 {
@@ -10,6 +11,6 @@ namespace EC.Services.DiscountAPI.Dtos.Discount
         public string Sponsor { get; set; }
         public int Rate { get; set; }
         public string Code { get; set; }
-        public bool Status { get; set; }
+        public DateTime ExpirationDate { get; set; }
     }
 }

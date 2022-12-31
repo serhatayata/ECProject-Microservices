@@ -37,11 +37,13 @@ namespace EC.Services.DiscountAPI.Services.Concrete
             if (codeExists != null)
                 return new ErrorDataResult<DiscountDto>(MessageExtensions.AlreadyExists(DiscountConstantValues.DiscountCode));
             var discountAdded = _mapper.Map<Discount>(entity);
+            discountAdded.CDate = DateTime.Now;
+            discountAdded.UDate = DateTime.Now;
             await _discountDal.AddAsync(discountAdded);
-            var discountExists = await _discountDal.AnyAsync(d => d.Id == discountAdded.Id);
-            if (!discountExists)
+            var discountExists = await _discountDal.GetAsync(d => d.Id == discountAdded.Id);
+            if (discountExists == null)
                 return new ErrorDataResult<DiscountDto>(MessageExtensions.NotAdded(DiscountConstantValues.Discount));
-            var result = _mapper.Map<DiscountDto>(entity);
+            var result = _mapper.Map<DiscountDto>(discountExists);
             return new SuccessDataResult<DiscountDto>(result);
         }
         #endregion
@@ -53,15 +55,15 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         /// <returns></returns>
         public async Task<DataResult<DiscountDto>> UpdateAsync(DiscountUpdateDto entity)
         {
-            var discountExists = await _discountRepository.GetByIdAsync(entity.Id);
+            var discountExists = await _discountDal.GetAsync(d => d.Id == entity.Id);
             if (discountExists == null)
                 return new ErrorDataResult<DiscountDto>(MessageExtensions.NotExists(DiscountConstantValues.Discount));
             var codeExists = await _discountDal.GetAsync(d => d.Code == entity.Code && d.Id != entity.Id && d.Status == DiscountStatus.Active);
             if (codeExists != null)
                 return new ErrorDataResult<DiscountDto>(MessageExtensions.AlreadyExists(DiscountConstantValues.DiscountCode));
-            var discountUpdated = _mapper.Map<Discount>(entity);
+            var discountUpdated = _mapper.Map<DiscountUpdateDto, Discount>(entity, discountExists);
             await _discountDal.UpdateAsync(discountUpdated);
-            var result = _mapper.Map<DiscountDto>(discountExists);
+            var result = _mapper.Map<DiscountDto>(discountUpdated);
             return new SuccessDataResult<DiscountDto>(result);
         }
         #endregion
@@ -73,37 +75,50 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         /// <returns></returns>
         public async Task<IResult> DeleteAsync(DeleteIntDto entity)
         {
-            var discountExists = await _discountRepository.GetByIdAsync(entity.Id);
+            var discountExists = await _discountDal.GetAsync(d => d.Id == entity.Id);
             if (discountExists == null)
                 return new ErrorDataResult<DiscountDto>(MessageExtensions.NotExists(DiscountConstantValues.Discount));
-            await _discountDal.DeleteAsync(discountExists);
-            var discountDeleted = _discountDal.GetAsync(d => d.Id == discountExists.Id);
-            if (discountDeleted != null)
+            if(discountExists.Status == DiscountStatus.Deleted)
+                return new ErrorResult(MessageExtensions.AlreadyDeleted(DiscountConstantValues.Discount));
+            discountExists.Status = DiscountStatus.Deleted;
+            await _discountDal.UpdateAsync(discountExists);
+            var discountDeleted = await _discountDal.GetAsync(d => d.Id == discountExists.Id);
+            if (discountDeleted.Status != DiscountStatus.Deleted)
                 return new ErrorDataResult<DiscountDto>(MessageExtensions.NotExists(DiscountConstantValues.Discount));
             var result = _mapper.Map<DiscountDto>(discountExists);
             return new SuccessDataResult<DiscountDto>(result);
         }
         #endregion
-        #region ActivateCampaignAsync
-        public async Task<IResult> ActivateCampaignAsync(DeleteIntDto model)
+        #region ActivateDiscountAsync
+        /// <summary>
+        /// Activate discount
+        /// </summary>
+        /// <param name="model">Discount id dto</param>
+        /// <returns></returns>
+        public async Task<IResult> ActivateDiscountAsync(DiscountIdDto model)
         {
             var discountExists = await _discountDal.GetAsync(c => c.Id == model.Id);
             if (discountExists == null)
                 return new ErrorResult(MessageExtensions.NotExists(DiscountConstantValues.Discount));
-            if (discountExists.Status == DiscountStatus.Deleted)
-                return new ErrorResult(MessageExtensions.AlreadyDeleted(DiscountConstantValues.Discount));
-            discountExists.Status = DiscountStatus.Deleted;
+            if (discountExists.Status == DiscountStatus.Active)
+                return new SuccessResult(MessageExtensions.AlreadyActivated(DiscountConstantValues.Discount));
+            discountExists.Status = DiscountStatus.Active;
             await _discountDal.UpdateAsync(discountExists);
-            var discountDeleted = await _discountRepository.GetWithStatusByIdAsync(model.Id, DiscountStatus.Deleted);
+            var discountDeleted = await _discountRepository.GetWithStatusByIdAsync(model.Id, DiscountStatus.Active);
             if (discountDeleted == null)
                 return new ErrorResult(MessageExtensions.NotDeleted(DiscountConstantValues.Discount));
             return new SuccessResult(MessageExtensions.Deleted(DiscountConstantValues.Discount));
         }
         #endregion
         #region GetWithStatusByIdAsync
-        public async Task<DataResult<DiscountDto>> GetWithStatusByIdAsync(int id, DiscountStatus status = DiscountStatus.Active)
+        /// <summary>
+        /// Get by id with status
+        /// </summary>
+        /// <param name="model">discount id dto</param>
+        /// <returns></returns>
+        public async Task<DataResult<DiscountDto>> GetWithStatusByIdAsync(DiscountIdDto model)
         {
-            var discount = await _discountRepository.GetWithStatusByIdAsync(id,status);
+            var discount = await _discountRepository.GetWithStatusByIdAsync(model.Id,model.Status);
             if (discount == null)
                 return new ErrorDataResult<DiscountDto>(MessageExtensions.NotFound(DiscountConstantValues.Discount));
             var result = _mapper.Map<DiscountDto>(discount);
@@ -111,6 +126,11 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region GetAllWithStatusAsync
+        /// <summary>
+        /// Get all with status
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public async Task<DataResult<List<DiscountDto>>> GetAllWithStatusAsync(DiscountStatus status = DiscountStatus.Active)
         {
             var discounts = await _discountRepository.GetAllWithStatusAsync(status);
@@ -121,6 +141,10 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region GetAllAsync
+        /// <summary>
+        /// Get all
+        /// </summary>
+        /// <returns></returns>
         public async Task<DataResult<List<DiscountDto>>> GetAllAsync()
         {
             var discounts = await _discountRepository.GetAllAsync();
@@ -131,9 +155,14 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region GetAsync
+        /// <summary>
+        /// Get by id without status
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<DataResult<DiscountDto>> GetAsync(int id)
         {
-            var discount = await _discountRepository.GetByIdAsync(id);
+            var discount = await _discountDal.GetAsync(d => d.Id == id);
             if (discount == null)
                 return new ErrorDataResult<DiscountDto>(MessageExtensions.NotFound(DiscountConstantValues.Discount));
             var result = _mapper.Map<DiscountDto>(discount);
@@ -141,9 +170,14 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region GetDiscountByCodeAsync
+        /// <summary>
+        /// Get discount by code with status
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<DataResult<DiscountDto>> GetDiscountByCodeAsync(DiscountGetByCodeDto model)
         {
-            var discount = await _discountRepository.GetByCodeAsync(model.Code);
+            var discount = await _discountRepository.GetByCodeAsync(model.Code, model.Status);
             if (discount == null)
                 return new ErrorDataResult<DiscountDto>(MessageExtensions.NotFound(DiscountConstantValues.Discount));
             var result = _mapper.Map<DiscountDto>(discount);

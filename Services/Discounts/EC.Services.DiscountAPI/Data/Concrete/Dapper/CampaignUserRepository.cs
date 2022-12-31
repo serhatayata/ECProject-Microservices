@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using EC.Services.DiscountAPI.Data.Abstract.Dapper;
 using EC.Services.DiscountAPI.Data.Contexts;
+using EC.Services.DiscountAPI.Dtos.Campaign;
 using EC.Services.DiscountAPI.Dtos.CampaignUser;
 using EC.Services.DiscountAPI.Entities;
 using System.Drawing.Printing;
@@ -87,13 +88,13 @@ namespace EC.Services.DiscountAPI.Data.Concrete.Dapper
         }
         #endregion
         #region GetByCodeAsync
-        public async Task<CampaignUser> GetByCodeAsync(string code)
+        public async Task<CampaignUser> GetByCodeAsync(CampaignCodeDto model)
         {
-            var sql = "SELECT * FROM CampaignUsers WHERE Code=@Code";
+            var sql = "SELECT * FROM CampaignUsers WHERE Code=@Code AND IsUsed=@IsUsed";
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
-                var result = await connection.QueryFirstOrDefaultAsync<CampaignUser>(sql, new { Code=code });
+                var result = await connection.QueryFirstOrDefaultAsync<CampaignUser>(sql, new { Code=model.Code, IsUsed = model.IsUsed });
                 return result;
             }
         }

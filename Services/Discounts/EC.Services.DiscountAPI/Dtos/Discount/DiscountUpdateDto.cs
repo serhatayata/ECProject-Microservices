@@ -11,6 +11,5 @@ namespace EC.Services.DiscountAPI.Dtos.Discount
         public string Sponsor { get; set; }
         public int Rate { get; set; }
         public string Code { get; set; }
-        public bool Status { get; set; }
     }
 }

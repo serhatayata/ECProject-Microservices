@@ -1,0 +1,10 @@
+﻿using Core.Entities;
+
+namespace EC.Services.DiscountAPI.Dtos.Campaign
+{
+    public class CampaignCodeDto:IDto
+    {
+        public string Code { get; set; }
+        public bool IsUsed { get; set; }
+    }
+}

@@ -27,7 +27,7 @@ namespace EC.Services.DiscountAPI.Controllers
         }
         #endregion
         #region DeleteAsync
-        [HttpPost]
+        [HttpDelete]
         [Route("delete")]
         public async Task<IActionResult> DeleteAsync([FromBody] CampaignUserDeleteDto model)
         {
@@ -59,6 +59,15 @@ namespace EC.Services.DiscountAPI.Controllers
         public async Task<IActionResult> GetAllByUserIdAsync([FromQuery] CampaignUserIdDto model)
         {
             var result = await _campaignUserService.GetAllByUserIdAsync(model);
+            return StatusCode(result.StatusCode, result);
+        }
+        #endregion
+        #region GetByCodeAsync
+        [HttpGet]
+        [Route("get-by-code")]
+        public async Task<IActionResult> GetByCodeAsync([FromQuery] CampaignCodeDto model)
+        {
+            var result = await _campaignUserService.GetByCodeAsync(model);
             return StatusCode(result.StatusCode, result);
         }
         #endregion

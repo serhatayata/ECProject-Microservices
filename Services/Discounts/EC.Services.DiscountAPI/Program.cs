@@ -4,6 +4,9 @@ using EC.Services.DiscountAPI.Extensions;
 using EC.Services.DiscountAPI.Mappings;
 using EC.Services.DiscountAPI.DependencyResolvers.Autofac;
 using Microsoft.Extensions.Options;
+using Core.DependencyResolvers;
+using Core.Extensions;
+using Core.Utilities.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -39,8 +42,13 @@ builder.Services.AddEndpointsApiExplorer();
 #region SWAGGER
 builder.Services.AddSwaggerGen();
 #endregion
+#region CORE MODULE
+builder.Services.AddDependencyResolvers(new ICoreModule[] {
+                new CoreModule()
+            });
+#endregion
 #region AUTH
-builder.Services.AddAuth(configuration);
+//builder.Services.AddAuth(configuration);
 #endregion
 
 #endregion

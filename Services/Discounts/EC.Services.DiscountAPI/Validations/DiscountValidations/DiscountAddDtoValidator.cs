@@ -31,6 +31,9 @@ namespace EC.Services.DiscountAPI.Validations.DiscountValidations
 
             RuleFor(x => x.DiscountType).NotNull().WithMessage(MessageExtensions.ErrorNotNull(DiscountConstantValues.DiscountType));
             RuleFor(x => x.DiscountType).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(DiscountConstantValues.DiscountType));
+
+            RuleFor(x => x.ExpirationDate).NotNull().WithMessage(MessageExtensions.ErrorNotNull(DiscountConstantValues.DiscountExpirationDate));
+            RuleFor(x => x.ExpirationDate).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(DiscountConstantValues.DiscountExpirationDate));
         }
     }
 }

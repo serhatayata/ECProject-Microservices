@@ -9,9 +9,9 @@ namespace EC.Services.DiscountAPI.Services.Abstract
 {
     public interface IDiscountService : IBaseService<DiscountDto, DiscountAddDto, DiscountUpdateDto, DeleteIntDto>
     {
-        Task<IResult> ActivateCampaignAsync(DeleteIntDto model);
+        Task<IResult> ActivateDiscountAsync(DiscountIdDto model);
         Task<DataResult<DiscountDto>> GetAsync(int id);
-        Task<DataResult<DiscountDto>> GetWithStatusByIdAsync(int id, DiscountStatus status=DiscountStatus.Active);
+        Task<DataResult<DiscountDto>> GetWithStatusByIdAsync(DiscountIdDto model);
         Task<DataResult<List<DiscountDto>>> GetAllWithStatusAsync(DiscountStatus status=DiscountStatus.Active);
         Task<DataResult<DiscountDto>> GetDiscountByCodeAsync(DiscountGetByCodeDto model);
     }

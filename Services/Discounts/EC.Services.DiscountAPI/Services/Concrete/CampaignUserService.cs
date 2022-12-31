@@ -85,9 +85,9 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region GetByCodeAsync
-        public async Task<DataResult<CampaignDto>> GetByCodeAsync(string code)
+        public async Task<DataResult<CampaignDto>> GetByCodeAsync(CampaignCodeDto model)
         {
-            var campaignUser = await _campaignUserRepository.GetByCodeAsync(code);
+            var campaignUser = await _campaignUserRepository.GetByCodeAsync(model);
             if(campaignUser == null)
                 return new ErrorDataResult<CampaignDto>(MessageExtensions.NotFound(DiscountConstantValues.CampaignUser));
             var result = _mapper.Map<CampaignDto>(campaignUser);

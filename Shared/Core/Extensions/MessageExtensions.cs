@@ -164,6 +164,13 @@ namespace Core.Extensions
             return value;
         }
         #endregion
+        #region AlreadyActivated
+        public static string AlreadyActivated(string entity)
+        {
+            var value = $"{entity} already activated";
+            return value;
+        }
+        #endregion
         #region NotExists
         public static string NotExists(string entity)
         {
