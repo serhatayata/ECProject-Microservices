@@ -55,9 +55,9 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region GetAllByCampaignIdAsync
-        public async Task<DataResult<List<CampaignDto>>> GetAllByCampaignIdAsync(int campaignId, bool isUsed)
+        public async Task<DataResult<List<CampaignDto>>> GetAllByCampaignIdAsync(CampaignIdDto model)
         {
-            var campaignUsers = await _campaignUserRepository.GetAllByCampaignIdAsync(campaignId, isUsed);
+            var campaignUsers = await _campaignUserRepository.GetAllByCampaignIdAsync(model.CampaignId, model.IsUsed);
             if (campaignUsers == null || campaignUsers?.Count() < 1)
                 return new ErrorDataResult<List<CampaignDto>>(MessageExtensions.NotFound(DiscountConstantValues.CampaignUser));
             var result = _mapper.Map<List<CampaignDto>>(campaignUsers);
@@ -75,9 +75,9 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         }
         #endregion
         #region GetAllByUserIdAsync
-        public async Task<DataResult<List<CampaignDto>>> GetAllByUserIdAsync(string userId, bool isUsed)
+        public async Task<DataResult<List<CampaignDto>>> GetAllByUserIdAsync(CampaignUserIdDto model)
         {
-            var campaignUsers = await _campaignUserRepository.GetAllByUserIdAsync(userId,isUsed);
+            var campaignUsers = await _campaignUserRepository.GetAllByUserIdAsync(model.UserId,model.IsUsed);
             if (campaignUsers == null || campaignUsers?.Count() < 1)
                 return new ErrorDataResult<List<CampaignDto>>(MessageExtensions.NotFound(DiscountConstantValues.CampaignUser));
             var result = _mapper.Map<List<CampaignDto>>(campaignUsers);
