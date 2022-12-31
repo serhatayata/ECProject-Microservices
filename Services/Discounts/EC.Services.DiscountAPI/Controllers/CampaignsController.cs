@@ -22,7 +22,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region GetAsync
         [HttpGet]
         [Route("get-by-id")]
-        public async Task<IActionResult> GetByIdAsync(CampaignGetWithStatusDto model)
+        public async Task<IActionResult> GetByIdAsync([FromQuery]CampaignGetWithStatusDto model)
         {
             var result = await _campaignService.GetWithStatusByIdAsync(model.Id, model.Status);
             return StatusCode(result.StatusCode, result);
@@ -31,7 +31,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region GetAllAsync
         [HttpGet]
         [Route("get-all")]
-        public async Task<IActionResult> GetAllAsync(CampaignGetAllWithStatusDto model)
+        public async Task<IActionResult> GetAllAsync([FromQuery]CampaignGetAllWithStatusDto model)
         {
             var result = await _campaignService.GetAllWithStatusAsync(model.Status);
             return StatusCode(result.StatusCode, result);
@@ -40,7 +40,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region GetProductCampaignsAsync
         [HttpGet]
         [Route("get-product-campaigns")]
-        public async Task<IActionResult> GetProductCampaignsAsync(int productId)
+        public async Task<IActionResult> GetProductCampaignsAsync([FromQuery]int productId)
         {
             var result = await _campaignService.GetProductCampaignsAsync(productId);
             return StatusCode(result.StatusCode, result);
@@ -49,7 +49,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region CreateAsync
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateAsync(CampaignAddDto model)
+        public async Task<IActionResult> CreateAsync([FromBody]CampaignAddDto model)
         {
             var result = await _campaignService.CreateAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -58,7 +58,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region AddProductAsync
         [HttpPost]
         [Route("add-product")]
-        public async Task<IActionResult> AddProductAsync(CampaignAddProductDto model)
+        public async Task<IActionResult> AddProductAsync([FromBody]CampaignAddProductDto model)
         {
             var result = await _campaignService.AddProductAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -67,7 +67,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region UpdateAsync
         [HttpPut]
         [Route("update")]
-        public async Task<IActionResult> UpdateAsync(CampaignUpdateDto model)
+        public async Task<IActionResult> UpdateAsync([FromBody] CampaignUpdateDto model)
         {
             var result = await _campaignService.UpdateAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -76,7 +76,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region DeleteAsync
         [HttpDelete]
         [Route("delete")]
-        public async Task<IActionResult> DeleteAsync(DeleteIntDto model)
+        public async Task<IActionResult> DeleteAsync([FromBody] DeleteIntDto model)
         {
             var result = await _campaignService.DeleteAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -85,7 +85,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region DeleteProductAsync
         [HttpDelete]
         [Route("delete-product")]
-        public async Task<IActionResult> DeleteProductAsync(CampaignDeleteProductDto model)
+        public async Task<IActionResult> DeleteProductAsync([FromBody] CampaignDeleteProductDto model)
         {
             var result = await _campaignService.DeleteProductAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -94,7 +94,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region DeleteAllProductsByCampaignIdAsync
         [HttpDelete]
         [Route("delete-all-products")]
-        public async Task<IActionResult> DeleteAllProductsByCampaignIdAsync(DeleteIntDto model)
+        public async Task<IActionResult> DeleteAllProductsByCampaignIdAsync([FromBody] DeleteIntDto model)
         {
             var result = await _campaignService.DeleteAllProductsByCampaignIdAsync(model);
             return StatusCode(result.StatusCode, result);
@@ -103,7 +103,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region ActivateCampaignAsync
         [HttpPost]
         [Route("delete")]
-        public async Task<IActionResult> ActivateCampaignAsync(DeleteIntDto model)
+        public async Task<IActionResult> ActivateCampaignAsync([FromBody]DeleteIntDto model)
         {
             var result = await _campaignService.ActivateCampaignAsync(model);
             return StatusCode(result.StatusCode, result);

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using EC.Services.DiscountAPI.Validations.CampaignValidations;
 using EC.Services.DiscountAPI.Validations.DiscountValidations;
 using Core.Utilities.Validations;
+using EC.Services.DiscountAPI.Validations.CampaignUserValidations;
+using EC.Services.DiscountAPI.Validations.CampaignProduct;
 
 namespace EC.Services.DiscountAPI.Extensions
 {
@@ -29,11 +31,10 @@ namespace EC.Services.DiscountAPI.Extensions
 
             #endregion
             #region Campaign
+            services.AddValidatorsFromAssemblyContaining<CampaignIdDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CampaignAddDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CampaignProductIdValidator>();
-            services.AddValidatorsFromAssemblyContaining<CampaignAddProductDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CampaignUpdateDtoValidator>();
-            services.AddValidatorsFromAssemblyContaining<CampaignDeleteProductDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CampaignGetWithStatusDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CampaignGetAllWithStatusDtoValidator>();
             #endregion
@@ -43,7 +44,18 @@ namespace EC.Services.DiscountAPI.Extensions
             services.AddValidatorsFromAssemblyContaining<DiscountGetByCodeDtoValidator>();
 
             #endregion
+            #region CampaignUser
+            services.AddValidatorsFromAssemblyContaining<CampaignIdPagingDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<CampaignUserAddDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<CampaignUserDeleteDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<CampaignUserIdDtoValidator>();
 
+            #endregion
+            #region CampaignProduct
+            services.AddValidatorsFromAssemblyContaining<CampaignAddProductDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<CampaignDeleteProductDtoValidator>();
+
+            #endregion
 
             services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters(); // for client side

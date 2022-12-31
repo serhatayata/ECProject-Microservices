@@ -11,8 +11,8 @@ namespace EC.Services.DiscountAPI.Services.Abstract
         Task<IResult> DeleteAsync(CampaignUserDeleteDto model);
         Task<DataResult<CampaignUserDto>> AddAsync(CampaignUserAddDto model);
         Task<DataResult<CampaignDto>> GetByCodeAsync(string code);
-        Task<DataResult<List<CampaignDto>>> GetAllByCampaignIdAsync(int campaignId, bool isUsed);
+        Task<DataResult<List<CampaignDto>>> GetAllByCampaignIdAsync(CampaignIdDto model);
         Task<DataResult<List<CampaignDto>>> GetAllByCampaignIdPagingAsync(CampaignIdPagingDto model);
-        Task<DataResult<List<CampaignDto>>> GetAllByUserIdAsync(string userId, bool isUsed);
+        Task<DataResult<List<CampaignDto>>> GetAllByUserIdAsync(CampaignUserIdDto model);
     }
 }

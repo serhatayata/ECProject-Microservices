@@ -3,11 +3,11 @@ using EC.Services.DiscountAPI.Constants;
 using EC.Services.DiscountAPI.Dtos.CampaignProduct;
 using FluentValidation;
 
-namespace EC.Services.DiscountAPI.Validations.CampaignValidations
+namespace EC.Services.DiscountAPI.Validations.CampaignProduct
 {
-    public class CampaignDeleteProductDtoValidator : AbstractValidator<CampaignDeleteProductDto>
+    public class CampaignAddProductDtoValidator : AbstractValidator<CampaignAddProductDto>
     {
-        public CampaignDeleteProductDtoValidator()
+        public CampaignAddProductDtoValidator()
         {
             RuleFor(x => x.CampaignId).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(DiscountConstantValues.CampaignId));
             RuleFor(x => x.CampaignId).NotNull().WithMessage(MessageExtensions.ErrorNotNull(DiscountConstantValues.CampaignId));
