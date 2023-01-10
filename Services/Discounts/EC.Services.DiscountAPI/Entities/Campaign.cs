@@ -14,6 +14,10 @@ namespace EC.Services.DiscountAPI.Entities
         /// <summary>
         /// Campaign description, used for what
         /// </summary>
+        public string CampaignCode { get; set; }
+        /// <summary>
+        /// Campaign description, used for what
+        /// </summary>
         public string Description { get; set; }
         /// <summary>
         /// CampaignType gives us the type of campaign

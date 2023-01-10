@@ -12,6 +12,6 @@ namespace EC.Services.DiscountAPI.Entities
         /// <summary>
         /// Product Id which this campaign includes
         /// </summary>
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
     }
 }

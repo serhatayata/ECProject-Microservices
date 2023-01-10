@@ -63,6 +63,9 @@ namespace EC.Services.DiscountAPI.Data.Contexts
 
                 entity.Property(c => c.Sponsor).HasColumnType("nvarchar(100)");
 
+                entity.Property(c => c.CampaignCode).HasColumnType("nvarchar(32)");
+                entity.HasIndex(c => c.CampaignCode).IsUnique();
+
                 entity.Property(c => c.CampaignType).HasConversion<int>();
                 entity.Property(c => c.Status).HasConversion<int>();
                 entity.Property(c => c.Status).HasDefaultValue(CampaignStatus.Active);

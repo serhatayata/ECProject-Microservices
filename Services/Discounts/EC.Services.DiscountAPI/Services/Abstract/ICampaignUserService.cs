@@ -10,7 +10,7 @@ namespace EC.Services.DiscountAPI.Services.Abstract
     {
         Task<IResult> DeleteAsync(CampaignUserDeleteDto model);
         Task<DataResult<CampaignUserDto>> AddAsync(CampaignUserAddDto model);
-        Task<DataResult<CampaignDto>> GetByCodeAsync(CampaignCodeDto model);
+        Task<DataResult<CampaignDto>> GetByCodeAsync(CampaignUserCodeDto model);
         Task<DataResult<List<CampaignDto>>> GetAllByCampaignIdAsync(CampaignIdDto model);
         Task<DataResult<List<CampaignDto>>> GetAllByCampaignIdPagingAsync(CampaignIdPagingDto model);
         Task<DataResult<List<CampaignDto>>> GetAllByUserIdAsync(CampaignUserIdDto model);

@@ -7,6 +7,7 @@ namespace EC.Services.DiscountAPI.Dtos.Campaign
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string CampaignCode { get; set; }
         public CampaignTypes CampaignType { get; set; }
         public int Rate { get; set; }
         public int Amount { get; set; }

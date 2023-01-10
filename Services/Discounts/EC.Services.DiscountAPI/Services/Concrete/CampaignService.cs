@@ -41,7 +41,7 @@ namespace EC.Services.DiscountAPI.Services.Concrete
             var campaign = await _campaignRepository.GetByIdAsync(id);
             if (campaign == null)
                 return new ErrorDataResult<CampaignDto>(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
-            return new SuccessDataResult<CampaignDto>(campaign);
+            return new SuccessDataResult<CampaignDto>(_mapper.Map<CampaignDto>(campaign));
         }
         #endregion
         #region GetAllAsync
@@ -73,7 +73,9 @@ namespace EC.Services.DiscountAPI.Services.Concrete
             var campaign = await _campaignRepository.GetWithStatusByIdAsync(id,status);
             if (campaign == null)
                 return new ErrorDataResult<CampaignDto>(MessageExtensions.NotFound(DiscountConstantValues.Campaign));
-            return new SuccessDataResult<CampaignDto>(campaign);
+
+            var result = _mapper.Map<CampaignDto>(campaign);
+            return new SuccessDataResult<CampaignDto>(result);
         }
         #endregion
         #region GetAllWithStatusAsync
@@ -100,7 +102,7 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         /// </summary>
         /// <param name="productId">Product Id</param>
         /// <returns></returns>
-        public async Task<DataResult<List<CampaignDto>>> GetProductCampaignsAsync(int productId)
+        public async Task<DataResult<List<CampaignDto>>> GetProductCampaignsAsync(string productId)
         {
             var campaigns = await _campaignRepository.GetAllByProductIdAsync(productId);
             if (campaigns == null)
@@ -108,7 +110,7 @@ namespace EC.Services.DiscountAPI.Services.Concrete
             else if (campaigns.Count() == 0)
                 return new SuccessDataResult<List<CampaignDto>>(new List<CampaignDto>(), MessageExtensions.NotFound(DiscountConstantValues.Campaign));
             else
-                return new SuccessDataResult<List<CampaignDto>>(campaigns);
+                return new SuccessDataResult<List<CampaignDto>>(_mapper.Map<List<CampaignDto>>(campaigns));
         }
         #endregion
         #region CreateAsync
@@ -119,7 +121,11 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         /// <returns></returns>
         public async Task<DataResult<CampaignDto>> CreateAsync(CampaignAddDto entity)
         {
+            var campaignCodeExists = await _campaignRepository.GetWithStatusByCodeAsync(entity.CampaignCode);
+            if (campaignCodeExists != null)
+                return new ErrorDataResult<CampaignDto>(MessageExtensions.AlreadyExists(DiscountConstantValues.CampaignCode));
             var campaignAdded = _mapper.Map<Campaign>(entity);
+            campaignAdded.CDate = DateTime.Now;
             await _campaignDal.AddAsync(campaignAdded);
             bool campaignAddResult = await _campaignRepository.GetByIdAsync(campaignAdded.Id) != null ? true : false;
             if (!campaignAddResult)
@@ -156,6 +162,9 @@ namespace EC.Services.DiscountAPI.Services.Concrete
         {
             var campaignExists = await _campaignRepository.GetByIdAsync(entity.Id);
             if(campaignExists == null)
+                return new ErrorDataResult<CampaignDto>(MessageExtensions.NotExists(DiscountConstantValues.Campaign));
+            var campaignCodeExists = await _campaignDal.GetAsync(c => c.CampaignCode != campaignExists.CampaignCode && c.CampaignCode == entity.CampaignCode);
+            if (campaignExists != null)
                 return new ErrorDataResult<CampaignDto>(MessageExtensions.NotExists(DiscountConstantValues.Campaign));
             var campaignUpdated = _mapper.Map<CampaignUpdateDto, Campaign>(entity, campaignExists);
             campaignUpdated.UDate = DateTime.Now; 

@@ -5,6 +5,7 @@ using EC.Services.DiscountAPI.Data.Contexts;
 using EC.Services.DiscountAPI.Entities;
 using Microsoft.Data.SqlClient;
 using MongoDB.Driver.Core.Configuration;
+using Nest;
 using System.Data;
 
 namespace EC.Services.DiscountAPI.Data.Concrete.Dapper
@@ -131,9 +132,9 @@ namespace EC.Services.DiscountAPI.Data.Concrete.Dapper
         }
         #endregion
         #region GetAllByProductIdAsync
-        public async Task<List<Campaign>> GetAllByProductIdAsync(int productId, CampaignStatus status = CampaignStatus.Active)
+        public async Task<List<Campaign>> GetAllByProductIdAsync(string productId, CampaignStatus status = CampaignStatus.Active)
         {
-            var sql = "SELECT c.* FROM Campaigns c INNER JOIN CampaignProducts cp ON c.Id = cp.CampaignId WHERE cp.ProductId=@ProductId AND Status=@Status";
+            var sql = "SELECT c.* FROM Campaigns c INNER JOIN CampaignProducts cp ON c.Id = cp.CampaignId WHERE cp.ProductId=@ProductId AND c.Status=@Status";
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
@@ -151,6 +152,18 @@ namespace EC.Services.DiscountAPI.Data.Concrete.Dapper
                 connection.Open();
                 var result = await connection.QueryAsync<Campaign>(sql, new { Sponsor = sponsor, Status = status });
                 return result.ToList();
+            }
+        }
+        #endregion
+        #region GetWithStatusByCodeAsync
+        public async Task<Campaign> GetWithStatusByCodeAsync(string code, CampaignStatus status = CampaignStatus.Active)
+        {
+            var sql = "SELECT * FROM Campaigns WHERE CampaignCode=@CampaignCode AND Status=@Status";
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                var result = await connection.QuerySingleOrDefaultAsync<Campaign>(sql, new { CampaignCode = code, Status = status });
+                return result;
             }
         }
         #endregion

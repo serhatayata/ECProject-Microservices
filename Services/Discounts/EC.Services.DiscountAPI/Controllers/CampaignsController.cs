@@ -40,7 +40,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region GetProductCampaignsAsync
         [HttpGet]
         [Route("get-product-campaigns")]
-        public async Task<IActionResult> GetProductCampaignsAsync([FromQuery]int productId)
+        public async Task<IActionResult> GetProductCampaignsAsync([FromQuery]string productId)
         {
             var result = await _campaignService.GetProductCampaignsAsync(productId);
             return StatusCode(result.StatusCode, result);

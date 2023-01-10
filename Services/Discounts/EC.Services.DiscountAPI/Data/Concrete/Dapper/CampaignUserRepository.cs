@@ -88,7 +88,7 @@ namespace EC.Services.DiscountAPI.Data.Concrete.Dapper
         }
         #endregion
         #region GetByCodeAsync
-        public async Task<CampaignUser> GetByCodeAsync(CampaignCodeDto model)
+        public async Task<CampaignUser> GetByCodeAsync(CampaignUserCodeDto model)
         {
             var sql = "SELECT * FROM CampaignUsers WHERE Code=@Code AND IsUsed=@IsUsed";
             using (var connection = _context.CreateConnection())

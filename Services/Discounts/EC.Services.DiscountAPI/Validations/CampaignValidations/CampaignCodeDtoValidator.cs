@@ -9,8 +9,8 @@ namespace EC.Services.DiscountAPI.Validations.CampaignValidations
     {
         public CampaignCodeDtoValidator()
         {
-            RuleFor(x => x.Code).NotNull().WithMessage(MessageExtensions.ErrorNotNull(DiscountConstantValues.CampaignCode));
-            RuleFor(x => x.Code).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(DiscountConstantValues.CampaignCode));
+            RuleFor(x => x.CampaignCode).NotNull().WithMessage(MessageExtensions.ErrorNotNull(DiscountConstantValues.CampaignCode));
+            RuleFor(x => x.CampaignCode).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(DiscountConstantValues.CampaignCode));
         }
     }
 }

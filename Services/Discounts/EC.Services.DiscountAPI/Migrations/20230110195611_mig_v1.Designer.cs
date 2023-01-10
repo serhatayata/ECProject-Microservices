@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC.Services.DiscountAPI.Migrations
 {
     [DbContext(typeof(DiscountDbContext))]
-    [Migration("20221222193909_mig_v1")]
+    [Migration("20230110195611_mig_v1")]
     partial class mig_v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,10 @@ namespace EC.Services.DiscountAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("CampaignCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<int>("CampaignType")
                         .HasColumnType("int");
@@ -73,6 +77,9 @@ namespace EC.Services.DiscountAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CampaignCode")
+                        .IsUnique();
+
                     b.ToTable("Campaigns");
                 });
 
@@ -81,8 +88,8 @@ namespace EC.Services.DiscountAPI.Migrations
                     b.Property<int>("CampaignId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CampaignId", "ProductId");
 

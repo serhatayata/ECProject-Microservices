@@ -16,6 +16,7 @@ namespace EC.Services.DiscountAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(120)", nullable: false),
+                    CampaignCode = table.Column<string>(type: "nvarchar(32)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", nullable: false),
                     CampaignType = table.Column<int>(type: "int", nullable: false),
                     Rate = table.Column<int>(type: "int", nullable: false),
@@ -58,7 +59,7 @@ namespace EC.Services.DiscountAPI.Migrations
                 columns: table => new
                 {
                     CampaignId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false)
+                    ProductId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,6 +91,12 @@ namespace EC.Services.DiscountAPI.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Campaigns_CampaignCode",
+                table: "Campaigns",
+                column: "CampaignCode",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Discounts_Code",

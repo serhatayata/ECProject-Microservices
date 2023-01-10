@@ -38,6 +38,10 @@ namespace EC.Services.DiscountAPI.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<string>("CampaignCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(32)");
+
                     b.Property<int>("CampaignType")
                         .HasColumnType("int");
 
@@ -71,6 +75,9 @@ namespace EC.Services.DiscountAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CampaignCode")
+                        .IsUnique();
+
                     b.ToTable("Campaigns");
                 });
 
@@ -79,8 +86,8 @@ namespace EC.Services.DiscountAPI.Migrations
                     b.Property<int>("CampaignId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CampaignId", "ProductId");
 

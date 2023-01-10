@@ -10,7 +10,6 @@ namespace EC.Services.DiscountAPI.Validations.CampaignValidations
     {
         public CampaignGetAllWithStatusDtoValidator()
         {
-            RuleFor(x => x.Status).NotEmpty().WithMessage(MessageExtensions.ErrorNotEmpty(DiscountConstantValues.CampaignStatus));
             RuleFor(x => x.Status).NotNull().WithMessage(MessageExtensions.ErrorNotNull(DiscountConstantValues.CampaignStatus));
         }
     }

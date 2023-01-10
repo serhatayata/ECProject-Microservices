@@ -65,7 +65,7 @@ namespace EC.Services.DiscountAPI.Controllers
         #region GetByCodeAsync
         [HttpGet]
         [Route("get-by-code")]
-        public async Task<IActionResult> GetByCodeAsync([FromQuery] CampaignCodeDto model)
+        public async Task<IActionResult> GetByCodeAsync([FromQuery] CampaignUserCodeDto model)
         {
             var result = await _campaignUserService.GetByCodeAsync(model);
             return StatusCode(result.StatusCode, result);
